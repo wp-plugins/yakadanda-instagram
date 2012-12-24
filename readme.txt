@@ -11,7 +11,7 @@ A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
 
 == Description ==
 
-A Wordpress plugin that pulls in Instagram images based on profile and hashtags. Requires PHP curl extension.
+A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
 
 == Features ==
 
