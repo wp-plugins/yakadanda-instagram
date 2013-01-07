@@ -13,8 +13,7 @@ A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
 
 A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
 
-== Features ==
-
+= Features =
 * Set up speed, to adjust speed of scrolling images
 * Set up directions, to manage direction of scrolling images (only up and down direction)
 * Display your images or/and display other images in Instagram based on tag
