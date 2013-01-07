@@ -18,7 +18,7 @@ A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
 * Set up directions, to manage direction of scrolling images (only up and down direction)
 * Display your images or/and display other images in Instagram based on tag
 * Set the header and footer color
-* Work in WordPressMU
+* Works in WordPressMU
 
 == Installation ==
 
