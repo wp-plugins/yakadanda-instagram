@@ -1,0 +1,57 @@
+.yi-header {
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  height: 20px;
+  position: relative;
+}
+
+.yi-header .yi-menu {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+}
+
+body .yi-header img {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.yi-footer {
+  padding: 10px;
+}
+
+.yi-footer .addthis_toolbox {
+  height: 20px;
+}
+
+.yi-fluid-img {
+  margin: 0;
+  padding: 0;
+}
+
+#images-content #yakadanda-instagram-images {
+  margin: 0;
+  padding: 0;
+}
+
+#images-content #yakadanda-instagram-images li {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0;
+  list-style: none;
+  display: block;
+  font-size: 0px;
+}
+
+#images-content #yakadanda-instagram-images li img {
+  padding: 0;
+  margin: 0 !important;
+  border: 0;
+  width: 25%;
+  height: 25%;
+}
+
+
