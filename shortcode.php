@@ -2,7 +2,7 @@
 function yinstagram_shortcode( $atts ) {
   list( $client_id, $client_secret, $display_your_images, $display_the_following_hashtags ) = YISettings::data();
   list( $access_token, $username, $picture, $fullname ) = YISettings::authentication_data();
-  list( $logo_display_file, $header_menu_color, $background_color, $resolution, $height, $direction, $speed ) = YIDisplayOptions::data();
+  list( $logo_display_file, $header_menu_color, $background_color, $resolution, $height, $direction, $speed, $social_links ) = YIDisplayOptions::data();
   
   $pictures = array();
   if ( $display_your_images ) list( $next_url, $pictures[] ) = yinstagram_by_self();
@@ -21,10 +21,15 @@ function yinstagram_shortcode( $atts ) {
   echo '<input name="direction" type="hidden" value="' . $direction . '">';
   echo '<input name="speed" type="hidden" value="' . $speed . '">';
   
+  ?>
+  <!-- beginheader-->
+  <div class="yi-header" style="background-color: <?php echo $header_menu_color; ?>;" >
+    <?php echo ($logo_display_file) ? '<img src="'. $logo_display_file .'" alt="Logo">': null; ?>
+  </div>
+  <div class="clear"></div>
+  <!-- endheader-->
   
-  yinstagram_header();
-  
-  ?><div id="images-content"><ul id="yakadanda-instagram-images"><?php
+  <div id="images-content"><ul id="yakadanda-instagram-images"><?php
   
   $i = 0;
   
@@ -41,9 +46,27 @@ function yinstagram_shortcode( $atts ) {
   
   echo '</li>';
   
-  ?></ul></div><?php
+  ?></ul></div>
   
-  yinstagram_footer();
+    <!-- beginfooter -->
+    <div class="clear"></div>
+    <div class="yi-footer" style="background-color: <?php echo $background_color; ?>;">
+      <?php if ($social_links): ?>
+      <!-- AddThis Button BEGIN -->
+      <div class="addthis_toolbox addthis_default_style ">
+        <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+        <a class="addthis_button_tweet"></a>
+        <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+        <!-- <a class="addthis_button_pinterest_pinit"></a>
+        <a class="addthis_counter addthis_pill_style"></a> -->
+      </div>
+      <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b30c8d0ad640e9"></script>
+      <!-- AddThis Button END -->
+      <?php endif; ?>
+    </div>
+    <div class="clear"></div>
+    <!-- endfooter -->
+  <?php
 }
 add_shortcode( 'yinstagram', 'yinstagram_shortcode' );
 
@@ -58,20 +81,7 @@ function yinstagram_fetch_data($url) {
   return $result;
 }
 
-function yinstagram_header() {
-  list( $logo_display_file, $header_menu_color, $background_color, $resolution, $height, $direction, $speed ) = YIDisplayOptions::data();
-  ?>
-    <div class="yi-header" style="background-color: <?php echo $header_menu_color; ?>;" >
-      <!-- <div class="yi-menu">
-        <a href="<?php //echo network_home_url(); ?>">Back</a>
-      </div> -->
-      <?php echo ($logo_display_file) ? '<img src="'. $logo_display_file .'" alt="Logo">': null; ?>
-    </div>
-    <div class="clear"></div>
-  <?php
-}
-
-function yinstagram_footer() {
+function yinstagram_bottom($social_links) {
   list( $logo_display_file, $header_menu_color, $background_color, $resolution, $height, $direction, $speed ) = YIDisplayOptions::data();
   ?>
     <div class="clear"></div>

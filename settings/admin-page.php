@@ -19,7 +19,7 @@
             <input type="text" name="client_id" id="client_id" class="regular-text" value="<?php echo ($data['client_id']) ? $data['client_id'] : null; ?>"/>
             <p class="description">Your Instagram Client Id.</p>
           </td>
-          <td rowspan="3">
+          <td rowspan="4">
             <?php if ( $data['access_token'] ) : ?>
               <p><label>Logged as:&nbsp;</label><?php echo $data['username']; ?></p>
               <p><img alt="<?php echo $data['username']; ?>" src="<?php echo $data['picture']; ?>" height="50" width="50"/></p>
@@ -89,5 +89,9 @@
     <p class="description">
       <a href="<?php echo YAKADANDA_INSTAGRAM_PLUGIN_URL . '/manual.php'; ?>" onclick="window.open(this.href, Math.random(), 'height=500,width=600'); return false">See these instructions</a> to register Instagram clients. You need to allow pop-ups for this page to have this functionality work.
     </p>
+    <h3>Shortcode Examples:</h3> 
+    <ul class="sc_examples">
+	    <li>[yinstagram]</li>
+    </ul>
   </form>
 </div>

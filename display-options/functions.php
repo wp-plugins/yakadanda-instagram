@@ -57,7 +57,8 @@ class YIDisplayOptions {
         'resolution' => ($_POST['resolution']) ? $_POST['resolution'] : 'thumbnail',
         'height' => ($_POST['height']) ? $_POST['height'] : '300',
         'direction' => ($_POST['direction']) ? $_POST['direction'] : 'up',
-        'speed' => ($_POST['speed']) ? $_POST['speed'] : '10000'
+        'speed' => ($_POST['speed']) ? $_POST['speed'] : '10000',
+        'display_social_links' => ($_POST['display_social_links']) ? $_POST['display_social_links'] : '0'
       );
 
       $args = array(
@@ -104,7 +105,8 @@ class YIDisplayOptions {
         'resolution' => ($_POST['resolution']) ? $_POST['resolution'] : 'thumbnail',
         'height' => ($_POST['height']) ? $_POST['height'] : '300',
         'direction' => ($_POST['direction']) ? $_POST['direction'] : 'up',
-        'speed' => ($_POST['speed']) ? $_POST['speed'] : '10000'
+        'speed' => ($_POST['speed']) ? $_POST['speed'] : '10000',
+        'display_social_links' => ($_POST['display_social_links']) ? $_POST['display_social_links'] : '0'
       );
       $update_post = array(
         'ID' => $postid,
@@ -156,7 +158,7 @@ class YIDisplayOptions {
     
     if ($post) {
       $data = maybe_unserialize($post->post_content);
-      $output = array( $data['logo_display_file'], $data['header_menu_color'], $data['background_color'], $data['thumbnail'], $data['height'], $data['direction'], $data['speed'] );
+      $output = array( $data['logo_display_file'], $data['header_menu_color'], $data['background_color'], $data['thumbnail'], $data['height'], $data['direction'], $data['speed'], $data['display_social_links'] );
     }
     
     return $output;

@@ -11,18 +11,6 @@
     <?php endif; ?>
     <table class="form-table">
       <tbody>
-        <!-- <tr valign="top">
-          <th scope="row">
-            <label for="logo_display_file">Logo Display</label>
-          </th>
-          <td>
-            <?php //if ($data): ?>
-              <p><img alt="Logo" src="<?php //echo $data['logo_display_file']; ?>"/></p>
-            <?php //endif; ?>
-            <input type="file" name="logo_display_file" id="logo_display_file" />
-            <p class="description">Upload logo 100x100 maximum.</p>
-          </td>
-        </tr> -->
         <tr valign="top">
           <th scope="row">
             <label for="header_menu_color">Header Menu Color</label>
@@ -42,18 +30,6 @@
             <input type="text" name="background_color" id="background_color" class="regular-text colorwell" value="<?php echo ($data['background_color']) ? $data['background_color'] : '#000000'; ?>"/>
           </td>
         </tr>
-        <!-- <tr valign="top">
-          <th scope="row">
-            <label for="resolution">Resolution</label>
-          </th>
-          <td>
-            <select id="resolution" name="resolution">
-              <option value="thumbnail" <?php //echo (($data['resolution'] == 'thumbnail') || !isset($data['resolution'])) ? 'selected="selected"' : null; ?>>Thumbnail (150x150)&nbsp;</option>
-              <option value="low" <?php //echo ($data['resolution'] == 'low') ? 'selected="selected"' : null; ?>>Low (306x306)&nbsp;</option>
-              <option value="standard" <?php //echo ($data['resolution'] == 'standard') ? 'selected="selected"' : null; ?>>Standard (612x612)&nbsp;</option>
-            </select>
-          </td>
-        </tr> -->
         <tr valign="top">
           <th scope="row">
             <label for="height">Height</label>
@@ -81,6 +57,25 @@
           <td>
             <input type="text" name="speed" id="speed" class="regular-text" value="<?php echo ($data['speed']) ? $data['speed'] : '10000'; ?>"/>
             <p class="description">In millisecond.</p>
+          </td>
+        </tr>
+        <tr valign="top">
+          <th scope="row">Social Links</th>
+          <td>
+            <fieldset>
+              <legend class="screen-reader-text">
+                <span>Social Links</span>
+              </legend>
+              <label title="Yes">
+                <input type="radio" value="1" name="display_social_links" <?php echo ($data['display_social_links']) ? 'checked="checked"' : null; ?>>
+                <span>Yes</span>
+              </label>
+              <br>
+              <label title="No">
+                <input type="radio" value="0" name="display_social_links" <?php echo ($data['display_social_links']) ? null : 'checked="checked"'; ?>>
+                <span>No</span>
+              </label>
+            </fieldset>
           </td>
         </tr>
       </tbody>

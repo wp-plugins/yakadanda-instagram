@@ -50,5 +50,12 @@ It seems in YInstagram setting you choose to only display your images, YInstagra
 * Updated to fit with WordPress 3.5 and Twenty Twelve theme
 
 = 0.0.1 =
+*
 
 == Upgrade Notice ==
+
+= 0.0.11 =
+*
+
+= 0.0.1 =
+*
