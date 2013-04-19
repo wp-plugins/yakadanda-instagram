@@ -10,41 +10,60 @@
     <title>How to get your Instagram Client ID and Client Secret</title>
     <meta name="description" content="How to get your Instagram Client ID and Client Secret">
     <meta name="viewport" content="width=device-width">
+    
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <style type="text/css">
+    	body { background: #eee; }
+	    .container {
+	    	background: #fff;
+	    	border: 1px solid #d2d2d2;
+	    	color: #444;
+	    	margin: 20px auto; padding: 20px;
+		    width: 960px; 
+	    }
+	    h1 { text-align: center; }
+	    ol, dl { margin: 10px 0; }
+	    li, dd, dt { padding: 5px 0; }
+	    img { margin: 10px auto; text-align: center; }
+    </style>
+    
   </head>
   <body>
     <!--[if lt IE 7]>
         <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
     <![endif]-->
-    <h1>How to get your Instagram Client ID and Client Secret</h1>
-    <ol>
-      <li>
-        Login in <a href="https://instagram.com/accounts/login/?next=" target="_blank">https://instagram.com/accounts/login/?next=</a> and then visit api link in <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a>
-      </li>
-      <li>
-        Click on the Manage Clients link.
-        <br>
-        <img src="img/manual-1.png"/>
-      </li>
-      <li>
-        Register you applications by click the Register a New Client button.
-        <br>
-        <img src="img/manual-2.png"/>
-      </li>
-      <li>
-        Fill in the register new OAuth Client form with:
-        <dl>
-          <dt><strong>Application name</strong></dt>
-          <dd><em>Name of your website.</em></dd>
-          <dt><strong>Description</strong></dt>
-          <dd><em>Yakadanda Instagram wordpress plugin</em></dd>
-          <dt><strong>Website</strong></dt>
-          <dd><em>Your website url</em></dd>
-          <dt><strong>OAuth redirect_url</strong></dt>
-          <dd><em><?php echo YAKADANDA_INSTAGRAM_PLUGIN_URL . '/authentication.php'; ?></em></dd>
-        </dl>
-        <br>
-        <img src="img/3.png">
-      </li>
-    </ol>
+    <div class="container">
+      <h1>How to get your Instagram Client ID and Client Secret</h1>
+      <ol>
+        <li>
+          Login in <a href="https://instagram.com/accounts/login/?next=" target="_blank">https://instagram.com/accounts/login/?next=</a> and then visit api link in <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a>
+        </li>
+        <li>
+          Click on the Manage Clients link.
+          <br>
+          <img src="img/manual-1.png"/>
+        </li>
+        <li>
+          Register you applications by click the Register a New Client button.
+          <br>
+          <img src="img/manual-2.png"/>
+        </li>
+        <li>
+          Fill in the register new OAuth Client form with:
+          <dl>
+            <dt><strong>Application name</strong></dt>
+            <dd><em>Name of your website.</em></dd>
+            <dt><strong>Description</strong></dt>
+            <dd><em>Yakadanda Instagram wordpress plugin</em></dd>
+            <dt><strong>Website</strong></dt>
+            <dd><em>Your website url</em></dd>
+            <dt><strong>OAuth redirect_url</strong></dt>
+            <dd><em><?php echo YINSTAGRAM_PLUGIN_URL . '/authentication.php'; ?></em></dd>
+          </dl>
+          <br>
+          <img src="img/3.png">
+        </li>
+      </ol>
+    </div>
   </body>
 </html>
