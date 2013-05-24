@@ -23,36 +23,60 @@ jQuery(function($){
       imageResize();
     });
   }
+  
+  if ( $('body').find('.widget_yinstagram').length == 1 ) {
+    var colorbox_options = $('#colorbox-options').val().split(';');
+    if (colorbox_options[0] == 'on') {
+      if ( colorbox_options[1] == 'fade' ) {
+        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', transition:'fade'});
+      } else if ( colorbox_options[1] == 'slideshow' ) {
+        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', slideshow:true});
+      } else {
+        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox'});
+      }
+    }
+  }
   /* end of frontend */
   
   /* === backend === */
   if ( $('.wrap').find('#display_the_following_hashtags').length == 1 ) {
-    $('input[name*="option_display_the_following_hashtags"]').click(function() {
-      var showHashtags = $(this).val();
-      if (showHashtags == 1) {
+    //Display Your Images
+    $('input[name*="display_your_images"]').click(function() {
+      if ( $(this).val() != 0 ) {
+        $('input:hidden[name=dyi_radio_previous_value]').val( $(this).val() );
+      }
+      
+      if ( $(this).val() == '0' ) {
+        $('input:radio[name=option_display_the_following_hashtags]').filter('[value=1]').prop('checked', true);
         $('#showHashtags').attr('style', 'display: block;');
       } else {
+        $('input:radio[name=option_display_the_following_hashtags]').filter('[value=0]').prop('checked', true);
         $('#showHashtags').attr('style', 'display: none;');
       }
     });
-  }
-  
-  if ( $('.wrap').find('input[name$="ydo[header_menu_color]"]').length == 1 ) {
-    var f = $.farbtastic('#picker'),
-      p = $('#picker').css('opacity', 0.25),
-      selected;
-    $('.colorwell').each(function () {
-      f.linkTo(this);
-      $(this).css('opacity', 0.75);
-    }).focus(function() {
-      if (selected) {
-        $(selected).css('opacity', 0.75).removeClass('colorwell-selected');
+    
+    //Display The Following Hashtags
+    $('input[name*="option_display_the_following_hashtags"]').click(function() {
+      var showHashtags = $(this).val(),
+      dyi_radios = $('input:radio[name=display_your_images]'),
+      dyi_radio_previous_value = $('input:hidden[name=dyi_radio_previous_value]').val();
+      
+      if ( showHashtags == '1' ) {
+        $('#showHashtags').attr('style', 'display: block;');
+        dyi_radios.filter('[value=0]').prop('checked', true);
+      } else {
+        $('#showHashtags').attr('style', 'display: none;');
+        dyi_radios.filter('[value='+dyi_radio_previous_value+']').prop('checked', true);
       }
-      f.linkTo(this);
-      p.css('opacity', 1);
-      $(selected = this).css('opacity', 1).addClass('colorwell-selected');
     });
   }
+  $('.yinstagram-colorbox').live('change', function(){
+    if(this.checked) {
+      $('.yinstagram-colorbox-options').prop('disabled', false);
+    } else {
+      $('.yinstagram-colorbox-options').prop('disabled', true);
+    }
+  });
   /* end of backend */
 });
 
@@ -67,3 +91,7 @@ function imageResize() {
   });
 }
 /* end of frontend functions */
+
+/* === backend functions === */
+
+/* end of backend functions */

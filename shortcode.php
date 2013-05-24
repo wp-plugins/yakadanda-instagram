@@ -5,11 +5,13 @@ function yinstagram_shortcode( $atts ) {
         'frame_rate' => 24,
         'speed' => 1,
         'direction' => 'forwards',
+        'size' => 'thumbnail',
         'display_social_links' => 0
       );
   
   $yinstagram = array_merge( (array)get_option('yinstagram_settings'), (array)$display_options );
   $auth = get_option('yinstagram_access_token');
+  $output = null;
   
   if ($auth) {
     if ( $yinstagram['display_your_images'] ) {
@@ -20,47 +22,51 @@ function yinstagram_shortcode( $atts ) {
     
     if ( ! empty($data) ) {
       yinstagram_styles( $yinstagram );
-      echo '<input name="frame_rate" type="hidden" value="' . $yinstagram['frame_rate'] . '">';
-      echo '<input name="speed" type="hidden" value="' . $yinstagram['speed'] . '">';
-      echo '<input name="direction" type="hidden" value="' . $yinstagram['direction'] . '">';
-      echo '<input name="height" type="hidden" value="' . $yinstagram['height'] . '">';
+      $output .= '<input name="frame_rate" type="hidden" value="' . $yinstagram['frame_rate'] . '">';
+      $output .= '<input name="speed" type="hidden" value="' . $yinstagram['speed'] . '">';
+      $output .= '<input name="direction" type="hidden" value="' . $yinstagram['direction'] . '">';
+      $output .= '<input name="height" type="hidden" value="' . $yinstagram['height'] . '">';
+      
+      $output .= '<ul id="yinstagram-scroller">';
+      
+      $i = $j = 0;
+      
+      foreach( $data as $datum ) { $i++; $j++;
+        $img_src = $datum->images->thumbnail->url;
+        if ( $yinstagram['size'] == 'low_resolution' ) $img_src = $datum->images->low_resolution->url;
+        elseif ( $yinstagram['size'] == 'standard_resolution' ) $img_src = $datum->images->standard_resolution->url;
+        
+        $output .= ($i==1) ? '<li>' : null;
+        
+        $output .= '<img title="' . str_replace('"', "'", $datum->caption->text) . '" src="' . $img_src . '">';
+        
+        $output .= ($i==4) ? '</li>' : null;
+        $i = ($i==4) ? 0 : $i;
+        if ($j==80) break;
+      }
+      
+      $output .= '</li>';
+      
+      $output .= '</ul>';
 
-      ?>
-        <ul id="yinstagram-scroller">
-          <?php
-            $i = $j = 0;
-
-            foreach( $data as $datum ) { $i++; $j++;
-              echo ($i==1) ? '<li>' : null;
-
-              ?><img title="<?php echo str_replace('"', "'", $datum->caption->text); ?>" src="<?php echo $datum->images->thumbnail->url; ?>"><?php
-
-              echo ($i==4) ? '</li>' : null;
-              $i = ($i==4) ? 0 : $i;
-              if ($j==80) break;
-            }
-
-            echo '</li>';
-          ?>
-        </ul>
-
-        <?php if ( $yinstagram['display_social_links'] == '1' ): ?>
-          <!-- AddThis Button BEGIN -->
-          <div class="addthis_toolbox addthis_default_style ">
-            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-            <a class="addthis_button_tweet"></a>
-            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
-            <!-- <a class="addthis_button_pinterest_pinit"></a>
-            <a class="addthis_counter addthis_pill_style"></a> -->
-          </div>
-          <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b30c8d0ad640e9"></script>
-          <!-- AddThis Button END -->
-        <?php endif; ?>
-      <?php } else { echo '<p>No have ' . $yinstagram['display_your_images'] . ' images.</p>'; } ?>
-    <?php
+      if ( $yinstagram['display_social_links'] == '1' ) {
+        $output .= '<!-- AddThis Button BEGIN -->';
+        $output .= '<div class="addthis_toolbox addthis_default_style ">';
+        $output .= '<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>';
+        $output .= '<a class="addthis_button_tweet"></a>';
+        $output .= '<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>';
+        $output .= '<!-- <a class="addthis_button_pinterest_pinit"></a>';
+        $output .= '<a class="addthis_counter addthis_pill_style"></a> -->';
+        $output .= '</div>';
+        $output .= '<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b30c8d0ad640e9"></script>';
+        $output .= '<!-- AddThis Button END -->';
+      }
+    } else { $output .= '<p>No have ' . $yinstagram['display_your_images'] . ' images.</p>'; }
   } else {
-    echo '<p>Not Connected.</p>';
+    $output .= '<p>Not Connected.</p>';
   }
+  
+  return $output;
 }
 add_shortcode( 'yinstagram', 'yinstagram_shortcode' );
 
@@ -83,7 +89,7 @@ function yinstagram_extract_hastags( $data ) {
   return explode(',', $output);
 }
 
-function yinstagram_get_own_images( $yinstagram, $auth ) {
+function yinstagram_get_own_images( $yinstagram, $auth, $shortcode = true ) {
   if ( $yinstagram['display_your_images'] == 'feed' ) {
     //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
     $responses = yinstagram_fetch_data( 'https://api.instagram.com/v1/users/self/feed/?access_token=' . $auth['access_token'] . '&count=33' );
@@ -100,22 +106,24 @@ function yinstagram_get_own_images( $yinstagram, $auth ) {
   
   $next_url = ( isset($responses->pagination->next_url) ) ? $responses->pagination->next_url : null;
   
-  $i = 0;
-  while ( $next_url ) {
-    $responses = yinstagram_fetch_data( $next_url );
-    $responses = json_decode( $responses );
+  if ( $shortcode ) {
+    $i = 0;
+    while ( $next_url ) {
+      $responses = yinstagram_fetch_data( $next_url );
+      $responses = json_decode( $responses );
 
-    $output = array_merge( $output, $responses->data );
+      $output = array_merge( $output, $responses->data );
 
-    if ($i == 1) break;
-    $i++;
-    $next_url = ($responses->pagination->next_url) ? $responses->pagination->next_url : null;
+      if ($i == 1) break;
+      $i++;
+      $next_url = ($responses->pagination->next_url) ? $responses->pagination->next_url : null;
+    }
   }
   
   return $output;
 }
 
-function yinstagram_get_tags_images( $yinstagram, $auth ) {
+function yinstagram_get_tags_images( $yinstagram, $auth, $shortcode = true ) {
   $tags = yinstagram_extract_hastags( $yinstagram['display_the_following_hashtags'] );
   $number_of_tags = count( $tags );
   $count = round( 33 / $number_of_tags );
@@ -129,16 +137,18 @@ function yinstagram_get_tags_images( $yinstagram, $auth ) {
     
     $next_url = ( isset($responses->pagination->next_url) ) ? $responses->pagination->next_url : null;
     
-    $i = 0;
-    while ( $next_url ) {
-      $responses = yinstagram_fetch_data( $next_url );
-      $responses = json_decode( $responses );
-      
-      $output = array_merge( $output, $responses->data );
-      
-      if ($i == 1) break;
-      $i++;
-      $next_url = ($responses->pagination->next_url) ? $responses->pagination->next_url : null;
+    if ( $shortcode ) {
+      $i = 0;
+      while ( $next_url ) {
+        $responses = yinstagram_fetch_data( $next_url );
+        $responses = json_decode( $responses );
+        
+        $output = array_merge( $output, $responses->data );
+        
+        if ($i == 1) break;
+        $i++;
+        $next_url = ($responses->pagination->next_url) ? $responses->pagination->next_url : null;
+      }
     }
   }
   

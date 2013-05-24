@@ -10,7 +10,7 @@
           <td>
             <input type="text" name="client_id" id="client_id" class="regular-text" value="<?php echo $client_id; ?>"/>&nbsp;
             <?php if ( get_option('yinstagram_access_token') ): ?>
-              <strong style="color: green;" title="<?php echo $data['full_name']; ?>">Connected, logged as <?php echo $data['username']; ?>.</strong>
+              <strong style="color: green;" title="<?php echo $data['full_name']; ?>">Connected, logged in as <?php echo $data['username']; ?>.</strong>
             <?php else: ?>
               <strong style="color: red;">Not Connected.</strong>
             <?php endif; ?>
@@ -29,6 +29,7 @@
         <tr valign="top">
           <th scope="row">Display Your Images</th>
           <td>
+            <input name="dyi_radio_previous_value" type="hidden" value="<?php echo $data['display_your_images']; ?>"/>
             <fieldset>
               <legend class="screen-reader-text">
                 <span>Display Your Images</span>
