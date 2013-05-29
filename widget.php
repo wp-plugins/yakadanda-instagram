@@ -9,11 +9,8 @@ class YInstagram_Widget extends WP_Widget {
   }
   
   public function widget($args, $instance) {
-    $colorbox_enqueue_style = function() use ($instance) {
-              wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $instance['theme'] . '.css', false, '1.4.15', 'all');
-              wp_enqueue_style('yinstagram-colorbox');
-            };
-    add_action( 'wp_enqueue_scripts', $colorbox_enqueue_style() );
+    YInstagram_Widget::colorbox_enqueue_style($instance);
+    add_action( 'wp_enqueue_scripts', 'YInstagram_Widget::colorbox_enqueue_style' );
     
     extract( $args );
     $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Yakadanda Instagram' ) : $instance['title'], $instance, $this->id_base );
@@ -154,6 +151,11 @@ class YInstagram_Widget extends WP_Widget {
         </select>
       </p>
     <?php
+  }
+  
+  function colorbox_enqueue_style($instance) {
+    wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $instance['theme'] . '.css', false, '1.4.15', 'all');
+    wp_enqueue_style('yinstagram-colorbox');
   }
   
 }
