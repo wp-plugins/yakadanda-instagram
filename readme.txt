@@ -44,7 +44,7 @@ Not connected or possibility you have entered tags that does not exist in Instag
 == Changelog ==
 
 = 0.0.31 =
-* -
+* Supported PHP 5.2.* version
 
 = 0.0.30 =
 * Added autochecked feature on settings page
