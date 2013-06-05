@@ -42,8 +42,8 @@
           </th>
           <td>
             <select id="direction" name="ydo[direction]">
-              <option value="forwards" <?php echo (($data['direction'] == 'up') || !isset($data['direction'])) ? 'selected="selected"' : null; ?>>Up&nbsp;</option>
-              <option value="backwards" <?php echo ($data['direction'] == 'down') ? 'selected="selected"' : null; ?>>Down&nbsp;</option>
+              <option value="forwards" <?php echo (($data['direction'] == 'forwards') || !isset($data['direction'])) ? 'selected="selected"' : null; ?>>Up&nbsp;</option>
+              <option value="backwards" <?php echo ($data['direction'] == 'backwards') ? 'selected="selected"' : null; ?>>Down&nbsp;</option>
             </select>
           </td>
         </tr>
