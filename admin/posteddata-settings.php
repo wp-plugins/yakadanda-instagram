@@ -10,13 +10,13 @@ if ($_GET['logout']) {
   $data = get_option('yinstagram_settings');
   $token = get_option('yinstagram_access_token');
   
-  if ( ($_POST['display_your_images'] != '0') && ($_POST['option_display_the_following_hashtags'] == '1') ) {
+  if ( ($_POST['display_your_images'] != 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1') ) {
     $_POST['option_display_the_following_hashtags'] = '0';
   }
-  if ( ($_POST['display_your_images'] == '0') && ($_POST['option_display_the_following_hashtags'] == '0') ) {
+  if ( ($_POST['display_your_images'] == 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '0') ) {
     $_POST['display_your_images'] = 'recent';
   }
-  if ( ($_POST['display_your_images'] == '0') && ($_POST['option_display_the_following_hashtags'] == '1') && empty($_POST['display_the_following_hashtags']) ) {
+  if ( ($_POST['display_your_images'] == 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1') && empty($_POST['display_the_following_hashtags']) ) {
     $_POST['display_your_images'] = 'recent';
     $_POST['option_display_the_following_hashtags'] = '0';
   }

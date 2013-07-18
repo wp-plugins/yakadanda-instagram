@@ -19,23 +19,26 @@ function yinstagram_settings_page() {
 	}
   
   $data = array_merge( (array)get_option( 'yinstagram_settings' ), (array)get_option( 'yinstagram_access_token' ));
+  $display_your_images = isset($data['display_your_images']) ? $data['display_your_images'] : null;
+  $option_display_the_following_hashtags = isset($data['option_display_the_following_hashtags']) ? $data['option_display_the_following_hashtags'] : null;
   
   /* for upgrade from 0.0.12 to 0.0.20 */
   $post_yinstagram_settings = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE `post_title` = 'yakadanda-instagram-settings'");
+  $old_yinstagram_settings = null;
   if ($post_yinstagram_settings) {
     $old_yinstagram_settings = maybe_unserialize($post_yinstagram_settings->post_content);
   }
   
   $client_id = null;
-  if ( $data['client_id'] ) {
+  if ( isset($data['client_id']) ) {
     $client_id = $data['client_id'];
-  } elseif( $old_yinstagram_settings && !$data['client_id'] ) {
+  } elseif( $old_yinstagram_settings && !isset($data['client_id']) ) {
     $client_id = $old_yinstagram_settings['client_id'];
   }
   $client_secret = null;
-  if ( $data['client_secret'] ) {
+  if ( isset($data['client_secret']) ) {
     $client_secret = $data['client_secret'];
-  } elseif( $old_yinstagram_settings && !$data['client_id'] ) {
+  } elseif( $old_yinstagram_settings && !isset($data['client_id']) ) {
     $client_secret = $old_yinstagram_settings['client_secret'];
   }
   /* end for upgrade */
@@ -45,8 +48,9 @@ function yinstagram_settings_page() {
 
 function yinstagram_display_options_page() {
   if (!current_user_can('manage_options'))  {
-		wp_die( __('You do not have sufficient permissions to access this page.') );
-	}
+    wp_die( __('You do not have sufficient permissions to access this page.') );
+  }
+  $response = null;
   if (isset($_POST["update_display_options"])) {
     $action = update_option('yinstagram_display_options', $_POST['ydo']);
     $response = array('class' => 'error', 'msg' => 'Failed.');

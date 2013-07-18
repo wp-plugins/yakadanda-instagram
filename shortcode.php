@@ -14,7 +14,7 @@ function yinstagram_shortcode( $atts ) {
   $output = null;
   
   if ($auth) {
-    if ( $yinstagram['display_your_images'] ) {
+    if ( $yinstagram['display_your_images'] != 'hashtag' ) {
       $data = yinstagram_get_own_images( $yinstagram, $auth );
     } else {
       $data = yinstagram_get_tags_images( $yinstagram, $auth );
@@ -38,7 +38,7 @@ function yinstagram_shortcode( $atts ) {
         
         $output .= ($i==1) ? '<li>' : null;
         
-        $output .= '<img title="' . str_replace('"', "'", $datum->caption->text) . '" src="' . $img_src . '">';
+        $output .= '<img title="' . str_replace('"', "'", (string)$datum->caption->text) . '" src="' . $img_src . '">';
         
         $output .= ($i==4) ? '</li>' : null;
         $i = ($i==4) ? 0 : $i;
@@ -61,7 +61,7 @@ function yinstagram_shortcode( $atts ) {
         $output .= '<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b30c8d0ad640e9"></script>';
         $output .= '<!-- AddThis Button END -->';
       }
-    } else { $output .= '<p>No have ' . $yinstagram['display_your_images'] . ' images.</p>'; }
+    } else { $output .= '<p>Request timed out, or no have ' . $yinstagram['display_your_images'] . ' images.</p>'; }
   } else {
     $output .= '<p>Not Connected.</p>';
   }

@@ -38,7 +38,7 @@ class YInstagram_Widget extends WP_Widget {
     $auth = get_option('yinstagram_access_token');
     
     if ($auth) {
-      if ( $yinstagram['display_your_images'] ) {
+      if ( $yinstagram['display_your_images'] != 'hashtag' ) {
         $data = yinstagram_get_own_images( $yinstagram, $auth, false );
       } else {
         $data = yinstagram_get_tags_images( $yinstagram, $auth, false );
@@ -57,21 +57,20 @@ class YInstagram_Widget extends WP_Widget {
         
         echo '<input id="colorbox-options" type="hidden" value="' . $colorbox['status'] . ';' . $instance['effect'] . '">';
         echo '<ul class="yinstagram_grid">';
+        
         foreach( $data as $datum ) {
           $img_src = $datum->images->thumbnail->url;
           if ( $instance['size'] == 'low_resolution' ) $img_src = $datum->images->low_resolution->url;
           elseif ( $instance['size'] == 'standard_resolution' ) $img_src = $datum->images->standard_resolution->url;
           
-          echo '<li><a class="yinstagram-cbox" style="cursor:' . $colorbox['cursor'] . ';" onclick="' . $colorbox['onclick'] . '" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt( str_replace('"', "'", $datum->caption->text) ) . '">';
+          echo '<li><a class="yinstagram-cbox" style="cursor:' . $colorbox['cursor'] . ';" onclick="' . $colorbox['onclick'] . '" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt( str_replace('"', "'", (string)$datum->caption->text) ) . '">';
           echo '<img src="' . $img_src . '" ' . $style . '>';
           echo '</a></li>';
           $i++;
           if ( $i == $instance['limit'] ) break;
         }
         echo '</ul>';
-      } else {
-        echo '<p>No have ' . $yinstagram['display_your_images'] . ' images.</p>';
-      }
+      } else { echo '<p>Request timed out, or no have ' . $yinstagram['display_your_images'] . ' images.</p>'; }
     } else {
       echo '<p>Not Connected.</p>';
     }

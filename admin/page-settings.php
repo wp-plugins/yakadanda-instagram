@@ -29,28 +29,28 @@
         <tr valign="top">
           <th scope="row">Display Your Images</th>
           <td>
-            <input name="dyi_radio_previous_value" type="hidden" value="<?php echo $data['display_your_images']; ?>"/>
+            <input name="dyi_radio_previous_value" type="hidden" value="<?php echo ($display_your_images) ? $display_your_images : 'recent'; ?>"/>
             <fieldset>
               <legend class="screen-reader-text">
                 <span>Display Your Images</span>
               </legend>
               <label title="Get the most recent media published by a user.">
-                <input type="radio" value="recent" name="display_your_images" <?php echo ( ($data['display_your_images'] == 'recent') || !isset($data['display_your_images']) ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="recent" name="display_your_images" <?php echo ( ($display_your_images == 'recent') || !$display_your_images ) ? 'checked="checked"' : null; ?>>
                 <span>Recent</span>
               </label>
               <br>
               <label title="See the authenticated user's feed.">
-                <input type="radio" value="feed" name="display_your_images" <?php echo ( ($data['display_your_images'] == 'feed') ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="feed" name="display_your_images" <?php echo ( ($display_your_images == 'feed') ) ? 'checked="checked"' : null; ?>>
                 <span>Feed</span>
               </label>
               <br>
               <label title="See the authenticated user's list of media they've liked.">
-                <input type="radio" value="liked" name="display_your_images" <?php echo ( ($data['display_your_images'] == 'liked') ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="liked" name="display_your_images" <?php echo ( ($display_your_images == 'liked') ) ? 'checked="checked"' : null; ?>>
                 <span>Liked</span>
               </label>
               <br>
               <label title="No">
-                <input type="radio" value="0" name="display_your_images" <?php echo ( ($data['display_your_images'] == '0') && isset($data['display_your_images']) ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="hashtag" name="display_your_images" <?php echo ( ($display_your_images == 'hashtag') && $display_your_images ) ? 'checked="checked"' : null; ?>>
                 <span>No</span>
               </label>
             </fieldset>
@@ -64,17 +64,17 @@
                 <span>Display The Following Hashtags</span>
               </legend>
               <label title="Yes">
-                <input type="radio" value="1" name="option_display_the_following_hashtags" <?php echo ($data['option_display_the_following_hashtags'] == '1') ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="1" name="option_display_the_following_hashtags" <?php echo ($option_display_the_following_hashtags == '1') ? 'checked="checked"' : null; ?>>
                 <span>Yes</span>
               </label>
               <br>
               <label title="No">
-                <input type="radio" value="0" name="option_display_the_following_hashtags" <?php echo ( ($data['option_display_the_following_hashtags'] == '0') || !isset($data['option_display_the_following_hashtags']) ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="0" name="option_display_the_following_hashtags" <?php echo ( ($option_display_the_following_hashtags == '0') || !$option_display_the_following_hashtags ) ? 'checked="checked"' : null; ?>>
                 <span>No</span>
               </label>
-              <div id="showHashtags" style="<?php echo ($data['option_display_the_following_hashtags']) ? 'display: block;' : 'display: none;'; ?>">
+              <div id="showHashtags" style="<?php echo ($option_display_the_following_hashtags) ? 'display: block;' : 'display: none;'; ?>">
                 <p>
-                  <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="10" name="display_the_following_hashtags"><?php echo ($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
+                  <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="10" name="display_the_following_hashtags"><?php echo isset($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
                 </p>
                 <p class="description">Hashtags separated by comma, e.g. <em style="font-style:normal; color: #464646;">#buildings, #graffiti, #art</em> etc.</p>
               </div>

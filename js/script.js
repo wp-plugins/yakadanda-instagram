@@ -7,13 +7,13 @@ jQuery(function($){
   if ( $('body').find('#yinstagram-scroller').length == 1 ) {
     // simplyScroller
     $('#yinstagram-scroller').simplyScroll({
-			customClass:'vert',
-      frameRate:the_frameRate,
-      speed:the_speed,
-      orientation:'vertical',
-      direction:the_direction,
-			pauseOnHover: false
-		});
+      customClass: 'vert',
+      frameRate: the_frameRate,
+      speed: the_speed,
+      orientation: 'vertical',
+      direction: the_direction,
+      pauseOnHover: false
+    });
     
     //Triggers when document first loads
     imageResize();
@@ -24,7 +24,7 @@ jQuery(function($){
     });
   }
   
-  if ( $('body').find('.widget_yinstagram').length == 1 ) {
+  if ( ($('body').find('.widget_yinstagram').length == 1) && ($('body').find('#colorbox-options').length == 1) ) {
     var colorbox_options = $('#colorbox-options').val().split(';');
     if (colorbox_options[0] == 'on') {
       if ( colorbox_options[1] == 'fade' ) {
@@ -42,11 +42,11 @@ jQuery(function($){
   if ( $('.wrap').find('#display_the_following_hashtags').length == 1 ) {
     //Display Your Images
     $('input[name*="display_your_images"]').click(function() {
-      if ( $(this).val() != 0 ) {
+      if ( $(this).val() != 'hashtag' ) {
         $('input:hidden[name=dyi_radio_previous_value]').val( $(this).val() );
       }
       
-      if ( $(this).val() == '0' ) {
+      if ( $(this).val() == 'hashtag' ) {
         $('input:radio[name=option_display_the_following_hashtags]').filter('[value=1]').prop('checked', true);
         $('#showHashtags').attr('style', 'display: block;');
       } else {
@@ -63,9 +63,11 @@ jQuery(function($){
       
       if ( showHashtags == '1' ) {
         $('#showHashtags').attr('style', 'display: block;');
-        dyi_radios.filter('[value=0]').prop('checked', true);
+        dyi_radios.filter('[value=hashtag]').prop('checked', true);
       } else {
         $('#showHashtags').attr('style', 'display: none;');
+        
+        if ( dyi_radio_previous_value == 'hashtag' ) { dyi_radio_previous_value = 'recent' }
         dyi_radios.filter('[value='+dyi_radio_previous_value+']').prop('checked', true);
       }
     });
