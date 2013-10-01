@@ -93,7 +93,7 @@ function yinstagram_section_setup() {
   $output .= '<li>Register new OAuth Client by click Register a New Client button.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png"/></li>';
   $output .= '<li>Setup Register new OAuth Client form.<br><br>';
   $output .= 'a. Fill textboxes and textarea with suitable information<br>';
-  $output .= 'b. Fill OAuth redirect_url textbox with <span>' . YINSTAGRAM_PLUGIN_URL . '/authentication.php</span><br>';
+  $output .= 'b. Fill OAuth redirect_uri textbox with <span>' . YINSTAGRAM_PLUGIN_URL . '/authentication.php</span><br>';
   $output .= '<img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-4.png"/></li>';
   $output .= '<li>Congratulation, now you have Client ID and Client Secret.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png"/></li>';
   $output .= '</ol>';
