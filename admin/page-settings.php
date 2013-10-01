@@ -1,6 +1,13 @@
 <div class="wrap">
-	<div id="icon-edit" class="icon32 icon32-posts-quote"><br></div><h2>Settings</h2>
+  <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div>
+  <h2>Settings</h2>
+  <?php if (isset($_GET['msg'])): ?>
+    <div class="error">
+      <p><?php echo $_GET['msg']; ?></p>
+    </div>
+  <?php endif; ?>
   <form action="<?php echo YINSTAGRAM_PLUGIN_URL . '/admin/posteddata-settings.php'; ?>" method="post" enctype="multipart/form-data">
+    <p>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> to register Instagram client, or <a id="yinstagram-help-tab" href="#">see these manual</a> for help.</p>
     <table class="form-table">
       <tbody>
         <tr valign="top">
@@ -8,9 +15,9 @@
             <label for="client_id">Client ID</label>
           </th>
           <td>
-            <input type="text" name="client_id" id="client_id" class="regular-text" value="<?php echo $client_id; ?>"/>&nbsp;
-            <?php if ( get_option('yinstagram_access_token') ): ?>
-              <strong style="color: green;" title="<?php echo $data['full_name']; ?>">Connected, logged in as <?php echo $data['username']; ?>.</strong>
+            <input type="text" name="client_id" id="client_id" class="regular-text" value="<?php echo isset($data['client_id']) ? $data['client_id'] : null; ?>"/>&nbsp;
+            <?php if (isset($data['access_token']) && isset($data['user'])): ?>
+              <strong style="color: green;" title="<?php echo $data['full_name']; ?>">Connected, logged in as <?php echo $data['user']->username; ?>.</strong>
             <?php else: ?>
               <strong style="color: red;">Not Connected.</strong>
             <?php endif; ?>
@@ -22,7 +29,7 @@
             <label for="client_secret">Client Secret</label>
           </th>
           <td>
-            <input type="text" name="client_secret" id="client_secret" class="regular-text" value="<?php echo $client_secret; ?>"/>
+            <input type="text" name="client_secret" id="client_secret" class="regular-text" value="<?php echo isset($data['client_secret']) ? $data['client_secret'] : null; ?>"/>
             <p class="description">Your Instagram Client Secret.</p>
           </td>
         </tr>
@@ -84,19 +91,12 @@
       </tbody>
     </table>
     <p class="submit">
-      <?php if ( get_option('yinstagram_access_token') ): ?>
+      <?php if ( isset($data['access_token']) && isset($data['user']) ): ?>
         <input id="submit" class="button-primary" type="submit" value="Save Changes" name="submit">&nbsp;
         <a href="<?php echo YINSTAGRAM_PLUGIN_URL . '/admin/posteddata-settings.php?logout=1'; ?>" class="button-primary">Logout</a>
       <?php else: ?>
         <input id="submit" class="button-primary" type="submit" value="Save and Connect" name="submit">
       <?php endif; ?>
     </p>
-    <p class="description">
-      <a href="<?php echo YINSTAGRAM_PLUGIN_URL . '/manual.php'; ?>" target="_blank">See these instructions</a> to register Instagram clients.
-    </p>
-    <h3>Shortcode Examples:</h3> 
-    <ul class="sc_examples">
-	    <li>[yinstagram]</li>
-    </ul>
   </form>
 </div>

@@ -52,9 +52,13 @@ Note all DIVs are generated and should not be hard-coded
   list-style: none;
 }
 
-.simply-scroll-list li img {
+.simply-scroll-list li img, .simply-scroll-list li span em {
   border: none;
   display: block;
+}
+
+.simply-scroll-list li span em {
+  background: transparent url('../img/ajax-loader.gif') no-repeat center center;
 }
 
 .simply-scroll-btn {
@@ -193,7 +197,7 @@ Note all DIVs are generated and should not be hard-coded
   width: auto;
   height: 150px;
 }
-.vert .simply-scroll-list li img {
+.vert .simply-scroll-list li img, .vert .simply-scroll-list li span em {
   float: left;
 }
 
@@ -219,7 +223,7 @@ Note all DIVs are generated and should not be hard-coded
   list-style-type: none;
 }
 
-#yinstagram-scroller, #yinstagram-scroller li, #yinstagram-scroller li img {
+#yinstagram-scroller, #yinstagram-scroller li, #yinstagram-scroller li img, #yinstagram-scroller li span em {
   margin: 0;
   padding: 0;
 }
@@ -242,7 +246,7 @@ Note all DIVs are generated and should not be hard-coded
   line-height: 0;
 }
 
-.yinstagram_grid li img {
+.yinstagram_grid li img, .yinstagram_grid li span em {
   background-color: white;
   margin: 0;
 }
@@ -254,5 +258,15 @@ Note all DIVs are generated and should not be hard-coded
   clear: both;
   height: 0;
 }
+
+.yinstagram_grid li a span {
+  display: block;
+}
+
+.yinstagram_grid li a span em{
+  background: transparent url('../img/ajax-loader.gif') no-repeat center center;
+  display: block;
+}
+
 * html .yinstagram_grid { zoom: 1; } /* IE6 */
 *:first-child+html .yinstagram_grid { zoom: 1; } /* IE7 */

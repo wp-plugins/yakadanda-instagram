@@ -1,5 +1,5 @@
 <div class="wrap">
-	<div id="icon-edit" class="icon32 icon32-posts-quote"><br></div><h2>Display Options</h2>
+  <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div><h2>Display Options</h2>
   <?php if ($response): ?>
     <div id="message" class="<?php echo $response['class']; ?>">
       <p><?php echo $response['msg']; ?></p>
