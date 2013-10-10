@@ -105,12 +105,12 @@ jQuery(function($){
       } else {
         $('#showHashtags').attr('style', 'display: none;');
         
-        if ( dyi_radio_previous_value === 'hashtag' ) { dyi_radio_previous_value = 'recent' }
+        if ( dyi_radio_previous_value === 'hashtag' ) { dyi_radio_previous_value = 'recent'; }
         dyi_radios.filter('[value='+dyi_radio_previous_value+']').prop('checked', true);
       }
     });
   }
-  $('.yinstagram-colorbox').live('change', function(){
+  $(document.body).on('change', '.yinstagram-colorbox' ,function(){
     if(this.checked) {
       $('.yinstagram-colorbox-options').prop('disabled', false);
     } else {

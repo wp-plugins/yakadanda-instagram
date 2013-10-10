@@ -2,9 +2,9 @@
 Contributors: Yakadanda.com
 Donate link: http://www.yakadanda.com/
 Tags: images, pictures, photos, instagram, yakadanda
-Requires at least: 3.4.2
-Tested up to: 3.5.1
-Stable tag: 0.0.50
+Requires at least: 3.5
+Tested up to: 3.6.1
+Stable tag: 0.0.51
 License: GPLv2 or later
 
 A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
@@ -43,6 +43,9 @@ Not connected or possibility you have entered tags that does not exist in Instag
 
 == Changelog ==
 
+= 0.0.51 =
+* Updated deprecated function, http://wordpress.org/support/topic/bug-scriptjs-using-deprecatedremoved-jquery-function
+
 = 0.0.50 =
 * Changed the way instagram images loaded on shorcode and widget
 * Improved authorization and authentication to Instagram API
@@ -75,6 +78,9 @@ Not connected or possibility you have entered tags that does not exist in Instag
 * Updated to fit with WordPress 3.5 and Twenty Twelve theme
 
 == Upgrade Notice ==
+
+= 0.0.51 =
+* Updated deprecated code on script.js
 
 = 0.0.50 =
 * Removed bugs on display options page, and posted data functions
