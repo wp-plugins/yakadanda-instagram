@@ -9,11 +9,13 @@ class YInstagram_Widget extends WP_Widget {
   }
 
   public function widget($args, $instance) {
-    YInstagram_Widget::colorbox_enqueue_style($instance);
-    add_action('wp_enqueue_scripts', 'YInstagram_Widget::colorbox_enqueue_style');
+    if ($instance['colorbox']) {
+      YInstagram_Widget::colorbox_enqueue_style($instance);
+      add_action('wp_enqueue_scripts', 'YInstagram_Widget::colorbox_enqueue_style');
+    }
 
     extract($args);
-    $title = apply_filters('widget_title', empty($instance['title']) ? __('Yakadanda Instagram') : $instance['title'], $instance, $this->id_base);
+    $title = apply_filters('widget_title', empty($instance['title']) ? null : $instance['title'], $instance, $this->id_base);
 
     $instance['limit'] = isset($instance['limit']) ? $instance['limit'] : '6';
     $instance['size'] = isset($instance['size']) ? $instance['size'] : 'thumbnail';
@@ -25,8 +27,7 @@ class YInstagram_Widget extends WP_Widget {
 
     echo $before_widget;
 
-    if (!empty($title))
-      echo $before_title . $title . $after_title;
+    if (!empty($title)) echo $before_title . $title . $after_title;
 
     $display_options = (get_option('yinstagram_display_options')) ? get_option('yinstagram_display_options') : array(
         'height' => 300,
@@ -47,9 +48,7 @@ class YInstagram_Widget extends WP_Widget {
       }
       if (!empty($data)) {
         $i = 0;
-        $colorbox = array('status' => 'off', 'onclick' => 'return false;', 'cursor' => 'default');
         if ($instance['colorbox']) {
-          $colorbox = array('status' => 'on', 'onclick' => null, 'cursor' => 'pointer');
           echo '<style type="text/css">';
           echo '.yinstagram_grid li a:hover img {';
           echo 'opacity:0.5; filter:alpha(opacity=50);';
@@ -57,7 +56,7 @@ class YInstagram_Widget extends WP_Widget {
           echo '</style>';
         }
 
-        echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $colorbox['status'], 'colorbox_effect' => $instance['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
+        echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $instance['colorbox'], 'colorbox_effect' => $instance['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
 
         echo '<ul class="yinstagram_grid">';
 
@@ -70,12 +69,14 @@ class YInstagram_Widget extends WP_Widget {
 
           $images[] = array('id' => $datum->id, 'src' => $img_src);
 
-          echo '<li><a class="yinstagram-cbox" style="cursor:' . $colorbox['cursor'] . ';" onclick="' . $colorbox['onclick'] . '" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+          echo '<li>';
 
-          //echo '<img src="' . $img_src . '" ' . $style . '>';
+          if ($instance['colorbox']) echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+          else echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+
           echo '<span class="load_w-' . $datum->id . '" ' . $style . '></span>';
-
           echo '</a></li>';
+          
           $i++;
           if ($i == $instance['limit'])
             break;
