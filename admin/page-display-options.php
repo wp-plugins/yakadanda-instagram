@@ -48,18 +48,6 @@
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row">
-            <label for="size">Image Size</label>
-          </th>
-          <td>
-            <select id="size" name="ydo[size]">
-              <option value="thumbnail" <?php echo (($data['size'] == 'thumbnail') || !isset($data['size'])) ? 'selected="selected"' : null; ?>>Thumbnail&nbsp;</option>
-              <option value="low_resolution" <?php echo ($data['size'] == 'low_resolution') ? 'selected="selected"' : null; ?>>Low Resolution&nbsp;</option>
-              <option value="standard_resolution" <?php echo ($data['size'] == 'standard_resolution') ? 'selected="selected"' : null; ?>>Standard Resolution&nbsp;</option>
-            </select>
-          </td>
-        </tr>
-        <tr valign="top">
           <th scope="row">Social Links</th>
           <td>
             <fieldset>

@@ -17,7 +17,7 @@
           <td>
             <input type="text" name="client_id" id="client_id" class="regular-text" value="<?php echo isset($data['client_id']) ? $data['client_id'] : null; ?>"/>&nbsp;
             <?php if (isset($data['access_token']) && isset($data['user'])): ?>
-              <strong style="color: green;" title="<?php echo $data['full_name']; ?>">Connected, logged in as <?php echo $data['user']->username; ?>.</strong>
+              <strong style="color: green;" title="<?php echo $data['user']->full_name; ?>">Connected, logged in as <?php echo $data['user']->username; ?>.</strong>
             <?php else: ?>
               <strong style="color: red;">Not Connected.</strong>
             <?php endif; ?>
@@ -34,31 +34,31 @@
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row">Display Your Images</th>
+          <th scope="row">Display Images</th>
           <td>
-            <input name="dyi_radio_previous_value" type="hidden" value="<?php echo ($display_your_images) ? $display_your_images : 'recent'; ?>"/>
+            <input name="di_radio_previous_value" type="hidden" value="<?php echo $data['display_your_images']; ?>"/>
             <fieldset>
               <legend class="screen-reader-text">
                 <span>Display Your Images</span>
               </legend>
               <label title="Get the most recent media published by a user.">
-                <input type="radio" value="recent" name="display_your_images" <?php echo ( ($display_your_images == 'recent') || !$display_your_images ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="recent" name="display_images" <?php echo ( $data['display_your_images'] == 'recent' ) ? 'checked="checked"' : null; ?>>
                 <span>Recent</span>
               </label>
               <br>
               <label title="See the authenticated user's feed.">
-                <input type="radio" value="feed" name="display_your_images" <?php echo ( ($display_your_images == 'feed') ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="feed" name="display_images" <?php echo ( ($data['display_your_images'] == 'feed') ) ? 'checked="checked"' : null; ?>>
                 <span>Feed</span>
               </label>
               <br>
               <label title="See the authenticated user's list of media they've liked.">
-                <input type="radio" value="liked" name="display_your_images" <?php echo ( ($display_your_images == 'liked') ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="liked" name="display_images" <?php echo ( ($data['display_your_images'] == 'liked') ) ? 'checked="checked"' : null; ?>>
                 <span>Liked</span>
               </label>
               <br>
-              <label title="No">
-                <input type="radio" value="hashtag" name="display_your_images" <?php echo ( ($display_your_images == 'hashtag') && $display_your_images ) ? 'checked="checked"' : null; ?>>
-                <span>No</span>
+              <label title="Tags">
+                <input type="radio" value="hashtag" name="display_images" <?php echo ( ($data['display_your_images'] == 'hashtag') && $data['display_your_images'] ) ? 'checked="checked"' : null; ?>>
+                <span>Tags</span>
               </label>
             </fieldset>
           </td>
@@ -71,21 +71,52 @@
                 <span>Display The Following Hashtags</span>
               </legend>
               <label title="Yes">
-                <input type="radio" value="1" name="option_display_the_following_hashtags" <?php echo ($option_display_the_following_hashtags == '1') ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="1" name="option_display_the_following_hashtags" <?php echo ($data['option_display_the_following_hashtags'] == '1') ? 'checked="checked"' : null; ?>>
                 <span>Yes</span>
               </label>
               <br>
               <label title="No">
-                <input type="radio" value="0" name="option_display_the_following_hashtags" <?php echo ( ($option_display_the_following_hashtags == '0') || !$option_display_the_following_hashtags ) ? 'checked="checked"' : null; ?>>
+                <input type="radio" value="0" name="option_display_the_following_hashtags" <?php echo ( $data['option_display_the_following_hashtags'] == '0' ) ? 'checked="checked"' : null; ?>>
                 <span>No</span>
               </label>
-              <div id="showHashtags" style="<?php echo ($option_display_the_following_hashtags) ? 'display: block;' : 'display: none;'; ?>">
+              <div id="showHashtags" style="<?php echo ($data['option_display_the_following_hashtags']) ? 'display: block;' : 'display: none;'; ?>">
                 <p>
                   <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="10" name="display_the_following_hashtags"><?php echo isset($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
                 </p>
                 <p class="description">Hashtags separated by comma, e.g. <em style="font-style:normal; color: #464646;">#buildings, #graffiti, #art</em> etc.</p>
               </div>
             </fieldset>
+          </td>
+        </tr>
+        <tr valign="top">
+          <th scope="row">
+            <label for="size">Image Size</label>
+          </th>
+          <td>
+            <select id="size" name="size">
+              <option value="thumbnail" <?php echo (($data['size'] == 'thumbnail') || !isset($data['size'])) ? 'selected="selected"' : null; ?>>Thumbnail&nbsp;</option>
+              <option value="low_resolution" <?php echo ($data['size'] == 'low_resolution') ? 'selected="selected"' : null; ?>>Low Resolution&nbsp;</option>
+              <option value="standard_resolution" <?php echo ($data['size'] == 'standard_resolution') ? 'selected="selected"' : null; ?>>Standard Resolution&nbsp;</option>
+            </select>
+          </td>
+        </tr>
+        <tr valign="top">
+          <th scope="row">
+            <label for="size">Number Of Images</label>
+          </th>
+          <td>
+            <select id="size" name="number_of_images">
+              <option value="1" <?php echo ($data['number_of_images'] == '1') ? 'selected="selected"' : null; ?>>less than or equal to 80 images&nbsp;</option>
+              <option value="2" <?php echo ($data['number_of_images'] == '2') ? 'selected="selected"' : null; ?>>less than or equal to 120 images&nbsp;</option>
+              <option value="3" <?php echo ($data['number_of_images'] == '3') ? 'selected="selected"' : null; ?>>less than or equal to 160 images&nbsp;</option>
+              <option value="4" <?php echo ($data['number_of_images'] == '4') ? 'selected="selected"' : null; ?>>less than or equal to 180 images&nbsp;</option>
+              <option value="5" <?php echo ($data['number_of_images'] == '5') ? 'selected="selected"' : null; ?>>less than or equal to 220 images&nbsp;</option>
+              <option value="6" <?php echo ($data['number_of_images'] == '6') ? 'selected="selected"' : null; ?>>less than or equal to 260 images&nbsp;</option>
+              <option value="7" <?php echo ($data['number_of_images'] == '7') ? 'selected="selected"' : null; ?>>less than or equal to 280 images&nbsp;</option>
+              <option value="8" <?php echo ($data['number_of_images'] == '8') ? 'selected="selected"' : null; ?>>less than or equal to 320 images&nbsp;</option>
+              <option value="9" <?php echo ($data['number_of_images'] == '9') ? 'selected="selected"' : null; ?>>less than or equal to 360 images&nbsp;</option>
+              <option value="10" <?php echo ($data['number_of_images'] == '10') ? 'selected="selected"' : null; ?>>less than or equal to 380 images&nbsp;</option>
+            </select>
           </td>
         </tr>
       </tbody>

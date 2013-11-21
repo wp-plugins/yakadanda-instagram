@@ -7,7 +7,7 @@ function yinstagram_register_menu_page() {
   // Call styles in admin
   add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_styles');
 
-  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_settings_page', network_home_url('wp-content/plugins/yakadanda-instagram/img/instagram-icon.png'), 205);
+  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_settings_page', network_home_url('wp-content/plugins/yakadanda-instagram/img/instagram-icon-16x16.png'), 205);
 
   $settings_page = add_submenu_page('yinstagram/settings.php', 'Settings', 'Settings', 'manage_options', 'yinstagram/settings.php', 'yinstagram_settings_page');
   add_action('load-' . $settings_page, 'yinstagram_settings_help_tab');
@@ -17,36 +17,41 @@ function yinstagram_register_menu_page() {
 }
 
 function yinstagram_settings_page() {
-  global $wpdb;
-
   if (!current_user_can('manage_options')) {
     wp_die(__('You do not have sufficient permissions to access this page.'));
   }
-
+  
   $data = array_merge((array) get_option('yinstagram_settings'), (array) get_option('yinstagram_access_token'));
-  $display_your_images = isset($data['display_your_images']) ? $data['display_your_images'] : null;
-  $option_display_the_following_hashtags = isset($data['option_display_the_following_hashtags']) ? $data['option_display_the_following_hashtags'] : null;
-
+  $display_options = get_option('yinstagram_display_options');
+  
+  // set default
+  $data['number_of_images'] = isset($data['number_of_images']) ? $data['number_of_images'] : '1';
+  
+  $data['size'] = isset($data['size']) ? $data['size'] : 'thumbnail';
+  $data['size'] = isset($display_options['size']) ? $display_options['size'] : $data['size'];
+  
+  $data['display_your_images'] = isset($data['display_your_images']) ? $data['display_your_images'] : 'recent';
+  $data['option_display_the_following_hashtags'] = isset($data['option_display_the_following_hashtags']) ? $data['option_display_the_following_hashtags'] : 0;
+  
   include dirname(__FILE__) . '/page-settings.php';
 }
 
 function yinstagram_display_options_page() {
-  if (!current_user_can('manage_options')) {
-    wp_die(__('You do not have sufficient permissions to access this page.'));
-  }
+  if (!current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
+  
   $response = null;
   if (isset($_POST["update_display_options"])) {
     $action = update_option('yinstagram_display_options', $_POST['ydo']);
-    $response = array('class' => 'error', 'msg' => 'Failed.');
-    if ($action)
-      $response = array('class' => 'updated', 'msg' => 'Display options changed.');
+    if ($action) $response = array('class' => 'updated', 'msg' => 'Display options changed.');
   }
+  
   $data = get_option('yinstagram_display_options');
-
+  
   $data['direction'] = isset($data['direction']) ? $data['direction'] : 'forwards';
   $data['size'] = isset($data['size']) ? $data['size'] : 'thumbnail';
+  $data['number_of_images'] = isset($data['number_of_images']) ? $data['number_of_images'] : '1';
   $data['display_social_links'] = isset($data['display_social_links']) ? $data['display_social_links'] : null;
-
+  
   include dirname(__FILE__) . '/page-display-options.php';
 }
 
@@ -104,5 +109,17 @@ function yinstagram_section_setup() {
 function yinstagram_section_shortcode() {
   $output = '<p><span>[yinstagram]</span></p>';
 
+  return $output;
+}
+
+function yinstagram_get_user_info( $auth ) {
+  $output = null;
+  
+  $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $auth['user']->id . '/?access_token=' . $auth['access_token']);
+  $responses = json_decode($responses);
+  
+  if ( $responses->meta->code == 200 )
+    $output = $responses->data;
+  
   return $output;
 }

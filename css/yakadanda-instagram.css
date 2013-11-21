@@ -44,12 +44,16 @@ Note all DIVs are generated and should not be hard-coded
   margin: 0;
   padding: 0;
   list-style: none;
+  list-style-position: outside;
+  list-style-type: none;
 }
 
 .simply-scroll-list li {
   padding: 0;
   margin: 0;
   list-style: none;
+  list-style-position: outside;
+  list-style-type: none;
 }
 
 .simply-scroll-list li img, .simply-scroll-list li span em {
@@ -230,15 +234,20 @@ Note all DIVs are generated and should not be hard-coded
 
 .widget ul.yinstagram_grid {
   padding: 0;
-  list-style: none;
   margin: 20px auto 0;
   width: 100%;  
+  list-style: none;
+  list-style-type: none;
+  list-style-position: outside;
 }
 
 .yinstagram_grid li {
   float: left;
   padding: 0;
   margin: 0 5px 10px 5px;
+  list-style: none;
+  list-style-type: none;
+  list-style-position: outside;
 }
 
 .yinstagram_grid li a {
@@ -270,3 +279,127 @@ Note all DIVs are generated and should not be hard-coded
 
 * html .yinstagram_grid { zoom: 1; } /* IE6 */
 *:first-child+html .yinstagram_grid { zoom: 1; } /* IE7 */
+
+/* profile widget */
+div .widget_yinstagram .yinstagram_profile {
+  text-align: center;
+  margin: 0 auto;
+  background: #FFF;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+
+div .widget_yinstagram .yinstagram_profile .circular {
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+  margin: -35px 0 5px 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+div .widget_yinstagram .yinstagram_profile .info {
+  border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 0 0 3px 3px;
+  -moz-border-radius: 0 0 3px 3px;
+  border-right: 1px #E8E8E8 solid;
+  border-bottom: 1px #E8E8E8 solid;
+  border-left: 1px #E8E8E8 solid;
+}
+
+div .widget_yinstagram .yinstagram_profile p {
+  line-height: 15px;
+  margin: 5px 10px 5px 10px;
+  color: #757575;
+}
+
+div .widget_yinstagram .yinstagram_profile p.bio {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.counts {
+  color: #757575;
+  padding: 5px 10px 10px 10px;
+  font-weight: bold;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.counts li {
+  display: inline-block;
+  list-style: none;
+  list-style-type: none;
+  list-style-position: outside;
+  font-size: 11px;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.counts li:first-child,
+div .widget_yinstagram .yinstagram_profile ul.counts li:nth-child(2) {
+  margin-right: 5px;
+}
+
+div .widget_yinstagram .yinstagram_profile p.fullname a:link,
+div .widget_yinstagram .yinstagram_profile p.fullname a:visited,
+div .widget_yinstagram .yinstagram_profile p.fullname a:hover,
+div .widget_yinstagram .yinstagram_profile p.fullname a:active {
+  text-decoration: none;
+  font-size: 18px;
+  color: #262626;
+}
+
+div .widget_yinstagram .yinstagram_profile p.website a:link,
+div .widget_yinstagram .yinstagram_profile p.website a:visited,
+div .widget_yinstagram .yinstagram_profile p.website a:hover,
+div .widget_yinstagram .yinstagram_profile p.website a:active {
+  text-decoration: none;
+  font-size: 11px;
+  color: #b0b7bc;
+}
+
+div .widget_yinstagram .yinstagram_profile .header {
+  position: relative;
+}
+
+div .widget_yinstagram .yinstagram_profile .header .icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -16px 0 0 -16px;
+  box-shadow: none;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images {
+  padding: 0;
+  margin: 0;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li {
+  font-size: 0;
+  line-height: 0;
+  list-style-position: outside;
+  list-style: none;
+  list-style-type: none;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li img {
+  padding: 0;
+  margin: 0;
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  box-shadow: none;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:first-child {
+  border-radius: 3px 0 0 0;
+  -webkit-border-radius: 3px 0 0 0;
+  -moz-border-radius: 3px 0 0 0;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:nth-child(4) {
+  border-radius: 0 3px 0 0;
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+}

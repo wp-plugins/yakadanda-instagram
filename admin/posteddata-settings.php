@@ -9,23 +9,25 @@ if (isset($_GET['logout'])) {
 
   $data = array_merge( (array) get_option('yinstagram_settings'), (array) get_option('yinstagram_access_token') );
 
-  if (($_POST['display_your_images'] != 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1')) {
+  if (($_POST['display_images'] != 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1')) {
     $_POST['option_display_the_following_hashtags'] = '0';
   }
-  if (($_POST['display_your_images'] == 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '0')) {
-    $_POST['display_your_images'] = 'recent';
+  if (($_POST['display_images'] == 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '0')) {
+    $_POST['display_images'] = 'recent';
   }
-  if (($_POST['display_your_images'] == 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1') && empty($_POST['display_the_following_hashtags'])) {
-    $_POST['display_your_images'] = 'recent';
+  if (($_POST['display_images'] == 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1') && empty($_POST['display_the_following_hashtags'])) {
+    $_POST['display_images'] = 'recent';
     $_POST['option_display_the_following_hashtags'] = '0';
   }
 
   $value = array(
       'client_id' => $_POST['client_id'],
       'client_secret' => $_POST['client_secret'],
-      'display_your_images' => $_POST['display_your_images'],
+      'display_your_images' => $_POST['display_images'],
       'option_display_the_following_hashtags' => $_POST['option_display_the_following_hashtags'],
-      'display_the_following_hashtags' => $_POST['display_the_following_hashtags']
+      'display_the_following_hashtags' => $_POST['display_the_following_hashtags'],
+      'size' => $_POST['size'],
+      'number_of_images' => $_POST['number_of_images']
   );
 
   $option = 'yinstagram_settings';
