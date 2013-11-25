@@ -7,11 +7,11 @@ Tested up to: 3.7.1
 Stable tag: 0.0.70
 License: GPLv2 or later
 
-A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
+A Wordpress plugin that pulls in Instagram images of user or hashtags.
 
 == Description ==
 
-A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
+A Wordpress plugin that pulls in Instagram images of user or hashtags.
 
 = Features =
 * Display your images or display other images in Instagram based on tags
