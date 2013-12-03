@@ -20,6 +20,7 @@ class YInstagram_Widget extends WP_Widget {
     // set default
     $instance['type'] = isset($instance['type']) ? $instance['type'] : 'images';
     $instance['display_images'] = isset($instance['display_images']) ? $instance['display_images'] : 'recent';
+    $instance['username_of_user_id'] = isset($instance['username_of_user_id']) ? $instance['username_of_user_id'] : null;
     $instance['custom_size'] = isset($instance['custom_size']) ? $instance['custom_size'] : null;
     $instance['limit'] = isset($instance['limit']) ? $instance['limit'] : '6';
     
@@ -38,7 +39,7 @@ class YInstagram_Widget extends WP_Widget {
       if ( $instance['display_images'] == 'tags') {
         $data = yinstagram_get_tags_images($auth, $instance['hashtags'], null, false);
       } else {
-        $data = yinstagram_get_own_images($auth, $instance['display_images'], null, false);
+        $data = yinstagram_get_own_images($auth, $instance['display_images'], null, $instance['username_of_user_id'], false);
       }
       
       if ( $instance['type'] == 'profile' ) {
@@ -139,6 +140,7 @@ class YInstagram_Widget extends WP_Widget {
     $instance['title'] = strip_tags($new_instance['title']);
     $instance['type'] = strip_tags($new_instance['type']);
     $instance['display_images'] = strip_tags($new_instance['display_images']);
+    $instance['username_of_user_id'] = strip_tags($new_instance['username_of_user_id']);
     $instance['hashtags'] = strip_tags($new_instance['hashtags']);
     $instance['size'] = strip_tags($new_instance['size']);
     $instance['custom_size'] = strip_tags($new_instance['custom_size']);
@@ -151,12 +153,15 @@ class YInstagram_Widget extends WP_Widget {
   }
 
   public function form($instance) {
+    $auth = get_option('yinstagram_access_token');
     $title = __(null, 'text_domain');
     if (isset($instance['title'])) $title = $instance['title'];
     $type = 'images';
     if (isset($instance['type'])) $type = $instance['type'];
     $display_images = 'recent';
     if (isset($instance['display_images'])) $display_images = $instance['display_images'];
+    $username_of_user_id = null;
+    if (isset($instance['username_of_user_id'])) $username_of_user_id = $instance['username_of_user_id'];
     $hashtags = null;
     if (isset($instance['hashtags'])) $hashtags = $instance['hashtags'];
     $size = 'thumbnail';
@@ -191,6 +196,10 @@ class YInstagram_Widget extends WP_Widget {
         <option value="liked" <?php echo ($display_images == 'liked') ? 'selected="selected"' : null; ?>>Liked&nbsp;</option>
         <option value="tags" <?php echo ($display_images == 'tags') ? 'selected="selected"' : null; ?>>Tags&nbsp;</option>
       </select>
+    </p>
+    <p id="<?php echo $this->get_field_id('recent-container'); ?>" <?php echo ($display_images != 'recent') ? 'style="display: none;"' : null; ?>>
+      <label for="<?php echo $this->get_field_id('username_of_user_id'); ?>"><?php _e('Username:'); ?></label> 
+      <input class="widefat" id="<?php echo $this->get_field_id('username_of_user_id'); ?>" name="<?php echo $this->get_field_name('username_of_user_id'); ?>" type="text" value="<?php echo esc_attr($username_of_user_id); ?>" placeholder="<?php echo isset( $auth['user']->username ) ? $auth['user']->username : null; ?>"/>
     </p>
     <p id="<?php echo $this->get_field_id('hashtags-container'); ?>" <?php echo ($display_images != 'tags') ? 'style="display: none;"' : null; ?>>
       <label for="<?php echo $this->get_field_id('hashtags'); ?>"><?php _e('Hashtags (separated by comma):'); ?></label> 

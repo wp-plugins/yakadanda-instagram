@@ -17,7 +17,7 @@
           <td>
             <input type="text" name="client_id" id="client_id" class="regular-text" value="<?php echo isset($data['client_id']) ? $data['client_id'] : null; ?>"/>&nbsp;
             <?php if (isset($data['access_token']) && isset($data['user'])): ?>
-              <strong style="color: green;" title="<?php echo $data['user']->full_name; ?>">Connected, logged in as <?php echo $data['user']->username; ?>.</strong>
+              <strong id="connected" style="color: green;" title="<?php echo $data['user']->full_name; ?>">Connected, logged in as <?php echo $data['user']->username; ?>.</strong>
             <?php else: ?>
               <strong style="color: red;">Not Connected.</strong>
             <?php endif; ?>
@@ -63,23 +63,32 @@
             </fieldset>
           </td>
         </tr>
-        <tr valign="top">
+        <tr valign="top" id="showUsername" style="<?php echo ( $data['display_your_images'] != 'recent' ) ? 'display: none;' : ''; ?>">
+          <th scope="row">
+            <label for="username_of_user_id">Username</label>
+          </th>
+          <td>
+            <input type="text" name="username_of_user_id" id="username_of_user_id" class="regular-text" value="<?php echo isset($data['username_of_user_id']) ? $data['username_of_user_id'] : null; ?>" placeholder="<?php echo isset( $data['user']->username ) ? $data['user']->username : null; ?>"/>
+            <p class="description">Get the most recent images published by a username. Leave blank to used your username.</p>
+          </td>
+        </tr>
+        <tr valign="top" id="showHashtags" style="<?php echo ($data['option_display_the_following_hashtags']) ? '' : 'display: none;'; ?>">
           <th scope="row">Display The Following Hashtags</th>
           <td>
             <fieldset>
               <legend class="screen-reader-text">
                 <span>Display The Following Hashtags</span>
               </legend>
-              <label title="Yes">
+              <label title="Yes" style="display: none;">
                 <input type="radio" value="1" name="option_display_the_following_hashtags" <?php echo ($data['option_display_the_following_hashtags'] == '1') ? 'checked="checked"' : null; ?>>
                 <span>Yes</span>
               </label>
-              <br>
-              <label title="No">
+              <!-- <br> -->
+              <label title="No" style="display: none;">
                 <input type="radio" value="0" name="option_display_the_following_hashtags" <?php echo ( $data['option_display_the_following_hashtags'] == '0' ) ? 'checked="checked"' : null; ?>>
                 <span>No</span>
               </label>
-              <div id="showHashtags" style="<?php echo ($data['option_display_the_following_hashtags']) ? 'display: block;' : 'display: none;'; ?>">
+              <div>
                 <p>
                   <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="10" name="display_the_following_hashtags"><?php echo isset($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
                 </p>

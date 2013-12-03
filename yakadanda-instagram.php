@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
-  Version: 0.0.70
+  Version: 0.0.80
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -27,7 +27,7 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.0.70');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.0.80');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());

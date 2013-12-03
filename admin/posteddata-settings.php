@@ -19,7 +19,7 @@ if (isset($_GET['logout'])) {
     $_POST['display_images'] = 'recent';
     $_POST['option_display_the_following_hashtags'] = '0';
   }
-
+  
   $value = array(
       'client_id' => $_POST['client_id'],
       'client_secret' => $_POST['client_secret'],
@@ -27,9 +27,10 @@ if (isset($_GET['logout'])) {
       'option_display_the_following_hashtags' => $_POST['option_display_the_following_hashtags'],
       'display_the_following_hashtags' => $_POST['display_the_following_hashtags'],
       'size' => $_POST['size'],
-      'number_of_images' => $_POST['number_of_images']
+      'number_of_images' => $_POST['number_of_images'],
+      'username_of_user_id' => $_POST['username_of_user_id']
   );
-
+  
   $option = 'yinstagram_settings';
   update_option($option, $value);
 

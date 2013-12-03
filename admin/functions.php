@@ -123,3 +123,19 @@ function yinstagram_get_user_info( $auth ) {
   
   return $output;
 }
+
+function yinstagram_get_user_id($auth, $username = null) {
+  $id = null;
+  
+  if ($username) {
+    $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/search?q=' . $username . '&access_token=' . $auth['access_token']);
+    
+    $responses = json_decode($responses);
+    
+    if ( $responses->meta->code == 200 ) {
+      if ( ! empty($responses->data) ) $id = $responses->data[0]->id;
+    }
+  }
+  
+  return $id;
+}

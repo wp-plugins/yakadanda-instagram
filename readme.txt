@@ -4,14 +4,14 @@ Donate link: http://www.yakadanda.com/
 Tags: images, pictures, photos, instagram, yakadanda
 Requires at least: 3.6
 Tested up to: 3.7.1
-Stable tag: 0.0.70
+Stable tag: 0.0.80
 License: GPLv2 or later
 
-A Wordpress plugin that pulls in Instagram images based on user or hashtags.
+A Wordpress plugin that pulls in Instagram images of user or hashtags.
 
 == Description ==
 
-A Wordpress plugin that pulls in Instagram images based on user or hashtags.
+A Wordpress plugin that pulls in Instagram images of user or hashtags.
 
 = Features =
 * Display your images or display other images in Instagram based on tags
@@ -40,8 +40,14 @@ Not connected or possibility you have entered tags that does not exist in Instag
 
 == Screenshots ==
 
+1. Scrolling images using shortcode
+2. Images widget
+3. Profile widget
 
 == Changelog ==
+
+= 0.0.80 =
+* Expanded recent Instagram images feature
 
 = 0.0.70 =
 * Updated settings page and display options page
@@ -89,6 +95,9 @@ Not connected or possibility you have entered tags that does not exist in Instag
 * Updated to fit with WordPress 3.5 and Twenty Twelve theme
 
 == Upgrade Notice ==
+
+= 0.0.80 =
+* -
 
 = 0.0.70 =
 * Removed failed response on display options page
