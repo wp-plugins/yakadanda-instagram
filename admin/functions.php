@@ -124,10 +124,10 @@ function yinstagram_get_user_info( $auth ) {
   return $output;
 }
 
-function yinstagram_get_user_id($auth, $username = null) {
+function yinstagram_get_user_id($auth, $username) {
   $id = null;
   
-  if ($username) {
+  if ($username != 'self') {
     $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/search?q=' . $username . '&access_token=' . $auth['access_token']);
     
     $responses = json_decode($responses);
@@ -138,4 +138,18 @@ function yinstagram_get_user_id($auth, $username = null) {
   }
   
   return $id;
+}
+
+function yinstagram_get_relationships($auth) {
+  $output = null;
+  
+  //  Get the list of users this user is followed by. 
+  $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $auth['user']->id . '/followed-by?access_token=' . $auth['access_token']);
+  
+  $responses = json_decode($responses);
+  
+  if ( $responses->meta->code == 200 )
+    $output = $responses;
+  
+  return $output;
 }

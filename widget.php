@@ -36,98 +36,101 @@ class YInstagram_Widget extends WP_Widget {
     if (isset($auth['access_token']) && isset($auth['user'])) {
       
       $data = null;
-      if ( $instance['display_images'] == 'tags') {
-        $data = yinstagram_get_tags_images($auth, $instance['hashtags'], null, false);
-      } else {
-        $data = yinstagram_get_own_images($auth, $instance['display_images'], null, $instance['username_of_user_id'], false);
+      switch($instance['display_images']) {
+        case 'tags':
+          $data = yinstagram_get_tags_images($auth, $instance['hashtags'], null, false);
+          break;
+        default:
+          $data = yinstagram_get_own_images($auth, $instance['display_images'], 1, $instance['username_of_user_id'], false);
       }
       
-      if ( $instance['type'] == 'profile' ) {
-        /*begin profile type*/
-        $u_info = yinstagram_get_user_info($auth);
-        
-        if ( $u_info && !empty($data) ) {
-          echo '<div class="yinstagram_profile">';
-          
-          $i = $j = 0;
-          echo '<div class="header"><ul class="images">';
-          foreach ($data as $datum) {
-            $i++; $j++;
-            
-            echo ($i == 1) ? '<li>' : null;
-            
-            echo '<img src="' . $datum->images->thumbnail->url . '"/>';
-            
-            echo ($i == 4) ? '</li>' : null;
-            $i = ($i == 4) ? 0 : $i;
-            
-            if ($j == 12) break;
+      switch($instance['type']) {
+        case 'profile':
+          /*begin profile type*/
+          $u_info = yinstagram_get_user_info($auth);
+
+          if ( $u_info && !empty($data) ) {
+            echo '<div class="yinstagram_profile">';
+
+            $i = $j = 0;
+            echo '<div class="header"><ul class="images">';
+            foreach ($data as $datum) {
+              $i++; $j++;
+
+              echo ($i == 1) ? '<li>' : null;
+
+              echo '<img src="' . $datum->images->thumbnail->url . '"/>';
+
+              echo ($i == 4) ? '</li>' : null;
+              $i = ($i == 4) ? 0 : $i;
+
+              if ($j == 12) break;
+            }
+
+            echo ( ($j != 4) || ($j != 8) || ($j != 12)) ? '</li>' : null;
+            echo '</ul><img class="icon" alt="instagram-icon" src="' . YINSTAGRAM_PLUGIN_URL . '/img/instagram-icon-32x32.png"></div>';
+
+            echo '<div class="info"><img class="circular" title="' . $u_info->full_name . '" alt="' . $u_info->username . '" src="' . $u_info->profile_picture . '">';
+            echo '<p class="fullname" title="' . $u_info->username . '"><a href="http://instagram.com/' . $u_info->username . '" target="_blank">' . $u_info->full_name . '</a></p>';
+            if ( $u_info->website ) echo '<p class="website"><a href="' . $u_info->website . '" target="_blank">' . preg_replace('#^https?://#', '', $u_info->website) . '</a></p>';
+            if ( $u_info->bio ) echo '<p class="bio">' . $u_info->bio . '</p>';
+
+            echo '<ul class="counts"><li>Posts: ' . $u_info->counts->media . '</li>';
+            echo '<li>Followers: ' . $u_info->counts->followed_by . '</li>';
+            echo '<li>Following: ' . $u_info->counts->follows . '</li></ul>';
+            echo '</div></div>';
+
+          } else {
+            echo '<p>Request timed out.</p>';
           }
-          
-          echo ( ($j != 4) || ($j != 8) || ($j != 12)) ? '</li>' : null;
-          echo '</ul><img class="icon" alt="instagram-icon" src="' . YINSTAGRAM_PLUGIN_URL . '/img/instagram-icon-32x32.png"></div>';
-          
-          echo '<div class="info"><img class="circular" title="' . $u_info->full_name . '" alt="' . $u_info->username . '" src="' . $u_info->profile_picture . '">';
-          echo '<p class="fullname" title="' . $u_info->username . '"><a href="http://instagram.com/' . $u_info->username . '" target="_blank">' . $u_info->full_name . '</a></p>';
-          if ( $u_info->website ) echo '<p class="website"><a href="' . $u_info->website . '" target="_blank">' . preg_replace('#^https?://#', '', $u_info->website) . '</a></p>';
-          if ( $u_info->bio ) echo '<p class="bio">' . $u_info->bio . '</p>';
+          /*end of profile type*/
+          break;
+        default:
+          /*begin images type*/
+          if (!empty($data)) {
+            $i = 0;
+            if ($instance['colorbox']) {
+              echo '<style type="text/css">';
+              echo '.yinstagram_grid li a:hover img {';
+              echo 'opacity:0.5; filter:alpha(opacity=50);';
+              echo '}';
+              echo '</style>';
+            }
 
-          echo '<ul class="counts"><li>Posts: ' . $u_info->counts->media . '</li>';
-          echo '<li>Followers: ' . $u_info->counts->followed_by . '</li>';
-          echo '<li>Following: ' . $u_info->counts->follows . '</li></ul>';
-          echo '</div></div>';
-          
-        } else {
-          echo '<p>Request timed out.</p>';
-        }
-        /*end of profile type*/
-      } else {
-        /*begin images type*/
-        if (!empty($data)) {
-          $i = 0;
-          if ($instance['colorbox']) {
-            echo '<style type="text/css">';
-            echo '.yinstagram_grid li a:hover img {';
-            echo 'opacity:0.5; filter:alpha(opacity=50);';
-            echo '}';
-            echo '</style>';
+            echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $instance['colorbox'], 'colorbox_effect' => $instance['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
+
+            echo '<ul class="yinstagram_grid">';
+
+            foreach ($data as $datum) {
+              $img_src = $datum->images->thumbnail->url;
+              if ($instance['size'] == 'low_resolution')
+                $img_src = $datum->images->low_resolution->url;
+              elseif ($instance['size'] == 'standard_resolution')
+                $img_src = $datum->images->standard_resolution->url;
+
+              $images[] = array('id' => $datum->id, 'src' => $img_src);
+
+              echo '<li>';
+
+              if ($instance['colorbox']) echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+              else echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+
+              echo '<span class="load_w-' . $datum->id . '" ' . $style . '></span>';
+              echo '</a></li>';
+
+              $i++;
+              if ($i == $instance['limit'])
+                break;
+            }
+            echo '</ul>';
+
+            echo '<textarea id="yinstagram-widget-images" name="yinstagram-widget-images" style="display: none;">' . json_encode($images) . '</textarea>';
+
+          } else {
+            echo '<p>Request timed out, or no have ' . $instance['display_images'] . ' images.</p>';
           }
-          
-          echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $instance['colorbox'], 'colorbox_effect' => $instance['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
-          
-          echo '<ul class="yinstagram_grid">';
-          
-          foreach ($data as $datum) {
-            $img_src = $datum->images->thumbnail->url;
-            if ($instance['size'] == 'low_resolution')
-              $img_src = $datum->images->low_resolution->url;
-            elseif ($instance['size'] == 'standard_resolution')
-              $img_src = $datum->images->standard_resolution->url;
-
-            $images[] = array('id' => $datum->id, 'src' => $img_src);
-
-            echo '<li>';
-
-            if ($instance['colorbox']) echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
-            else echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
-
-            echo '<span class="load_w-' . $datum->id . '" ' . $style . '></span>';
-            echo '</a></li>';
-
-            $i++;
-            if ($i == $instance['limit'])
-              break;
-          }
-          echo '</ul>';
-          
-          echo '<textarea id="yinstagram-widget-images" name="yinstagram-widget-images" style="display: none;">' . json_encode($images) . '</textarea>';
-          
-        } else {
-          echo '<p>Request timed out, or no have ' . $instance['display_images'] . ' images.</p>';
-        }
-        /*end of images type*/
+          /*end of images type*/
       }
-      
     } else {
       echo '<p>Not Connected.</p>';
     }

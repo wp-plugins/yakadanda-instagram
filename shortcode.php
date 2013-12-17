@@ -14,8 +14,7 @@ function yinstagram_shortcode($atts) {
         $data = yinstagram_get_tags_images($auth, $yinstagram['display_the_following_hashtags'], $yinstagram['number_of_images']);
         break;
       default:
-        $data = yinstagram_get_own_images($auth, $yinstagram['display_your_images'], $yinstagram['number_of_images'], $yinstagram['username_of_user_id']);
-        break;
+        $data = yinstagram_get_own_images($auth, $yinstagram['display_your_images'], $yinstagram['number_of_images'], $yinstagram['username_of_user_id'], true);
     }
     
     if (!empty($data)) {
@@ -112,18 +111,10 @@ function yinstagram_extract_hashtags($data) {
   return explode(',', $output);
 }
 
-function yinstagram_get_own_images($auth, $display_images, $number_of_images = 1, $username = null, $is_shortcode = true) {
+function yinstagram_get_own_images($auth, $display_images, $number_of_images, $username, $is_shortcode) {
   $responses = null;
   
   switch ($display_images) {
-    case 'recent':
-      if ($username) {
-        $user_id = yinstagram_get_user_id($auth, $username);
-        if ($user_id) $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $auth['access_token'] . '&count=33');
-      } else {
-        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $auth['access_token'] . '&count=33');
-      }
-      break;
     case 'feed':
       //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
       $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $auth['access_token'] . '&count=33');
@@ -132,6 +123,18 @@ function yinstagram_get_own_images($auth, $display_images, $number_of_images = 1
       //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
       $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $auth['access_token'] . '&count=33');
       break;
+    default:
+      $username = ($username) ? $username: 'self';
+      switch ($username) {
+        case 'self':
+          //https://api.instagram.com/v1/users/3/media/recent/?access_token=ACCESS-TOKEN
+          $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $auth['access_token'] . '&count=33');
+          break;
+        default:
+          $user_id = yinstagram_get_user_id($auth, $username);
+          if ($user_id)
+            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $auth['access_token'] . '&count=33');
+      }
   }
   
   $responses = json_decode($responses);

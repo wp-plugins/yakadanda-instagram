@@ -1,9 +1,9 @@
 <div class="wrap">
   <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div>
   <h2>Settings</h2>
-  <?php if (isset($_GET['msg'])): ?>
-    <div class="error">
-      <p><?php echo $_GET['msg']; ?></p>
+  <?php if (isset($_COOKIE['yinstagram_response'])): $msg = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response'])); ?>
+    <div class="<?php echo $msg['class']; ?>">
+      <p><?php echo $msg['msg']; ?></p>
     </div>
   <?php endif; ?>
   <form action="<?php echo YINSTAGRAM_PLUGIN_URL . '/admin/posteddata-settings.php'; ?>" method="post" enctype="multipart/form-data">
