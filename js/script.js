@@ -168,6 +168,24 @@ jQuery(function($){
       $('#widget-yinstagram-'+widgetID+'-effect').prop('disabled', true);
     }
   });
+  $('#yinstagram-dismiss').click(function(e){
+    var data = {
+      action: 'yinstagram_dismiss'
+    };
+    $.post(ajax_object.ajax_url, data, function(response) {
+		$('.yinstagram-notice').remove();
+	});
+    e.preventDefault();
+  });
+  $('#yinstagram-logout').click(function(e){
+    var data = {
+      action: 'yinstagram_logout'
+    };
+    $.post(ajax_object.ajax_url, data, function(response) {
+      location.reload();
+	});
+    e.preventDefault();
+  });
   /* end of backend */
 });
 

@@ -1,12 +1,12 @@
 <div class="wrap">
   <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div>
   <h2>Settings</h2>
-  <?php if (isset($_COOKIE['yinstagram_response'])): $msg = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response'])); ?>
-    <div class="<?php echo $msg['class']; ?>">
-      <p><?php echo $msg['msg']; ?></p>
+  <?php if ($message): ?>
+    <div class="<?php echo $message['class']; ?>">
+      <p><?php echo $message['msg']; ?></p>
     </div>
-  <?php endif; ?>
-  <form action="<?php echo YINSTAGRAM_PLUGIN_URL . '/admin/posteddata-settings.php'; ?>" method="post" enctype="multipart/form-data">
+  <?php if (isset($message['cookie'])) setcookie('yinstagram_response', null, time()-1, '/'); endif; ?>
+  <form action="" method="post" enctype="multipart/form-data">
     <p>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> to register Instagram client, or <a id="yinstagram-help-tab" href="#">see these manual</a> for help.</p>
     <table class="form-table">
       <tbody>
@@ -133,7 +133,7 @@
     <p class="submit">
       <?php if ( isset($data['access_token']) && isset($data['user']) ): ?>
         <input id="submit" class="button-primary" type="submit" value="Save Changes" name="submit">&nbsp;
-        <a href="<?php echo YINSTAGRAM_PLUGIN_URL . '/admin/posteddata-settings.php?logout=1'; ?>" class="button-primary">Logout</a>
+        <a id="yinstagram-logout" href="#" class="button-primary">Logout</a>
       <?php else: ?>
         <input id="submit" class="button-primary" type="submit" value="Save and Connect" name="submit">
       <?php endif; ?>

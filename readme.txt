@@ -50,6 +50,7 @@ Not connected or possibility you have entered tags that does not exist in Instag
 * Improved fetch function which get instagram images for shortcode and widget 
 * Changed menu icon
 * Removed security exploit
+* Change the way of plugin to connect with instagram API
 
 = 0.0.80 =
 * Expanded recent Instagram images feature

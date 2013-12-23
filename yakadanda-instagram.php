@@ -51,6 +51,8 @@ function yinstagram_register() {
   wp_register_script('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/js/jquery.colorbox-min.js', array('jquery'), '1.4.33', true);
   // YInstagram
   wp_register_script('yinstagram-script', YINSTAGRAM_PLUGIN_URL . '/js/script.js', array('jquery', 'yinstagram-simplyScroll'), YINSTAGRAM_VER, true);
+  
+  wp_localize_script( 'yinstagram-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 }
 
 // Enqueue styles for admin
