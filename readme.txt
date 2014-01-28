@@ -51,7 +51,8 @@ Not connected or possibility you have entered tags that does not exist in Instag
 * Added infinite scroll type to shortcode
 * Moved colorbox options from widget form to display options page
 * Added colorbox feature to infinite scroll
-* Provided settings link on plugins page 
+* Provided settings link on plugins page
+* Updated manual page
 
 = 0.0.90 =
 * Improved fetch function which get instagram images for shortcode and widget 
