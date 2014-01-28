@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
-  Version: 0.0.90
+  Version: 0.1.0
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -27,32 +27,49 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.0.90');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.0');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
 if (!defined('YINSTAGRAM_THEME_URL')) define('YINSTAGRAM_THEME_URL', get_stylesheet_directory_uri());
 
+add_filter('plugin_action_links', 'yinstagram_action_links', 10, 2);
+function yinstagram_action_links($links, $file) {
+  static $yakadanda_instagram;
+  
+  if (!$yakadanda_instagram) $yakadanda_instagram = plugin_basename(__FILE__);
+  
+  if ($file == $yakadanda_instagram) {
+    $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=yinstagram/settings.php">Settings</a>';
+    array_unshift($links, $settings_link);
+  }
+  
+  return $links;
+}
+
 // Register scripts & styles
 add_action('init', 'yinstagram_register');
 function yinstagram_register() {
+  $settings = yinstagram_get_settings();
+  
   /* Register styles */
   wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', false, YINSTAGRAM_VER, 'all');
+  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $settings['theme'] . '.css', false, '1.4.15', 'all');
   if (file_exists(YINSTAGRAM_THEME_DIR . '/css/yakadanda-instagram.css')) {
     wp_register_style('yinstagram-style', YINSTAGRAM_THEME_URL . '/css/yakadanda-instagram.css', false, YINSTAGRAM_VER, 'all');
   } else {
     wp_register_style('yinstagram-style', YINSTAGRAM_PLUGIN_URL . '/css/yakadanda-instagram.css', false, YINSTAGRAM_VER, 'all');
   }
-
+  
   /* Register scripts */
   // simplyScroll
   wp_register_script('yinstagram-simplyScroll', YINSTAGRAM_PLUGIN_URL . '/js/jquery.simplyscroll.min.js', array('jquery'), '2.0.5', true);
   // ColorBox
   wp_register_script('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/js/jquery.colorbox-min.js', array('jquery'), '1.4.33', true);
   // YInstagram
-  wp_register_script('yinstagram-script', YINSTAGRAM_PLUGIN_URL . '/js/script.js', array('jquery', 'yinstagram-simplyScroll'), YINSTAGRAM_VER, true);
+  wp_register_script('yinstagram-script', YINSTAGRAM_PLUGIN_URL . '/js/script.js', array('jquery', 'yinstagram-simplyScroll', 'yinstagram-colorbox'), YINSTAGRAM_VER, true);
   
-  wp_localize_script( 'yinstagram-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+  wp_localize_script('yinstagram-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ));
 }
 
 // Enqueue styles for admin
@@ -63,11 +80,13 @@ function yinstagram_admin_enqueue_styles() {
 // Enqueue then call styles in frontend
 add_action('wp_enqueue_scripts', 'yinstagram_wp_enqueue_styles');
 function yinstagram_wp_enqueue_styles() {
+  wp_enqueue_style('yinstagram-colorbox');
   wp_enqueue_style('yinstagram-style');
 }
 
 // Enqueue scripts for admin
 function yinstagram_admin_enqueue_scripts() {
+  wp_enqueue_script('jquery-ui-dialog');
   wp_enqueue_script('yinstagram-script');
 }
 
@@ -78,9 +97,6 @@ function yinstagram_wp_enqueue_scripts() {
   wp_enqueue_script('yinstagram-simplyScroll');
   wp_enqueue_script('yinstagram-colorbox');
   wp_enqueue_script('yinstagram-script');
-
-  // in javascript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
-  wp_localize_script( 'yinstagram-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => null ) );
 }
 
 require_once( dirname(__FILE__) . '/admin/functions.php' );

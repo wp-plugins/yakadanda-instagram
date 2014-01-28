@@ -92,7 +92,7 @@
                 <p>
                   <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="10" name="display_the_following_hashtags"><?php echo isset($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
                 </p>
-                <p class="description">Hashtags separated by comma, e.g. <em style="font-style:normal; color: #464646;">#buildings, #graffiti, #art</em> etc.</p>
+                <p class="description">Hashtags separated by comma, e.g. <code>#buildings, #graffiti, #art</code> etc.</p>
               </div>
             </fieldset>
           </td>
@@ -133,10 +133,14 @@
     <p class="submit">
       <?php if ( isset($data['access_token']) && isset($data['user']) ): ?>
         <input id="submit" class="button-primary" type="submit" value="Save Changes" name="submit">&nbsp;
-        <a id="yinstagram-logout" href="#" class="button-primary">Logout</a>
+        <a id="yinstagram-logout" href="#" class="button-primary">Logout</a>&nbsp;
       <?php else: ?>
-        <input id="submit" class="button-primary" type="submit" value="Save and Connect" name="submit">
+        <input id="submit" class="button-primary" type="submit" value="Save and Connect" name="submit">&nbsp;
       <?php endif; ?>
+        <a id="yinstagram-restore-settings" href="#" class="button-primary">Reset</a>
     </p>
   </form>
+</div>
+<div id="dialog-confirm" title="Confirmation">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These will also disconnect from Google API if connected. Are you sure?</p>
 </div>

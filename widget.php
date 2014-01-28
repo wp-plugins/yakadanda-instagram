@@ -1,19 +1,13 @@
 <?php
 add_action('widgets_init', create_function('', 'register_widget( "yinstagram_widget" );'));
 class YInstagram_Widget extends WP_Widget {
-
   public function __construct() {
     parent::__construct(
             'yinstagram', 'Yakadanda Instagram', array('description' => __('Yakadanda Instagram Widget', 'text_domain'))
     );
   }
-
+  
   public function widget($args, $instance) {
-    if ($instance['colorbox']) {
-      YInstagram_Widget::colorbox_enqueue_style($instance);
-      add_action('wp_enqueue_scripts', 'YInstagram_Widget::colorbox_enqueue_style');
-    }
-    
     extract($args);
     $title = apply_filters('widget_title', empty($instance['title']) ? null : $instance['title'], $instance, $this->id_base);
     
@@ -88,31 +82,25 @@ class YInstagram_Widget extends WP_Widget {
         default:
           /*begin images type*/
           if (!empty($data)) {
+            $settings = yinstagram_get_settings();
             $i = 0;
-            if ($instance['colorbox']) {
-              echo '<style type="text/css">';
-              echo '.yinstagram_grid li a:hover img {';
-              echo 'opacity:0.5; filter:alpha(opacity=50);';
-              echo '}';
-              echo '</style>';
-            }
-
-            echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $instance['colorbox'], 'colorbox_effect' => $instance['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
-
-            echo '<ul class="yinstagram_grid">';
-
+            
+            echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $settings['colorbox'], 'colorbox_effect' => $settings['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
+            
+            echo ($settings['colorbox']) ? '<ul class="yinstagram_grid colorbox_on">' : '<ul class="yinstagram_grid">';
+            
             foreach ($data as $datum) {
               $img_src = $datum->images->thumbnail->url;
               if ($instance['size'] == 'low_resolution')
                 $img_src = $datum->images->low_resolution->url;
               elseif ($instance['size'] == 'standard_resolution')
                 $img_src = $datum->images->standard_resolution->url;
-
+              
               $images[] = array('id' => $datum->id, 'src' => $img_src);
 
               echo '<li>';
 
-              if ($instance['colorbox']) echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+              if ($settings['colorbox']) echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
               else echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
 
               echo '<span class="load_w-' . $datum->id . '" ' . $style . '></span>';
@@ -148,10 +136,7 @@ class YInstagram_Widget extends WP_Widget {
     $instance['size'] = strip_tags($new_instance['size']);
     $instance['custom_size'] = strip_tags($new_instance['custom_size']);
     $instance['limit'] = strip_tags($new_instance['limit']);
-    $instance['colorbox'] = strip_tags($new_instance['colorbox']);
-    $instance['theme'] = strip_tags($new_instance['theme']);
-    $instance['effect'] = strip_tags($new_instance['effect']);
-
+    
     return $instance;
   }
 
@@ -173,12 +158,6 @@ class YInstagram_Widget extends WP_Widget {
     if (isset($instance['custom_size'])) $custom_size = $instance['custom_size'];
     $limit = 6;
     if (isset($instance['limit'])) $limit = $instance['limit'];
-    $colorbox = null;
-    if (isset($instance['colorbox'])) $colorbox = $instance['colorbox'];
-    $theme = null;
-    if (isset($instance['theme'])) $theme = $instance['theme'];
-    $effect = null;
-    if (isset($instance['effect'])) $effect = $instance['effect'];
     ?>
     <p>
       <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -224,34 +203,7 @@ class YInstagram_Widget extends WP_Widget {
       <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limit (max 33):'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" type="text" value="<?php echo esc_attr($limit); ?>" />
     </p>
-    <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
-      <input id="<?php echo $this->get_field_id('colorbox'); ?>" name="<?php echo $this->get_field_name('colorbox'); ?>" type="checkbox" <?php echo empty($colorbox) ? null : 'checked'; ?> class="yinstagram-colorbox"/>
-      <label for="<?php echo $this->get_field_id('colorbox'); ?>"><?php _e('Colorbox'); ?></label>
-    </p>
-    <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('theme'); ?>"><?php _e('Theme:'); ?></label><br>
-      <select id="<?php echo $this->get_field_id('theme'); ?>" name="<?php echo $this->get_field_name('theme'); ?>" <?php echo empty($colorbox) ? 'disabled' : null; ?>>
-        <option value="1" <?php echo ($theme == '1') ? 'selected="selected"' : null; ?>>1&nbsp;</option>
-        <option value="2" <?php echo ($theme == '2') ? 'selected="selected"' : null; ?>>2&nbsp;</option>
-        <option value="3" <?php echo ($theme == '3') ? 'selected="selected"' : null; ?>>3&nbsp;</option>
-        <option value="4" <?php echo ($theme == '4') ? 'selected="selected"' : null; ?>>4&nbsp;</option>
-        <option value="5" <?php echo ($theme == '5') ? 'selected="selected"' : null; ?>>5&nbsp;</option>
-      </select>
-    </p>
-    <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('effect'); ?>"><?php _e('Effect:'); ?></label><br>
-      <select id="<?php echo $this->get_field_id('effect'); ?>" name="<?php echo $this->get_field_name('effect'); ?>" <?php echo empty($colorbox) ? 'disabled' : null; ?>>
-        <option value="elastic" <?php echo ($effect == 'elastic') ? 'selected="selected"' : null; ?>>Elastic&nbsp;</option>
-        <option value="fade" <?php echo ($effect == 'fade') ? 'selected="selected"' : null; ?>>Fade&nbsp;</option>
-        <option value="slideshow" <?php echo ($effect == 'slideshow') ? 'selected="selected"' : null; ?>>Slideshow&nbsp;</option>
-      </select>
-    </p>
     <?php
-  }
-
-  function colorbox_enqueue_style($instance) {
-    wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $instance['theme'] . '.css', false, '1.4.15', 'all');
-    wp_enqueue_style('yinstagram-colorbox');
   }
 }
 

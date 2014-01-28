@@ -56,7 +56,9 @@ Note all DIVs are generated and should not be hard-coded
   list-style-type: none;
 }
 
-.simply-scroll-list li img, .simply-scroll-list li span em {
+.simply-scroll-list li img,
+.simply-scroll-list li span em,
+#yinstagram-scroller-infinite li img {
   border: none;
   display: block;
 }
@@ -201,7 +203,10 @@ Note all DIVs are generated and should not be hard-coded
   width: auto;
   height: 150px;
 }
-.vert .simply-scroll-list li img, .vert .simply-scroll-list li span em {
+.vert .simply-scroll-list li img,
+.vert .simply-scroll-list li span em,
+#yinstagram-scroller-infinite li img,
+#yinstagram-scroller-infinite li span em {
   float: left;
 }
 
@@ -223,11 +228,13 @@ Note all DIVs are generated and should not be hard-coded
 
 /* NOTE left-right classes wouldn't be needed on vertical scroller */
 
-#yinstagram-scroller {
+#yinstagram-scroller-auto,
+#yinstagram-scroller-infinite {
   list-style-type: none;
 }
 
-#yinstagram-scroller, #yinstagram-scroller li, #yinstagram-scroller li img, #yinstagram-scroller li span em {
+#yinstagram-scroller-auto, #yinstagram-scroller-auto li, #yinstagram-scroller-auto li img, #yinstagram-scroller-auto li span em,
+#yinstagram-scroller-infinite, #yinstagram-scroller-infinite li, #yinstagram-scroller-infinite li img, #yinstagram-scroller-infinite li span em {
   margin: 0;
   padding: 0;
 }
@@ -272,7 +279,8 @@ Note all DIVs are generated and should not be hard-coded
   display: block;
 }
 
-.yinstagram_grid li a span em{
+.yinstagram_grid li a span em,
+#yinstagram-scroller-infinite li span em {
   background: transparent url('../img/ajax-loader.gif') no-repeat center center;
   display: block;
 }
@@ -375,7 +383,8 @@ div .widget_yinstagram .yinstagram_profile ul.images {
   margin: 0;
 }
 
-div .widget_yinstagram .yinstagram_profile ul.images li {
+div .widget_yinstagram .yinstagram_profile ul.images li,
+#yinstagram-scroller-infinite li {
   font-size: 0;
   line-height: 0;
   list-style-position: outside;
@@ -383,7 +392,9 @@ div .widget_yinstagram .yinstagram_profile ul.images li {
   list-style-type: none;
 }
 
-div .widget_yinstagram .yinstagram_profile ul.images li img {
+div .widget_yinstagram .yinstagram_profile ul.images li img,
+#yinstagram-scroller-auto li img,
+#yinstagram-scroller-infinite li img {
   padding: 0;
   margin: 0;
   border-radius: 0px;
@@ -402,4 +413,8 @@ div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:nth-chil
   border-radius: 0 3px 0 0;
   -webkit-border-radius: 0 3px 0 0;
   -moz-border-radius: 0 3px 0 0;
+}
+
+.colorbox_on li a:hover img {
+  opacity:0.5; filter:alpha(opacity=50);
 }

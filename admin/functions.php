@@ -1,15 +1,15 @@
 <?php
-function callback($buffer) {
+function yinstagram_callback($buffer) {
   return $buffer;
 }
 
-add_action('init', 'add_ob_start');
-function add_ob_start() {
-  ob_start("callback");
+add_action('init', 'yinstagram_add_ob_start');
+function yinstagram_add_ob_start() {
+  ob_start('yinstagram_callback');
 }
 
-add_action('wp_footer', 'flush_ob_end');
-function flush_ob_end() {
+add_action('wp_footer', 'yinstagram_flush_ob_end');
+function yinstagram_flush_ob_end() {
   ob_end_flush();
 }
 
@@ -123,17 +123,7 @@ function yinstagram_settings_page() {
   }
   /* end of posted data */
   
-  $data = array_merge((array) get_option('yinstagram_settings'), (array) get_option('yinstagram_access_token'));
-  $display_options = get_option('yinstagram_display_options');
-  
-  // set default
-  $data['number_of_images'] = isset($data['number_of_images']) ? $data['number_of_images'] : '1';
-  
-  $data['size'] = isset($data['size']) ? $data['size'] : 'thumbnail';
-  $data['size'] = isset($display_options['size']) ? $display_options['size'] : $data['size'];
-  
-  $data['display_your_images'] = isset($data['display_your_images']) ? $data['display_your_images'] : 'recent';
-  $data['option_display_the_following_hashtags'] = isset($data['option_display_the_following_hashtags']) ? $data['option_display_the_following_hashtags'] : 0;
+  $data = array_merge((array) yinstagram_get_settings(), (array) get_option('yinstagram_access_token'));
   
   // message
   if (isset($_COOKIE['yinstagram_response'])) $message = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response']));
@@ -144,18 +134,16 @@ function yinstagram_settings_page() {
 function yinstagram_display_options_page() {
   if (!current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
   
-  $response = null;
+  $message = null;
   if (isset($_POST["update_display_options"])) {
     $action = update_option('yinstagram_display_options', $_POST['ydo']);
-    if ($action) $response = array('class' => 'updated', 'msg' => 'Display options changed.');
+    if ($action) $message = array('class' => 'updated', 'msg' => 'Display options changed.');
   }
   
-  $data = get_option('yinstagram_display_options');
+  $data = yinstagram_get_settings();
   
-  $data['direction'] = isset($data['direction']) ? $data['direction'] : 'forwards';
-  $data['size'] = isset($data['size']) ? $data['size'] : 'thumbnail';
-  $data['number_of_images'] = isset($data['number_of_images']) ? $data['number_of_images'] : '1';
-  $data['display_social_links'] = isset($data['display_social_links']) ? $data['display_social_links'] : null;
+  // message
+  if (isset($_COOKIE['yinstagram_response'])) $message = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response']));
   
   include dirname(__FILE__) . '/page-display-options.php';
 }
@@ -203,7 +191,7 @@ function yinstagram_section_setup() {
   $output .= '<li>Register new OAuth Client by click Register a New Client button.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png"/></li>';
   $output .= '<li>Setup Register new OAuth Client form.<br><br>';
   $output .= 'a. Fill textboxes and textarea with suitable information<br>';
-  $output .= 'b. Fill OAuth redirect_uri textbox with <span>' . admin_url('admin.php?page=yinstagram/settings.php') . '</span><br>';
+  $output .= 'b. Fill OAuth redirect_uri textbox with <code>' . admin_url('admin.php?page=yinstagram/settings.php') . '</code><br>';
   $output .= '<img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-4.png"/></li>';
   $output .= '<li>Congratulation, now you have Client ID and Client Secret.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png"/></li>';
   $output .= '</ol>';
@@ -212,7 +200,7 @@ function yinstagram_section_setup() {
 }
 
 function yinstagram_section_shortcode() {
-  $output = '<p><span>[yinstagram]</span></p>';
+  $output = '<p><code>[yinstagram]</code></p>';
 
   return $output;
 }
@@ -267,7 +255,7 @@ function yinstagram_admin_notice() {
     ?>
       <div class="updated yinstagram-notice">
         <p><a id="yinstagram-dismiss" href="#">Close</a></p>
-        <p>Since 0.0.90, OAuth redirect_uri or REDIRECT URI changed to <span><?php echo admin_url('admin.php?page=yinstagram/settings.php') ?></span>. You can change your OAuth redirect_uri at <a href="http://instagram.com/developer/clients/manage/" target="_blank">instagram.com/developer/clients/manage/</a>. Thank you.</p>
+        <p>Since 0.0.90, OAuth redirect_uri or REDIRECT URI changed to <code><?php echo admin_url('admin.php?page=yinstagram/settings.php') ?></code>. You can change your OAuth redirect_uri at <a href="http://instagram.com/developer/clients/manage/" target="_blank">instagram.com/developer/clients/manage/</a>. Thank you.</p>
       </div>
     <?php
   }
@@ -281,6 +269,63 @@ function yinstagram_dismiss_callback() {
 
 add_action('wp_ajax_yinstagram_logout', 'yinstagram_logout_callback');
 function yinstagram_logout_callback() {
-  update_option('yinstagram_access_token', null);
+  $action = update_option('yinstagram_access_token', null);
+  if ($action) {
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Disconnected.'));
+    setcookie('yinstagram_response', $message, time()+1, '/');
+    echo admin_url('admin.php?page=yinstagram/settings.php');
+  }
   die();
+}
+
+add_action('wp_ajax_yinstagram_restore_settings', 'yinstagram_restore_settings_callback');
+function yinstagram_restore_settings_callback() {
+  update_option('yinstagram_access_token', null);
+  $action = update_option('yinstagram_settings', null);
+  if ($action) {
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Settings restored to default settings.'));
+    setcookie('yinstagram_response', $message, time()+1, '/');
+    echo admin_url('admin.php?page=yinstagram/settings.php');
+  }
+  die();
+}
+
+add_action('wp_ajax_yinstagram_restore_display_options', 'yinstagram_restore_display_options_callback');
+function yinstagram_restore_display_options_callback() {
+  $action = update_option('yinstagram_display_options', null);
+  if ($action) {
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Display options restored to default settings.'));
+    setcookie('yinstagram_response', $message, time()+1, '/');
+    echo admin_url('admin.php?page=yinstagram/display-options.php');
+  }
+  die();
+}
+
+function yinstagram_get_settings() {
+  $default = array (
+      'client_id' => null,
+      'client_secret' => null,
+      'display_your_images' => 'recent',
+      'option_display_the_following_hashtags' => 0,
+      'display_the_following_hashtags' =>  null,
+      'size' => 'thumbnail',
+      'number_of_images' => 1,
+      'username_of_user_id' => null
+    );
+  $settings = wp_parse_args( get_option('yinstagram_settings'), $default );
+  
+  $default = array(
+      'scroll' => 'auto',
+      'height' => 300,
+      'frame_rate' => 24,
+      'speed' => 1,
+      'direction' => 'forwards',
+      'colorbox' => null,
+      'theme' => '1',
+      'effect' => 'elastic',
+      'display_social_links' => null
+    );
+  $display_options = wp_parse_args( get_option('yinstagram_display_options'), $default );
+  
+  return array_merge((array) $settings, (array) $display_options);
 }

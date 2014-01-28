@@ -2,9 +2,9 @@
 Contributors: Yakadanda.com
 Donate link: http://www.yakadanda.com/
 Tags: images, pictures, photos, instagram, yakadanda
-Requires at least: 3.6
-Tested up to: 3.8
-Stable tag: 0.0.90
+Requires at least: 3.7
+Tested up to: 3.8.1
+Stable tag: 0.1.0
 License: GPLv2 or later
 
 A Wordpress plugin that pulls in Instagram images of user or hashtags.
@@ -45,6 +45,13 @@ Not connected or possibility you have entered tags that does not exist in Instag
 3. Profile widget
 
 == Changelog ==
+
+= 0.1.0 =
+* Added reset feature to plugin settings
+* Added infinite scroll type to shortcode
+* Moved colorbox options from widget form to display options page
+* Added colorbox feature to infinite scroll
+* Provided settings link on plugins page 
 
 = 0.0.90 =
 * Improved fetch function which get instagram images for shortcode and widget 
@@ -101,6 +108,9 @@ Not connected or possibility you have entered tags that does not exist in Instag
 * Updated to fit with WordPress 3.5 and Twenty Twelve theme
 
 == Upgrade Notice ==
+
+= 0.1.0 =
+* -
 
 = 0.0.90 =
 * Fixed bugs
