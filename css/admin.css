@@ -1,0 +1,9 @@
+#tab-panel-yinstagram-shortcode p span,
+#tab-panel-yinstagram-setup ol li span,
+.yinstagram-notice p span {
+  font-family:"Courier New", Courier, monospace;
+}
+
+.yinstagram-notice p:first-child {
+  text-align: right;
+}
