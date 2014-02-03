@@ -67,6 +67,7 @@
                 <input type="checkbox" value="1" id="colorbox" name="ydo[colorbox]" <?php echo empty($data['colorbox']) ? null : 'checked'; ?>>Enable
               </label>
             </fieldset>
+            <p class="description">Enable for images widget and infinite scroll.</p>
           </td>
         </tr>
         <tr valign="top">

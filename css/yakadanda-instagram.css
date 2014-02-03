@@ -418,3 +418,25 @@ div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:nth-chil
 .colorbox_on li a:hover img {
   opacity:0.5; filter:alpha(opacity=50);
 }
+
+.yinstagram-social ul.links {
+  list-style: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+.yinstagram-social ul.links li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 100px;
+}
+
+.yinstagram-social ul.links li iframe {
+  margin: 0;
+  padding: 0;
+}
+
+.infinite_scroll ul.links li {
+  margin: 1.5em 0 0 0;
+}

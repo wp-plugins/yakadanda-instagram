@@ -1,6 +1,8 @@
 <?php
 add_shortcode('yinstagram', 'yinstagram_shortcode');
 function yinstagram_shortcode($atts) {
+  global $wp;
+  
   $yinstagram = yinstagram_get_settings();
   $auth = get_option('yinstagram_access_token');
   $data = null;
@@ -21,8 +23,10 @@ function yinstagram_shortcode($atts) {
   }
   
   if (!empty($data)) {
+    $is_inifinte = false;
     switch( $yinstagram['scroll'] ) {
       case 'infinite':
+        $is_inifinte = true;
         $output = yinstagram_get_scroll_infinite($yinstagram, $data);
         break;
       default:
@@ -30,16 +34,15 @@ function yinstagram_shortcode($atts) {
         $output = yinstagram_get_scroll_auto($yinstagram, $data);
     }
     if ($yinstagram['display_social_links']) {
-      $output .= '<!-- AddThis Button BEGIN -->';
-      $output .= '<div class="addthis_toolbox addthis_default_style ">';
-      $output .= '<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>';
-      $output .= '<a class="addthis_button_tweet"></a>';
-      $output .= '<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>';
-      $output .= '<!-- <a class="addthis_button_pinterest_pinit"></a>';
-      $output .= '<a class="addthis_counter addthis_pill_style"></a> -->';
-      $output .= '</div>';
-      $output .= '<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b30c8d0ad640e9"></script>';
-      $output .= '<!-- AddThis Button END -->';
+      $current_url = home_url(add_query_arg(array(),$wp->request));
+      
+      $socialClass = ($is_inifinte) ? 'yinstagram-social infinite_scroll' : 'yinstagram-social';
+      
+      $output .= '<div class="' . $socialClass . '"><ul class="links">';
+      $output .= '<li><iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($current_url).'&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=561399377290377" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:21px;" allowTransparency="true"></iframe></li>';
+      $output .= '<li><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a></li>';
+      $output .= '<li><div class="g-plusone" data-size="medium"></div></li>';
+      $output .= '</ul></div>';
     }
   }
   
