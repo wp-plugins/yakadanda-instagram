@@ -13,23 +13,42 @@ function yinstagram_flush_ob_end() {
   ob_end_flush();
 }
 
-add_action('admin_menu', 'yinstagram_register_menu_page');
-function yinstagram_register_menu_page() {
-  // Call scripts in admin
-  add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_scripts');
-  // Call styles in admin
-  add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_styles');
-
-  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_settings_page', network_home_url('wp-content/plugins/yakadanda-instagram/img/instagram-icon-16x16.png'), 205);
-
-  $settings_page = add_submenu_page('yinstagram/settings.php', 'Settings', 'Settings', 'manage_options', 'yinstagram/settings.php', 'yinstagram_settings_page');
-  add_action('load-' . $settings_page, 'yinstagram_settings_help_tab');
-
-  $display_options_page = add_submenu_page('yinstagram/settings.php', 'Display Options', 'Display Options', 'manage_options', 'yinstagram/display-options.php', 'yinstagram_display_options_page');
-  add_action('load-' . $display_options_page, 'yinstagram_display_options_help_tab');
+function yinstagram_get_page() {
+  $requet_uri = str_replace('/wp-admin/', '', $_SERVER['REQUEST_URI']);
+  
+  return ($requet_uri) ? $requet_uri : 'index.php';
 }
 
-function yinstagram_settings_page() {
+function yinstagram_is_plugin_page($url) {
+  $output = false;
+  
+  switch ($url) {
+    case 'admin.php?page=yinstagram/settings.php':
+      $output = true;
+      break;
+    case 'admin.php?page=yinstagram/display-options.php':
+      $output = true;
+      break;
+    case 'widgets.php':
+      $output = true;
+      break;
+  }
+  
+  return $output;
+}
+
+add_action('admin_menu', 'yinstagram_register_menu_page');
+function yinstagram_register_menu_page() {
+  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_page_settings', network_home_url('wp-content/plugins/yakadanda-instagram/img/instagram-icon-16x16.png'), 205);
+
+  $settings_page = add_submenu_page('yinstagram/settings.php', 'Settings', 'Settings', 'manage_options', 'yinstagram/settings.php', 'yinstagram_page_settings');
+  add_action('load-' . $settings_page, 'yinstagram_help_tab');
+
+  $display_options_page = add_submenu_page('yinstagram/settings.php', 'Display Options', 'Display Options', 'manage_options', 'yinstagram/display-options.php', 'yinstagram_page_display_options');
+  add_action('load-' . $display_options_page, 'yinstagram_help_tab');
+}
+
+function yinstagram_page_settings() {
   if (!current_user_can('manage_options')) {
     wp_die(__('You do not have sufficient permissions to access this page.'));
   }
@@ -79,9 +98,8 @@ function yinstagram_settings_page() {
   /* end of authentication */
   
   /* posted data */
-  if (isset($_POST['client_id']) && isset($_POST['client_secret'])) {
-    $option = 'yinstagram_settings';
-    $data = array_merge( (array) get_option($option), (array) get_option('yinstagram_access_token') );
+  if ( isset($_POST['update_settings']) ) {
+    $data = yinstagram_get_options('settings');
     
     if (($_POST['display_images'] != 'hashtag') && ($_POST['option_display_the_following_hashtags'] == '1')) {
       $_POST['option_display_the_following_hashtags'] = '0';
@@ -93,8 +111,9 @@ function yinstagram_settings_page() {
       $_POST['display_images'] = 'recent';
       $_POST['option_display_the_following_hashtags'] = '0';
     }
+    $_POST['client_id'] = !empty($_POST['client_id']) ? $_POST['client_id'] : null;
+    $_POST['client_secret'] = !empty($_POST['client_secret']) ? $_POST['client_secret'] : null;
     
-    $option = 'yinstagram_settings';
     $value = array(
         'client_id' => $_POST['client_id'],
         'client_secret' => $_POST['client_secret'],
@@ -105,15 +124,17 @@ function yinstagram_settings_page() {
         'number_of_images' => $_POST['number_of_images'],
         'username_of_user_id' => $_POST['username_of_user_id']
       );
-    update_option($option, $value);
+    update_option('yinstagram_settings', $value);
     
     $message = array('class' => 'updated', 'msg' => 'Settings updated.');
     
-    if (($data['client_id'] != $_POST['client_id']) || ($data['client_secret'] != $_POST['client_secret']) || !isset($data['access_token']) || !isset($data['user']) ) {
+    $granted = false;
+    if (($data['client_id'] != $_POST['client_id']) || ($data['client_secret'] != $_POST['client_secret'])) $granted = true;
+    if (empty($data['access_token']) && $data['client_id'] && $data['client_secret']) $granted = true;
+    
+    if ($granted) {
       // make null the token from database
-      $option = 'yinstagram_access_token';
-      $value = null;
-      update_option($option, $value);
+      update_option('yinstagram_access_token', null);
       
       $encodeURIComponent = yinstagram_encodeURIComponent(admin_url('admin.php?page=yinstagram/settings.php'));
       $url = 'https://api.instagram.com/oauth/authorize/?response_type=code&client_id=' . $_POST['client_id'] . '&redirect_uri=' . $encodeURIComponent;
@@ -123,7 +144,7 @@ function yinstagram_settings_page() {
   }
   /* end of posted data */
   
-  $data = array_merge((array) yinstagram_get_settings(), (array) get_option('yinstagram_access_token'));
+  $data = yinstagram_get_options('settings');
   
   // message
   if (isset($_COOKIE['yinstagram_response'])) $message = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response']));
@@ -131,7 +152,7 @@ function yinstagram_settings_page() {
   include dirname(__FILE__) . '/page-settings.php';
 }
 
-function yinstagram_display_options_page() {
+function yinstagram_page_display_options() {
   if (!current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
   
   $message = null;
@@ -140,7 +161,7 @@ function yinstagram_display_options_page() {
     if ($action) $message = array('class' => 'updated', 'msg' => 'Display options changed.');
   }
   
-  $data = yinstagram_get_settings();
+  $data = yinstagram_get_options('display_options');
   
   // message
   if (isset($_COOKIE['yinstagram_response'])) $message = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response']));
@@ -153,22 +174,7 @@ function yinstagram_encodeURIComponent($str) {
   return strtr(rawurlencode($str), $revert);
 }
 
-function yinstagram_settings_help_tab() {
-  $screen = get_current_screen();
-
-  $screen->add_help_tab(array(
-      'id' => 'yinstagram-setup',
-      'title' => __('Setup'),
-      'content' => yinstagram_section_setup(),
-  ));
-  $screen->add_help_tab(array(
-      'id' => 'yinstagram-shortcode',
-      'title' => __('Shortcode'),
-      'content' => yinstagram_section_shortcode(),
-  ));
-}
-
-function yinstagram_display_options_help_tab() {
+function yinstagram_help_tab() {
   $screen = get_current_screen();
 
   $screen->add_help_tab(array(
@@ -301,31 +307,49 @@ function yinstagram_restore_display_options_callback() {
   die();
 }
 
-function yinstagram_get_settings() {
-  $default = array (
-      'client_id' => null,
-      'client_secret' => null,
-      'display_your_images' => 'recent',
-      'option_display_the_following_hashtags' => 0,
-      'display_the_following_hashtags' =>  null,
-      'size' => 'thumbnail',
-      'number_of_images' => 1,
-      'username_of_user_id' => null
-    );
-  $settings = wp_parse_args( get_option('yinstagram_settings'), $default );
+function yinstagram_get_options($admin_page = 'all') {
+  $output = array();
   
-  $default = array(
-      'scroll' => 'auto',
-      'height' => 300,
-      'frame_rate' => 24,
-      'speed' => 1,
-      'direction' => 'forwards',
-      'colorbox' => null,
-      'theme' => '1',
-      'effect' => 'elastic',
-      'display_social_links' => null
-    );
-  $display_options = wp_parse_args( get_option('yinstagram_display_options'), $default );
+  if (($admin_page == 'all') || ($admin_page == 'settings')) {
+    $default = array (
+        'client_id' => null,
+        'client_secret' => null,
+        'display_your_images' => 'recent',
+        'option_display_the_following_hashtags' => 0,
+        'display_the_following_hashtags' =>  null,
+        'size' => 'thumbnail',
+        'number_of_images' => 1,
+        'username_of_user_id' => null
+      );
+    $settings = wp_parse_args( get_option('yinstagram_settings'), $default );
+    $output = array_merge((array) $output, (array) $settings);
+  }
   
-  return array_merge((array) $settings, (array) $display_options);
+  if (($admin_page == 'all') || ($admin_page == 'display_options')) {
+    $default = array(
+        'scroll' => 'auto',
+        'height' => 300,
+        'frame_rate' => 24,
+        'speed' => 1,
+        'direction' => 'forwards',
+        'colorbox' => null,
+        'theme' => '1',
+        'effect' => 'elastic',
+        'display_social_links' => null,
+        'order' => 'default'
+      );
+    $display_options = wp_parse_args( get_option('yinstagram_display_options'), $default );
+    $output = array_merge((array) $output, (array) $display_options);
+  }
+  
+  if (($admin_page == 'all') || ($admin_page == 'settings') || ($admin_page == 'token')) {
+    $default = array(
+      'access_token' => null,
+      'user' => null
+    );
+    $token = wp_parse_args( get_option('yinstagram_access_token'), $default );
+    $output = array_merge((array) $output, (array) $token);
+  }
+  
+  return $output;
 }

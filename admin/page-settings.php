@@ -7,6 +7,7 @@
     </div>
   <?php if (isset($message['cookie'])) setcookie('yinstagram_response', null, time()-1, '/'); endif; ?>
   <form action="" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="update_settings" value="1" />
     <p>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> to register Instagram client, or <a id="yinstagram-help-tab" href="#">see these manual</a> for help.</p>
     <table class="form-table">
       <tbody>
@@ -133,14 +134,14 @@
     <p class="submit">
       <?php if ( isset($data['access_token']) && isset($data['user']) ): ?>
         <input id="submit" class="button-primary" type="submit" value="Save Changes" name="submit">&nbsp;
-        <a id="yinstagram-logout" href="#" class="button-primary">Logout</a>&nbsp;
+        <input id="yinstagram-logout" class="button-primary" type="button" value="Logout" name="yinstagram-logout">&nbsp;
       <?php else: ?>
         <input id="submit" class="button-primary" type="submit" value="Save and Connect" name="submit">&nbsp;
       <?php endif; ?>
-        <a id="yinstagram-restore-settings" href="#" class="button-primary">Reset</a>
+        <input id="yinstagram-restore-settings" class="button-primary" type="button" value="Reset" name="yinstagram-restore-settings">
     </p>
   </form>
 </div>
-<div id="dialog-confirm" title="Confirmation">
+<div id="dialog-confirm" title="Confirmation" style="display: none;">
   <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These will also disconnect from Google API if connected. Are you sure?</p>
 </div>

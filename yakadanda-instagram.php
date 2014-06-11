@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
-  Version: 0.1.1
+  Version: 0.1.2
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -27,7 +27,7 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.1');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.2');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
@@ -50,7 +50,7 @@ function yinstagram_action_links($links, $file) {
 // Register scripts & styles
 add_action('init', 'yinstagram_register');
 function yinstagram_register() {
-  $settings = yinstagram_get_settings();
+  $settings = yinstagram_get_options();
   
   /* Register styles */
   wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', false, YINSTAGRAM_VER, 'all');
@@ -65,7 +65,7 @@ function yinstagram_register() {
   // simplyScroll
   wp_register_script('yinstagram-simplyScroll', YINSTAGRAM_PLUGIN_URL . '/js/jquery.simplyscroll.min.js', array('jquery'), '2.0.5', true);
   // ColorBox
-  wp_register_script('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/js/jquery.colorbox-min.js', array('jquery'), '1.4.33', true);
+  wp_register_script('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/js/jquery.colorbox-min.js', array('jquery'), '1.5.9', true);
   // YInstagram
   wp_register_script('yinstagram-script', YINSTAGRAM_PLUGIN_URL . '/js/script.js', array('jquery', 'yinstagram-simplyScroll', 'yinstagram-colorbox'), YINSTAGRAM_VER, true);
   
@@ -73,10 +73,12 @@ function yinstagram_register() {
 }
 
 // Enqueue styles for admin
+add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_styles');
 function yinstagram_admin_enqueue_styles() {
-  wp_enqueue_style('yinstagram-admin');
+  if (yinstagram_is_plugin_page(yinstagram_get_page())) {
+    wp_enqueue_style('yinstagram-admin');
+  }
 }
-
 // Enqueue then call styles in frontend
 add_action('wp_enqueue_scripts', 'yinstagram_wp_enqueue_styles');
 function yinstagram_wp_enqueue_styles() {
@@ -85,11 +87,13 @@ function yinstagram_wp_enqueue_styles() {
 }
 
 // Enqueue scripts for admin
+add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_scripts');
 function yinstagram_admin_enqueue_scripts() {
-  wp_enqueue_script('jquery-ui-dialog');
-  wp_enqueue_script('yinstagram-script');
+  if (yinstagram_is_plugin_page(yinstagram_get_page())) {
+    wp_enqueue_script('jquery-ui-dialog');
+    wp_enqueue_script('yinstagram-script');
+  }
 }
-
 // Enqueue then call scripts in frontend
 add_action('wp_enqueue_scripts', 'yinstagram_wp_enqueue_scripts');
 function yinstagram_wp_enqueue_scripts() {

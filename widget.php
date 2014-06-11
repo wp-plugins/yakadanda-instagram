@@ -17,6 +17,7 @@ class YInstagram_Widget extends WP_Widget {
     $instance['username_of_user_id'] = isset($instance['username_of_user_id']) ? $instance['username_of_user_id'] : null;
     $instance['custom_size'] = isset($instance['custom_size']) ? $instance['custom_size'] : null;
     $instance['limit'] = isset($instance['limit']) ? $instance['limit'] : '6';
+    $instance['order'] = isset($instance['order']) ? $instance['order'] : 'default';
     
     $style = null;
     if ($instance['custom_size'])
@@ -37,6 +38,8 @@ class YInstagram_Widget extends WP_Widget {
         default:
           $data = yinstagram_get_own_images($auth, $instance['display_images'], 1, $instance['username_of_user_id'], false);
       }
+      
+      if ($instance['order'] == 'shuffle') { shuffle($data); }
       
       switch($instance['type']) {
         case 'profile':
@@ -82,7 +85,7 @@ class YInstagram_Widget extends WP_Widget {
         default:
           /*begin images type*/
           if (!empty($data)) {
-            $settings = yinstagram_get_settings();
+            $settings = yinstagram_get_options();
             $i = 0;
             
             echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $settings['colorbox'], 'colorbox_effect' => $settings['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
@@ -136,28 +139,23 @@ class YInstagram_Widget extends WP_Widget {
     $instance['size'] = strip_tags($new_instance['size']);
     $instance['custom_size'] = strip_tags($new_instance['custom_size']);
     $instance['limit'] = strip_tags($new_instance['limit']);
+    $instance['order'] = strip_tags($new_instance['order']);
     
     return $instance;
   }
 
   public function form($instance) {
     $auth = get_option('yinstagram_access_token');
-    $title = __(null, 'text_domain');
-    if (isset($instance['title'])) $title = $instance['title'];
-    $type = 'images';
-    if (isset($instance['type'])) $type = $instance['type'];
-    $display_images = 'recent';
-    if (isset($instance['display_images'])) $display_images = $instance['display_images'];
-    $username_of_user_id = null;
-    if (isset($instance['username_of_user_id'])) $username_of_user_id = $instance['username_of_user_id'];
-    $hashtags = null;
-    if (isset($instance['hashtags'])) $hashtags = $instance['hashtags'];
-    $size = 'thumbnail';
-    if (isset($instance['size'])) $size = $instance['size'];
-    $custom_size = null;
-    if (isset($instance['custom_size'])) $custom_size = $instance['custom_size'];
-    $limit = 6;
-    if (isset($instance['limit'])) $limit = $instance['limit'];
+    $title = isset($instance['title']) ? $instance['title'] : __(null, 'text_domain');
+    $type = isset($instance['type']) ? $instance['type'] : 'images';
+    $display_images = isset($instance['display_images']) ? $instance['display_images'] : 'recent';
+    $username_of_user_id = isset($instance['username_of_user_id']) ? $instance['username_of_user_id'] : null;
+    $hashtags = isset($instance['hashtags']) ? $instance['hashtags'] : null;
+    $size = isset($instance['size']) ? $instance['size'] : 'thumbnail';
+    $custom_size = isset($instance['custom_size']) ? $instance['custom_size'] : null;
+    $limit = isset($instance['limit']) ? $instance['limit'] : 6;
+    $order = isset($instance['order']) ? $instance['order'] : 'default';
+    
     ?>
     <p>
       <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
@@ -202,6 +200,13 @@ class YInstagram_Widget extends WP_Widget {
     <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
       <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limit (max 33):'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" type="text" value="<?php echo esc_attr($limit); ?>" />
+    </p>
+      <p>
+      <label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Order:'); ?></label><br>
+      <select id="<?php echo $this->get_field_id('order'); ?>" name="<?php echo $this->get_field_name('order'); ?>">
+        <option value="default" <?php echo ($order == 'default') ? 'selected="selected"' : null; ?>>Default&nbsp;</option>
+        <option value="shuffle" <?php echo ($order == 'shuffle') ? 'selected="selected"' : null; ?>>Shuffle&nbsp;</option>
+      </select>
     </p>
     <?php
   }

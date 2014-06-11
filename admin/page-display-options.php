@@ -6,7 +6,7 @@
     </div>
   <?php if (isset($message['cookie'])) setcookie('yinstagram_response', null, time()-1, '/'); endif; ?>
   <form action="" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="update_display_options" value="Y" />
+    <input type="hidden" name="update_display_options" value="1" />
     <table class="form-table">
       <tbody>
         <tr valign="top">
@@ -15,7 +15,7 @@
           </th>
           <td>
             <select id="scroll" name="ydo[scroll]">
-              <option value="auto" <?php echo (($data['scroll'] == 'auto') || !isset($data['scroll'])) ? 'selected="selected"' : null; ?>>Auto&nbsp;</option>
+              <option value="auto" <?php echo ($data['scroll'] == 'auto') ? 'selected="selected"' : null; ?>>Auto&nbsp;</option>
               <option value="infinite" <?php echo ($data['scroll'] == 'infinite') ? 'selected="selected"' : null; ?>>Infinite&nbsp;</option>
             </select>
           </td>
@@ -53,7 +53,7 @@
           </th>
           <td>
             <select id="direction" name="ydo[direction]">
-              <option value="forwards" <?php echo (($data['direction'] == 'forwards') || !isset($data['direction'])) ? 'selected="selected"' : null; ?>>Up&nbsp;</option>
+              <option value="forwards" <?php echo ($data['direction'] == 'forwards') ? 'selected="selected"' : null; ?>>Up&nbsp;</option>
               <option value="backwards" <?php echo ($data['direction'] == 'backwards') ? 'selected="selected"' : null; ?>>Down&nbsp;</option>
             </select>
           </td>
@@ -76,7 +76,7 @@
           </th>
           <td>
             <select id="theme" name="ydo[theme]" <?php echo empty($data['colorbox']) ? 'disabled' : null; ?>>
-              <option value="1" <?php echo (($data['theme'] == '1') || !isset($data['theme'])) ? 'selected="selected"' : null; ?>>1&nbsp;</option>
+              <option value="1" <?php echo ($data['theme'] == '1') ? 'selected="selected"' : null; ?>>1&nbsp;</option>
               <option value="2" <?php echo ($data['theme'] == '2') ? 'selected="selected"' : null; ?>>2&nbsp;</option>
               <option value="3" <?php echo ($data['theme'] == '3') ? 'selected="selected"' : null; ?>>3&nbsp;</option>
               <option value="4" <?php echo ($data['theme'] == '4') ? 'selected="selected"' : null; ?>>4&nbsp;</option>
@@ -90,7 +90,7 @@
           </th>
           <td>
             <select id="effect" name="ydo[effect]" <?php echo empty($data['colorbox']) ? 'disabled' : null; ?>>
-              <option value="elastic" <?php echo (($data['effect'] == 'elastic') || !isset($data['effect'])) ? 'selected="selected"' : null; ?>>Elastic&nbsp;</option>
+              <option value="elastic" <?php echo ($data['effect'] == 'elastic') ? 'selected="selected"' : null; ?>>Elastic&nbsp;</option>
               <option value="fade" <?php echo ($data['effect'] == 'fade') ? 'selected="selected"' : null; ?>>Fade&nbsp;</option>
               <option value="slideshow" <?php echo ($data['effect'] == 'slideshow') ? 'selected="selected"' : null; ?>>Slideshow&nbsp;</option>
             </select>
@@ -115,11 +115,22 @@
             </fieldset>
           </td>
         </tr>
+        <tr valign="top">
+          <th scope="row">
+            <label for="order">Order</label>
+          </th>
+          <td>
+            <select id="order" name="ydo[order]">
+              <option value="default" <?php echo ($data['order'] == 'default') ? 'selected="selected"' : null; ?>>Default&nbsp;</option>
+              <option value="shuffle" <?php echo ($data['order'] == 'shuffle') ? 'selected="selected"' : null; ?>>Shuffle&nbsp;</option>
+            </select>
+          </td>
+        </tr>
       </tbody>
     </table>
     <p class="submit">
       <input id="submit" class="button-primary" type="submit" value="<?php echo ($data) ? 'Save Changes' : 'Save'; ?>" name="submit">&nbsp;
-      <a id="yinstagram-restore-display-options" href="#" class="button-primary">Reset</a>
+      <input id="yinstagram-restore-display-options" class="button-primary" type="button" value="Reset" name="yinstagram-restore-display-options">
     </p>
   </form>
 </div>

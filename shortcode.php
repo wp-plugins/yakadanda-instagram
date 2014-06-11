@@ -3,7 +3,7 @@ add_shortcode('yinstagram', 'yinstagram_shortcode');
 function yinstagram_shortcode($atts) {
   global $wp;
   
-  $yinstagram = yinstagram_get_settings();
+  $yinstagram = yinstagram_get_options();
   $auth = get_option('yinstagram_access_token');
   $data = null;
   $output = '<p>Not Connected.</p>';
@@ -20,6 +20,7 @@ function yinstagram_shortcode($atts) {
       default:
         $data = yinstagram_get_own_images($auth, $yinstagram['display_your_images'], $yinstagram['number_of_images'], $yinstagram['username_of_user_id'], true);
     }
+    if ($yinstagram['order'] == 'shuffle') { shuffle($data); }
   }
   
   if (!empty($data)) {
