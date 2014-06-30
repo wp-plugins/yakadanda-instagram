@@ -415,7 +415,7 @@ div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:nth-chil
   -moz-border-radius: 0 3px 0 0;
 }
 
-.colorbox_on li a:hover img {
+.lightbox_on li a:hover img {
   opacity:0.5; filter:alpha(opacity=50);
 }
 

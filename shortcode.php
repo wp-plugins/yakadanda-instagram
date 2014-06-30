@@ -1,40 +1,38 @@
 <?php
 add_shortcode('yinstagram', 'yinstagram_shortcode');
 function yinstagram_shortcode($atts) {
-  global $wp;
+  global $wp, $yinstagram_options;
   
-  $yinstagram = yinstagram_get_options();
-  $auth = get_option('yinstagram_access_token');
   $data = null;
   $output = '<p>Not Connected.</p>';
   
-  $yinstagram['number_of_images'] = isset($yinstagram['number_of_images']) ? $yinstagram['number_of_images'] : '1';
-  $yinstagram['size'] = isset($yinstagram['size']) ? $yinstagram['size'] : 'thumbnail';
+  $yinstagram_options['number_of_images'] = isset($yinstagram_options['number_of_images']) ? $yinstagram_options['number_of_images'] : '1';
+  $yinstagram_options['size'] = isset($yinstagram_options['size']) ? $yinstagram_options['size'] : 'thumbnail';
   
-  if (isset($auth['access_token']) && isset($auth['user'])) {
-    $output = '<p>Request timed out, or no have ' . $yinstagram['display_your_images'] . ' images.</p>';
-    switch ($yinstagram['display_your_images']) {
+  if (isset($yinstagram_options['access_token']) && isset($yinstagram_options['user'])) {
+    $output = '<p>Request timed out, or no have ' . $yinstagram_options['display_your_images'] . ' images.</p>';
+    switch ($yinstagram_options['display_your_images']) {
       case 'hashtag':
-        $data = yinstagram_get_tags_images($auth, $yinstagram['display_the_following_hashtags'], $yinstagram['number_of_images']);
+        $data = yinstagram_get_tags_images($yinstagram_options['access_token'], $yinstagram_options['display_the_following_hashtags'], $yinstagram_options['number_of_images']);
         break;
       default:
-        $data = yinstagram_get_own_images($auth, $yinstagram['display_your_images'], $yinstagram['number_of_images'], $yinstagram['username_of_user_id'], true);
+        $data = yinstagram_get_own_images($yinstagram_options['access_token'], $yinstagram_options['display_your_images'], $yinstagram_options['number_of_images'], $yinstagram_options['username_of_user_id'], true);
     }
-    if ($yinstagram['order'] == 'shuffle') { shuffle($data); }
+    if ($yinstagram_options['order'] == 'shuffle') { shuffle($data); }
   }
   
   if (!empty($data)) {
     $is_inifinte = false;
-    switch( $yinstagram['scroll'] ) {
+    switch( $yinstagram_options['scroll'] ) {
       case 'infinite':
         $is_inifinte = true;
-        $output = yinstagram_get_scroll_infinite($yinstagram, $data);
+        $output = yinstagram_get_scroll_infinite($yinstagram_options, $data);
         break;
       default:
-        yinstagram_styles($yinstagram);
-        $output = yinstagram_get_scroll_auto($yinstagram, $data);
+        yinstagram_styles($yinstagram_options['height']);
+        $output = yinstagram_get_scroll_auto($yinstagram_options, $data);
     }
-    if ($yinstagram['display_social_links']) {
+    if ($yinstagram_options['display_social_links']) {
       $current_url = home_url(add_query_arg(array(),$wp->request));
       
       $socialClass = ($is_inifinte) ? 'yinstagram-social infinite_scroll' : 'yinstagram-social';
@@ -50,12 +48,12 @@ function yinstagram_shortcode($atts) {
   return $output;
 }
 
-function yinstagram_get_scroll_auto($yinstagram, $data) {
+function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   $i = $j = 0;
   $images = array();
-  $limit = yinstagram_number_of_images( $yinstagram );
+  $limit = yinstagram_get_number_of_images($yinstagram_options['number_of_images']);
   
-  $output = '<input id="yinstagram-shortcode-settings-au" name="yinstagram-shortcode-settings-au" type="hidden" value="' . htmlentities( json_encode( array( 'frame_rate' => $yinstagram['frame_rate'], 'speed' => $yinstagram['speed'], 'direction' => $yinstagram['direction'] ) ) ) . '">';
+  $output = '<input id="yinstagram-shortcode-settings-au" name="yinstagram-shortcode-settings-au" type="hidden" value="' . htmlentities( json_encode( array( 'frame_rate' => $yinstagram_options['frame_rate'], 'speed' => $yinstagram_options['speed'], 'direction' => $yinstagram_options['direction'] ) ) ) . '">';
   
   $output .= '<ul id="yinstagram-scroller-auto">';
   
@@ -63,9 +61,9 @@ function yinstagram_get_scroll_auto($yinstagram, $data) {
     if ( $datum->type != 'image' ) continue;
     $i++; $j++;
     $img_src = $datum->images->thumbnail->url;
-    if ($yinstagram['size'] == 'low_resolution')
+    if ($yinstagram_options['size'] == 'low_resolution')
       $img_src = $datum->images->low_resolution->url;
-    elseif ($yinstagram['size'] == 'standard_resolution')
+    elseif ($yinstagram_options['size'] == 'standard_resolution')
       $img_src = $datum->images->standard_resolution->url;
     
     $output .= ($i == 1) ? '<li>' : null;
@@ -88,41 +86,51 @@ function yinstagram_get_scroll_auto($yinstagram, $data) {
   
   $output .= '</ul>';
   
-  if ( $yinstagram['direction'] == 'backwards' ) $images = array_reverse( $images );
+  if ( $yinstagram_options['direction'] == 'backwards' ) $images = array_reverse( $images );
   
   $output .= '<textarea id="yinstagram-shortcode-images-auto" name="yinstagram-shortcode-images-auto" style="display: none;">' . json_encode($images) . '</textarea>';
   
   return $output;
 }
 
-function yinstagram_get_scroll_infinite($yinstagram, $data) {
+function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   $i = $j = $k = 0;
   $images = array();
-  $limit = yinstagram_number_of_images( $yinstagram );
+  $limit = yinstagram_get_number_of_images($yinstagram_options['number_of_images']);
   
-  $output = '<input id="yinstagram-shortcode-settings-inf" name="yinstagram-shortcode-settings-inf" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $yinstagram['colorbox'], 'colorbox_theme' => $yinstagram['theme'], 'colorbox_effect' => $yinstagram['effect'] ) ) ) . '">';
+  if ($yinstagram_options['lightbox'] == 'thickbox') { add_thickbox(); }
+  
+  $output = '<input id="yinstagram-shortcode-settings-inf" name="yinstagram-shortcode-settings-inf" type="hidden" value="' . htmlentities( json_encode( array( 'lightbox' => $yinstagram_options['lightbox'], 'colorbox_theme' => $yinstagram_options['theme'], 'colorbox_effect' => $yinstagram_options['effect'] ) ) ) . '">';
   
   $output .= '<input id="yinstagram-inf-images-i" name="yinstagram-inf-images-i" type="hidden" value="15">';
   
   $output .= '<ul id="yinstagram-scroller-infinite">';
   
   foreach ( $data as $datum ) {
-    if ( $datum->type != 'image' ) continue;
+    if ( $datum->type != 'image' ) { continue; }
     $i++; $j++;
     $img_src = $datum->images->thumbnail->url;
-    if ($yinstagram['size'] == 'low_resolution')
+    if ($yinstagram_options['size'] == 'low_resolution')
       $img_src = $datum->images->low_resolution->url;
-    elseif ($yinstagram['size'] == 'standard_resolution')
+    elseif ($yinstagram_options['size'] == 'standard_resolution')
       $img_src = $datum->images->standard_resolution->url;
     
     $output .= ($i == 1) ? '<li>' : null;
     
-    if ($yinstagram['colorbox']) $output .= '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+    switch($yinstagram_options['lightbox']) {
+      case 'thickbox':
+        $output .= '<a class="yinstagram-cbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '" rel="gallery-yinstagram">';
+        break;
+      case 'colorbox':
+        $output .= '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+        break;
+      default:
+        $output .= '<a target="_blank" href="' . $datum->images->standard_resolution->url . '">';
+    }
     
-    //$output .= '<span class="load_is-' . $datum->id . '"></span>';
     $output .= '<span class="load_is-' . $k++ . '"></span>';
     
-    if ($yinstagram['colorbox']) $output .= '</a>';
+    $output .= '</a>';
     
     $output .= ($i == 4) ? '</li>' : null;
     $i = ($i == 4) ? 0 : $i;
@@ -166,29 +174,29 @@ function yinstagram_extract_hashtags($data) {
   return explode(',', $output);
 }
 
-function yinstagram_get_own_images($auth, $display_images, $number_of_images, $username, $is_shortcode) {
+function yinstagram_get_own_images($access_token, $display_images, $number_of_images, $username, $is_shortcode) {
   $responses = null;
   
   switch ($display_images) {
     case 'feed':
       //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
-      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $auth['access_token'] . '&count=33');
+      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $access_token . '&count=33');
       break;
     case 'liked':
       //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
-      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $auth['access_token'] . '&count=33');
+      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $access_token . '&count=33');
       break;
     default:
       $username = ($username) ? $username: 'self';
       switch ($username) {
         case 'self':
           //https://api.instagram.com/v1/users/3/media/recent/?access_token=ACCESS-TOKEN
-          $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $auth['access_token'] . '&count=33');
+          $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $access_token . '&count=33');
           break;
         default:
-          $user_id = yinstagram_get_user_id($auth, $username);
+          $user_id = yinstagram_get_user_id($access_token, $username);
           if ($user_id)
-            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $auth['access_token'] . '&count=33');
+            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $access_token . '&count=33');
       }
   }
   
@@ -223,14 +231,14 @@ function yinstagram_get_own_images($auth, $display_images, $number_of_images, $u
   return $output;
 }
 
-function yinstagram_get_tags_images($auth, $hashtags, $number_of_images = 1, $is_shortcode = true) {
+function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images = 1, $is_shortcode = true) {
   $tags = yinstagram_extract_hashtags($hashtags);
   $number_of_hashtags = count($tags);
   $count = round(33 / $number_of_hashtags);
   $output = array();
   
   foreach ($tags as $tag) {
-    $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $auth['access_token'] . '&count=' . $count);
+    $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $access_token . '&count=' . $count);
     
     $responses = json_decode($responses);
     
@@ -262,11 +270,11 @@ function yinstagram_get_tags_images($auth, $hashtags, $number_of_images = 1, $is
   return yinstagram_shuffle_assoc( $output );
 }
 
-function yinstagram_styles($yinstagram) {
+function yinstagram_styles($height) {
   ?>
   <style type="text/css">
     .vert, .vert .simply-scroll-clip {
-      height: <?php echo $yinstagram['height'] . 'px'; ?>;
+      height: <?php echo $height . 'px'; ?>;
     }
   </style>
   <?php
@@ -285,20 +293,19 @@ function yinstagram_shuffle_assoc($list) {
   return $random;
 }
 
-function yinstagram_number_of_images($data) {
-  $loop = isset($data['number_of_images']) ? $data['number_of_images'] : '1';
-  
-  $output = 80;
-  
-  if ( $loop == '2' ) $output = 120;
-  elseif ( $loop == '3' ) $output = 160;
-  elseif ( $loop == '4' ) $output = 180;
-  elseif ( $loop == '5' ) $output = 220;
-  elseif ( $loop == '6' ) $output = 260;
-  elseif ( $loop == '7' ) $output = 280;
-  elseif ( $loop == '8' ) $output = 320;
-  elseif ( $loop == '9' ) $output = 360;
-  elseif ( $loop == '10' ) $output = 380;
+function yinstagram_get_number_of_images($loop) {
+  switch($loop) {
+    case '2': $output = 120; break;
+    case '3': $output = 160; break;
+    case '4': $output = 180; break;
+    case '5': $output = 220; break;
+    case '6': $output = 260; break;
+    case '7': $output = 280; break;
+    case '8': $output = 320; break;
+    case '9': $output = 360; break;
+    case '10': $output = 380; break;
+    default: $output = 80;
+  }
   
   return $output;
 }

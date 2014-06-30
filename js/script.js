@@ -73,13 +73,13 @@ jQuery(function($){
     });
     
     // shortcode colorbox
-    if (yinstagram_shortcode_settings['colorbox_status']) {
+    if (yinstagram_shortcode_settings['lightbox'] === 'colorbox' ) {
       if (yinstagram_shortcode_settings['colorbox_effect'] === 'fade') {
-        $(".yinstagram-cbox").colorbox({rel: 'yinstagram-cbox', transition: 'fade'});
+        $(".yinstagram-cbox").colorbox({rel: 'yinstagram-cbox', transition: 'fade', scalePhotos: true, maxHeight: '90%'});
       } else if (yinstagram_shortcode_settings['colorbox_effect'] === 'slideshow') {
-        $(".yinstagram-cbox").colorbox({rel: 'yinstagram-cbox', slideshow: true});
+        $(".yinstagram-cbox").colorbox({rel: 'yinstagram-cbox', slideshow: true, scalePhotos: true, maxHeight: '90%'});
       } else {
-        $(".yinstagram-cbox").colorbox({rel: 'yinstagram-cbox'});
+        $(".yinstagram-cbox").colorbox({rel: 'yinstagram-cbox', scalePhotos: true, maxHeight: '90%'});
       }
     }
   }
@@ -96,7 +96,7 @@ jQuery(function($){
         setTimeout( function() {
           $('.load_w-'+yinstagram_widget_images[i].id).html('<em style="width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;"></em>');
           
-          $( '<img class="img_w-' + yinstagram_widget_images[i].id + '" src="' + yinstagram_widget_images[i].src + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
+          $( '<img class="img_w-' + yinstagram_widget_images[i].id + '" title="' + yinstagram_widget_images[i].title +'" src="' + yinstagram_widget_images[i].src + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
             $( '.load_w-'+yinstagram_widget_images[i].id ).replaceWith(this);
             $('.img_w-'+yinstagram_widget_images[i].id).fadeIn();
           });
@@ -108,13 +108,13 @@ jQuery(function($){
     }
     
     // widget colorbox
-    if (yinstagram_widget_settings['colorbox_status']) {
+    if (yinstagram_widget_settings['lightbox'] === 'colorbox') {
       if ( yinstagram_widget_settings['colorbox_effect'] === 'fade' ) {
-        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', transition:'fade'});
+        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', transition:'fade', scalePhotos: true, maxHeight: '90%'});
       } else if ( yinstagram_widget_settings['colorbox_effect'] === 'slideshow' ) {
-        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', slideshow:true});
+        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', slideshow:true, scalePhotos: true, maxHeight: '90%'});
       } else {
-        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox'});
+        $(".yinstagram-cbox").colorbox({rel:'yinstagram-cbox', scalePhotos: true, maxHeight: '90%'});
       }
     }
   }
@@ -125,6 +125,11 @@ jQuery(function($){
     resizeWidgetImages();
   }
   // end of profile widget
+  
+  // remove # (Octothorpe, Number, Pound, sharp, or Hash) on thickbox modal dialog
+  $(document.body).on('click', '#TB_closeWindowButton',function(e) {
+    e.preventDefault();
+  });
   
   /*
    * backend
@@ -270,7 +275,7 @@ jQuery(function($){
     e.preventDefault();
   });
   
-  // scroll option
+  // scroll options
   $('#scroll').change(function() {
     var arr_au = [ 2, 3, 4, 5 ];
     if ($(this).val() === 'auto') {
@@ -284,14 +289,17 @@ jQuery(function($){
     }
   });
   
-  // colorbox
-  $('#colorbox').change(function() {
-    if(this.checked) {
-      $('#theme').prop('disabled', false);
-      $('#effect').prop('disabled', false);
+  // lightbox options
+  $('#lightbox').change(function() {
+    var arr_cb = [ 7, 8 ];
+    if ($(this).val() === 'colorbox') {
+      $.each(arr_cb, function(key, value) {
+        $('table.form-table tbody tr:nth-child(' + value + ')').show();
+      });
     } else {
-      $('#theme').prop('disabled', true);
-      $('#effect').prop('disabled', true);
+      $.each(arr_cb, function(key, value) {
+        $('table.form-table tbody tr:nth-child(' + value + ')').hide();
+      });
     }
   });
   

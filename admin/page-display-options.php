@@ -59,23 +59,22 @@
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row">Colorbox</th>
+          <th scope="row">Lightbox</th>
           <td>
-            <fieldset>
-              <legend class="screen-reader-text"><span>Colorbox</span></legend>
-              <label for="colorbox">
-                <input type="checkbox" value="1" id="colorbox" name="ydo[colorbox]" <?php echo empty($data['colorbox']) ? null : 'checked'; ?>>Enable
-              </label>
-            </fieldset>
-            <p class="description">Enable for images widget and infinite scroll.</p>
+            <select id="lightbox" name="ydo[lightbox]">
+              <option value="disable" <?php echo ($data['lightbox'] == 'disable') ? 'selected="selected"' : null; ?>>Disable&nbsp;</option>
+              <option value="thickbox" <?php echo ($data['lightbox'] == 'thickbox') ? 'selected="selected"' : null; ?>>ThickBox&nbsp;</option>
+              <option value="colorbox" <?php echo ($data['lightbox'] == 'colorbox') ? 'selected="selected"' : null; ?>>Colorbox&nbsp;</option>
+            </select>
+            <p class="description">Only for images widget and infinite scroll.</p>
           </td>
         </tr>
-        <tr valign="top">
+        <tr valign="top" style="<?php echo ( $data['lightbox'] == 'colorbox' ) ? '' : 'display: none;'; ?>">
           <th scope="row">
             <label for="theme">Theme</label>
           </th>
           <td>
-            <select id="theme" name="ydo[theme]" <?php echo empty($data['colorbox']) ? 'disabled' : null; ?>>
+            <select id="theme" name="ydo[theme]">
               <option value="1" <?php echo ($data['theme'] == '1') ? 'selected="selected"' : null; ?>>1&nbsp;</option>
               <option value="2" <?php echo ($data['theme'] == '2') ? 'selected="selected"' : null; ?>>2&nbsp;</option>
               <option value="3" <?php echo ($data['theme'] == '3') ? 'selected="selected"' : null; ?>>3&nbsp;</option>
@@ -84,12 +83,12 @@
             </select>
           </td>
         </tr>
-        <tr valign="top">
+        <tr valign="top" style="<?php echo ( $data['lightbox'] == 'colorbox' ) ? '' : 'display: none;'; ?>">
           <th scope="row">
             <label for="effect">Effect</label>
           </th>
           <td>
-            <select id="effect" name="ydo[effect]" <?php echo empty($data['colorbox']) ? 'disabled' : null; ?>>
+            <select id="effect" name="ydo[effect]">
               <option value="elastic" <?php echo ($data['effect'] == 'elastic') ? 'selected="selected"' : null; ?>>Elastic&nbsp;</option>
               <option value="fade" <?php echo ($data['effect'] == 'fade') ? 'selected="selected"' : null; ?>>Fade&nbsp;</option>
               <option value="slideshow" <?php echo ($data['effect'] == 'slideshow') ? 'selected="selected"' : null; ?>>Slideshow&nbsp;</option>

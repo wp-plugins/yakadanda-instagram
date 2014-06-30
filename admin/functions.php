@@ -13,6 +13,57 @@ function yinstagram_flush_ob_end() {
   ob_end_flush();
 }
 
+$yinstagram_options = yinstagram_get_options();
+function yinstagram_get_options($admin_page = 'all') {
+  $output = array();
+  
+  if (($admin_page == 'all') || ($admin_page == 'settings')) {
+    $default = array (
+        'client_id' => null,
+        'client_secret' => null,
+        'display_your_images' => 'recent',
+        'option_display_the_following_hashtags' => 0,
+        'display_the_following_hashtags' =>  null,
+        'size' => 'thumbnail',
+        'number_of_images' => 1,
+        'username_of_user_id' => null
+      );
+    $settings = wp_parse_args( get_option('yinstagram_settings'), $default );
+    $output = array_merge((array) $output, (array) $settings);
+  }
+  
+  if (($admin_page == 'all') || ($admin_page == 'display_options')) {
+    // suit previous display options settings
+    $display_options = get_option('yinstagram_display_options');
+    
+    $default = array(
+        'scroll' => 'auto',
+        'height' => 300,
+        'frame_rate' => 24,
+        'speed' => 1,
+        'direction' => 'forwards',
+        'lightbox' => (isset($display_options['colorbox']) && ($display_options['colorbox'] == '1')) ? 'colorbox' : 'disable',
+        'theme' => '1',
+        'effect' => 'elastic',
+        'display_social_links' => null,
+        'order' => 'default'
+      );
+    $display_options_preferences = wp_parse_args( $display_options, $default );
+    $output = array_merge((array) $output, (array) $display_options_preferences);
+  }
+  
+  if (($admin_page == 'all') || ($admin_page == 'settings') || ($admin_page == 'token')) {
+    $default = array(
+      'access_token' => null,
+      'user' => null
+    );
+    $token = wp_parse_args( get_option('yinstagram_access_token'), $default );
+    $output = array_merge((array) $output, (array) $token);
+  }
+  
+  return $output;
+}
+
 function yinstagram_get_page() {
   $requet_uri = str_replace('/wp-admin/', '', $_SERVER['REQUEST_URI']);
   
@@ -57,7 +108,7 @@ function yinstagram_page_settings() {
   
   /* authentication */
   if (isset($_GET['code'])) {
-    $data = get_option('yinstagram_settings');
+    $data = yinstagram_get_options('settings');
     
     $response = (array) wp_remote_post("https://api.instagram.com/oauth/access_token", array(
           'method' => 'POST',
@@ -211,10 +262,10 @@ function yinstagram_section_shortcode() {
   return $output;
 }
 
-function yinstagram_get_user_info( $auth ) {
+function yinstagram_get_user_info($yinstagram_options) {
   $output = null;
   
-  $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $auth['user']->id . '/?access_token=' . $auth['access_token']);
+  $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $yinstagram_options['user']->id . '/?access_token=' . $yinstagram_options['access_token']);
   $responses = json_decode($responses);
   
   if ( $responses->meta->code == 200 )
@@ -223,11 +274,25 @@ function yinstagram_get_user_info( $auth ) {
   return $output;
 }
 
-function yinstagram_get_user_id($auth, $username) {
+function yinstagram_get_relationships($yinstagram_options) {
+  $output = null;
+  
+  //  Get the list of users this user is followed by. 
+  $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $yinstagram_options['user']->id . '/followed-by?access_token=' . $yinstagram_options['access_token']);
+  
+  $responses = json_decode($responses);
+  
+  if ( $responses->meta->code == 200 )
+    $output = $responses;
+  
+  return $output;
+}
+
+function yinstagram_get_user_id($access_token, $username) {
   $id = null;
   
   if ($username != 'self') {
-    $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/search?q=' . $username . '&access_token=' . $auth['access_token']);
+    $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/search?q=' . $username . '&access_token=' . $access_token);
     
     $responses = json_decode($responses);
     
@@ -237,20 +302,6 @@ function yinstagram_get_user_id($auth, $username) {
   }
   
   return $id;
-}
-
-function yinstagram_get_relationships($auth) {
-  $output = null;
-  
-  //  Get the list of users this user is followed by. 
-  $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $auth['user']->id . '/followed-by?access_token=' . $auth['access_token']);
-  
-  $responses = json_decode($responses);
-  
-  if ( $responses->meta->code == 200 )
-    $output = $responses;
-  
-  return $output;
 }
 
 if (!get_option( 'yinstagram_ignore_notice' )) add_action('admin_notices', 'yinstagram_admin_notice');
@@ -305,51 +356,4 @@ function yinstagram_restore_display_options_callback() {
     echo admin_url('admin.php?page=yinstagram/display-options.php');
   }
   die();
-}
-
-function yinstagram_get_options($admin_page = 'all') {
-  $output = array();
-  
-  if (($admin_page == 'all') || ($admin_page == 'settings')) {
-    $default = array (
-        'client_id' => null,
-        'client_secret' => null,
-        'display_your_images' => 'recent',
-        'option_display_the_following_hashtags' => 0,
-        'display_the_following_hashtags' =>  null,
-        'size' => 'thumbnail',
-        'number_of_images' => 1,
-        'username_of_user_id' => null
-      );
-    $settings = wp_parse_args( get_option('yinstagram_settings'), $default );
-    $output = array_merge((array) $output, (array) $settings);
-  }
-  
-  if (($admin_page == 'all') || ($admin_page == 'display_options')) {
-    $default = array(
-        'scroll' => 'auto',
-        'height' => 300,
-        'frame_rate' => 24,
-        'speed' => 1,
-        'direction' => 'forwards',
-        'colorbox' => null,
-        'theme' => '1',
-        'effect' => 'elastic',
-        'display_social_links' => null,
-        'order' => 'default'
-      );
-    $display_options = wp_parse_args( get_option('yinstagram_display_options'), $default );
-    $output = array_merge((array) $output, (array) $display_options);
-  }
-  
-  if (($admin_page == 'all') || ($admin_page == 'settings') || ($admin_page == 'token')) {
-    $default = array(
-      'access_token' => null,
-      'user' => null
-    );
-    $token = wp_parse_args( get_option('yinstagram_access_token'), $default );
-    $output = array_merge((array) $output, (array) $token);
-  }
-  
-  return $output;
 }

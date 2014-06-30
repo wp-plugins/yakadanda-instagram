@@ -8,6 +8,8 @@ class YInstagram_Widget extends WP_Widget {
   }
   
   public function widget($args, $instance) {
+    global $yinstagram_options;
+    
     extract($args);
     $title = apply_filters('widget_title', empty($instance['title']) ? null : $instance['title'], $instance, $this->id_base);
     
@@ -27,16 +29,14 @@ class YInstagram_Widget extends WP_Widget {
     
     if (!empty($title)) echo $before_title . $title . $after_title;
     
-    $auth = get_option('yinstagram_access_token');
-    if (isset($auth['access_token']) && isset($auth['user'])) {
-      
+    if (isset($yinstagram_options['access_token']) && isset($yinstagram_options['user'])) {
       $data = null;
       switch($instance['display_images']) {
         case 'tags':
-          $data = yinstagram_get_tags_images($auth, $instance['hashtags'], null, false);
+          $data = yinstagram_get_tags_images($yinstagram_options['access_token'], $instance['hashtags'], null, false);
           break;
         default:
-          $data = yinstagram_get_own_images($auth, $instance['display_images'], 1, $instance['username_of_user_id'], false);
+          $data = yinstagram_get_own_images($yinstagram_options['access_token'], $instance['display_images'], 1, $instance['username_of_user_id'], false);
       }
       
       if ($instance['order'] == 'shuffle') { shuffle($data); }
@@ -44,7 +44,7 @@ class YInstagram_Widget extends WP_Widget {
       switch($instance['type']) {
         case 'profile':
           /*begin profile type*/
-          $u_info = yinstagram_get_user_info($auth);
+          $u_info = yinstagram_get_user_info($yinstagram_options);
 
           if ( $u_info && !empty($data) ) {
             echo '<div class="yinstagram_profile">';
@@ -85,12 +85,13 @@ class YInstagram_Widget extends WP_Widget {
         default:
           /*begin images type*/
           if (!empty($data)) {
-            $settings = yinstagram_get_options();
             $i = 0;
             
-            echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'colorbox_status' => $settings['colorbox'], 'colorbox_effect' => $settings['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
+            if ($yinstagram_options['lightbox'] == 'thickbox') { add_thickbox(); }
             
-            echo ($settings['colorbox']) ? '<ul class="yinstagram_grid colorbox_on">' : '<ul class="yinstagram_grid">';
+            echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'lightbox' => $yinstagram_options['lightbox'], 'colorbox_effect' => $yinstagram_options['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
+            
+            echo ($yinstagram_options['lightbox'] == 'disable') ? '<ul class="yinstagram_grid">' : '<ul class="yinstagram_grid lightbox_on">';
             
             foreach ($data as $datum) {
               $img_src = $datum->images->thumbnail->url;
@@ -99,12 +100,24 @@ class YInstagram_Widget extends WP_Widget {
               elseif ($instance['size'] == 'standard_resolution')
                 $img_src = $datum->images->standard_resolution->url;
               
-              $images[] = array('id' => $datum->id, 'src' => $img_src);
+              $images[] = array(
+                  'id' => $datum->id,
+                  'title' => str_replace('"', "'", (string) $datum->caption->text),
+                  'src' => $img_src
+                );
 
               echo '<li>';
 
-              if ($settings['colorbox']) echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
-              else echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+              switch($yinstagram_options['lightbox']) {
+                case 'thickbox':
+                  echo '<a class="yinstagram-cbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '" rel="gallery-yinstagram">';
+                  break;
+                case 'colorbox':
+                  echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+                  break;
+                default:
+                  echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '">';
+              }
 
               echo '<span class="load_w-' . $datum->id . '" ' . $style . '></span>';
               echo '</a></li>';
@@ -212,7 +225,7 @@ class YInstagram_Widget extends WP_Widget {
   }
 }
 
-function yinstagram_get_excerpt($str, $startPos = 0, $maxLength = 30) {
+function yinstagram_get_excerpt($str, $startPos = 0, $maxLength = 40) {
   $str = preg_replace("#(.*)<iframe(.*?)</iframe>(.*)#", '', $str);
   if (strlen($str) > $maxLength) {
     $excerpt = substr($str, $startPos, $maxLength - 3);
