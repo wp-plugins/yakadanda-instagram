@@ -51,9 +51,9 @@ Not connected or possibility you have entered tags that does not exist in Instag
 
 No attribute will retrieves Instagram images based on plugin settings, and if have attribute will override plugin settings.
 
-1. display_images	=	Get the authenticated user\'s "feed", list of media they've "liked", or get the most "recent" media published by a user.
-2. username	=	Get the most recent images published by a username, e.g. "motogp"
-3. hashtags	=	Get a list of recently tagged media, e.g. "#supercar, #hypercar"
+1. display_images	=	Get the authenticated user's `"feed"`, list of media they've `"liked"`, or get the most `"recent"` media published by a user.
+2. username	=	Get the most recent images published by a username, e.g. `"motogp"`
+3. hashtags	=	Get a list of recently tagged media, e.g. `"#supercar, #hypercar"`
 
 == Screenshots ==
 
