@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images based on profile and hashtags.
-  Version: 0.1.3
+  Version: 0.1.4
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -27,7 +27,7 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.3');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.4');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
@@ -54,7 +54,7 @@ function yinstagram_register() {
   
   /* Register styles */
   wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', false, YINSTAGRAM_VER, 'all');
-  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.4.15', 'all');
+  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.5.10', 'all');
   if (file_exists(YINSTAGRAM_THEME_DIR . '/css/yakadanda-instagram.css')) {
     wp_register_style('yinstagram-style', YINSTAGRAM_THEME_URL . '/css/yakadanda-instagram.css', false, YINSTAGRAM_VER, 'all');
   } else {
@@ -105,12 +105,9 @@ function yinstagram_wp_enqueue_scripts() {
   wp_enqueue_script('jquery');
   wp_enqueue_script('yinstagram-simplyScroll');
 
-  if ($yinstagram_options['lightbox'] == 'thickbox') { wp_enqueue_script('thickbox'); }
   if ($yinstagram_options['lightbox'] == 'colorbox') { wp_enqueue_script('yinstagram-colorbox'); }
 
   wp_enqueue_script('yinstagram-script');
 }
 
-require_once( dirname(__FILE__) . '/admin/functions.php' );
-require_once( dirname(__FILE__) . '/shortcode.php' );
-require_once( dirname(__FILE__) . '/widget.php' );
+require_once( dirname(__FILE__) . '/admin/includes.php' );

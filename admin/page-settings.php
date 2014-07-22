@@ -8,7 +8,7 @@
   <?php if (isset($message['cookie'])) setcookie('yinstagram_response', null, time()-1, '/'); endif; ?>
   <form action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="update_settings" value="1" />
-    <p>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> to register Instagram client, or <a id="yinstagram-help-tab" href="#">see these manual</a> for help.</p>
+    <p>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> to register Instagram client, or <a id="yinstagram-setup-help-tab" href="#">see these steps</a> for help. See <a id="yinstagram-shortcode-help-tab" href="#">shortcode documentation</a> to override plugin settings.</p>
     <table class="form-table">
       <tbody>
         <tr valign="top">

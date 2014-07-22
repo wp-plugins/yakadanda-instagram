@@ -713,6 +713,7 @@ button.ui-button::-moz-focus-inner {
 /* endOfJqueryUiDialog */
 
 #tab-panel-yinstagram-shortcode p span,
+#tab-panel-yinstagram-shortcode .sc_key span,
 #tab-panel-yinstagram-setup ol li span,
 .yinstagram-notice p span {
   font-family:"Courier New", Courier, monospace;
@@ -720,4 +721,14 @@ button.ui-button::-moz-focus-inner {
 
 .yinstagram-notice p:first-child {
   text-align: right;
+}
+
+.toplevel_page_yinstagram-settings .help-tab-content ul.sc_examples li,
+.yinstagram_page_yinstagram-display-options .help-tab-content ul.sc_examples li {
+  list-style: none;
+  margin-left: 0;
+}
+
+.toplevel_page_yinstagram-settings .sc_key span {
+  font-family:"Courier New", Courier, monospace;
 }

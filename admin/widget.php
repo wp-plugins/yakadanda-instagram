@@ -89,7 +89,7 @@ class YInstagram_Widget extends WP_Widget {
             
             if ($yinstagram_options['lightbox'] == 'thickbox') { add_thickbox(); }
             
-            echo '<input id="yinstagram-widget-settings" name="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'lightbox' => $yinstagram_options['lightbox'], 'colorbox_effect' => $yinstagram_options['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
+            echo '<input class="yinstagram-widget-settings" type="hidden" value="' . htmlentities( json_encode( array( 'lightbox' => $yinstagram_options['lightbox'], 'colorbox_effect' => $yinstagram_options['effect'], 'dimensions' => $instance['custom_size'] ) ) ) . '">';
             
             echo ($yinstagram_options['lightbox'] == 'disable') ? '<ul class="yinstagram_grid">' : '<ul class="yinstagram_grid lightbox_on">';
             
@@ -110,10 +110,10 @@ class YInstagram_Widget extends WP_Widget {
 
               switch($yinstagram_options['lightbox']) {
                 case 'thickbox':
-                  echo '<a class="yinstagram-cbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '" rel="gallery-yinstagram">';
+                  echo '<a class="yinstagram-lbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '" rel="gallery-yinstagram">';
                   break;
                 case 'colorbox':
-                  echo '<a class="yinstagram-cbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+                  echo '<a class="yinstagram-lbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
                   break;
                 default:
                   echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '">';
@@ -128,7 +128,7 @@ class YInstagram_Widget extends WP_Widget {
             }
             echo '</ul>';
 
-            echo '<textarea id="yinstagram-widget-images" name="yinstagram-widget-images" style="display: none;">' . json_encode($images) . '</textarea>';
+            echo '<textarea class="yinstagram-widget-images" style="display: none;">' . json_encode($images) . '</textarea>';
 
           } else {
             echo '<p>Request timed out, or no have ' . $instance['display_images'] . ' images.</p>';

@@ -257,8 +257,22 @@ function yinstagram_section_setup() {
 }
 
 function yinstagram_section_shortcode() {
-  $output = '<p><code>[yinstagram]</code></p>';
-
+  $output = '<h1>Shortcode</h1>';
+  $output .= '<p><strong>Examples</strong></p>';
+  $output .= '<ul class="sc_examples">';
+  $output .= '<li><code>[yinstagram]</code></li>';
+  $output .= '<li><code>[yinstagram display_images="liked"]</code></li>';
+  $output .= '<li><code>[yinstagram username="motogp"]</code></li>';
+  $output .= '<li><code>[yinstagram hashtags="#supercar, #hypercar"]</code></li>';
+  $output .= '</ul>';
+  $output .= '<p><strong>Attributes</strong></p>';
+  $output .= '<table class="sc_key"><tbody>';
+  $output .= '<tr><td style="vertical-align: top;" colspan="3">No attribute will retrieves Instagram images based on plugin settings, and if have attribute will override plugin settings.</td></tr>';
+  $output .= '<tr><td style="vertical-align: top;">display_images</td><td style="vertical-align: top;">=</td><td>Get the authenticated user\'s <span>"feed"</span>, list of media they\'ve <span>"liked"</span>, or get the most <span>"recent"</span> media published by a user.</td></tr>';
+  $output .= '<tr><td style="vertical-align: top;">username</td><td style="vertical-align: top;">=</td><td>Get the most recent images published by a username, e.g. <span>"motogp"</td></tr>';
+  $output .= '<tr><td style="vertical-align: top;">hashtags</td><td style="vertical-align: top;">=</td><td>Get a list of recently tagged media, e.g. <span>"#supercar, #hypercar"</span></td></tr>';
+  $output .= '<tbody></table>';
+  
   return $output;
 }
 

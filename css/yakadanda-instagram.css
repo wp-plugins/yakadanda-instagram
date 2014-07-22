@@ -58,7 +58,7 @@ Note all DIVs are generated and should not be hard-coded
 
 .simply-scroll-list li img,
 .simply-scroll-list li span em,
-#yinstagram-scroller-infinite li img {
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img {
   border: none;
   display: block;
 }
@@ -205,8 +205,8 @@ Note all DIVs are generated and should not be hard-coded
 }
 .vert .simply-scroll-list li img,
 .vert .simply-scroll-list li span em,
-#yinstagram-scroller-infinite li img,
-#yinstagram-scroller-infinite li span em {
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li span em {
   float: left;
 }
 
@@ -228,13 +228,19 @@ Note all DIVs are generated and should not be hard-coded
 
 /* NOTE left-right classes wouldn't be needed on vertical scroller */
 
-#yinstagram-scroller-auto,
-#yinstagram-scroller-infinite {
+.yinstagram-shortcode-auto .yinstagram-scroller-auto,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite {
   list-style-type: none;
 }
 
-#yinstagram-scroller-auto, #yinstagram-scroller-auto li, #yinstagram-scroller-auto li img, #yinstagram-scroller-auto li span em,
-#yinstagram-scroller-infinite, #yinstagram-scroller-infinite li, #yinstagram-scroller-infinite li img, #yinstagram-scroller-infinite li span em {
+.yinstagram-shortcode-auto .yinstagram-scroller-auto,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li img,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li span em,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li span em {
   margin: 0;
   padding: 0;
 }
@@ -280,7 +286,7 @@ Note all DIVs are generated and should not be hard-coded
 }
 
 .yinstagram_grid li a span em,
-#yinstagram-scroller-infinite li span em {
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li span em {
   background: transparent url('../img/ajax-loader.gif') no-repeat center center;
   display: block;
 }
@@ -384,7 +390,7 @@ div .widget_yinstagram .yinstagram_profile ul.images {
 }
 
 div .widget_yinstagram .yinstagram_profile ul.images li,
-#yinstagram-scroller-infinite li {
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li {
   font-size: 0;
   line-height: 0;
   list-style-position: outside;
@@ -393,8 +399,8 @@ div .widget_yinstagram .yinstagram_profile ul.images li,
 }
 
 div .widget_yinstagram .yinstagram_profile ul.images li img,
-#yinstagram-scroller-auto li img,
-#yinstagram-scroller-infinite li img {
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li img,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img {
   padding: 0;
   margin: 0;
   border-radius: 0px;
@@ -437,6 +443,13 @@ div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:nth-chil
   padding: 0;
 }
 
-.infinite_scroll ul.links li {
-  margin: 1.5em 0 0 0;
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
 }
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
