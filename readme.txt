@@ -47,10 +47,10 @@ Not connected or possibility you have entered tags that does not exist in Instag
 == Changelog ==
 
 = 0.1.3 =
-* Added ThickBox feature
+* Added ThickBox
 * Upgraded ColorBox
 * Added image scale on modal dialog
-* Filter the scripts and the styles if plugin feature is enable or disable
+* Filter the scripts and the styles if plugin features is enable or disable
 
 = 0.1.2 =
 * Improved logout feature and reset feature
