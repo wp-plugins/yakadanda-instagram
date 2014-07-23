@@ -83,7 +83,7 @@ jQuery(function($){
       
     });
     
-    var yinstagram_shortcode_settings = $.parseJSON( $('.yinstagram-shortcode-settings-inf:first-child').val() );
+    var yinstagram_shortcode_settings = $.parseJSON( $('.yinstagram-shortcode-settings-inf:first').val() );
     
     // shortcode lightbox
     modalDialog(yinstagram_shortcode_settings);
@@ -96,12 +96,17 @@ jQuery(function($){
     $('.widget_yinstagram').each(function() {
       var yinstagram_widget_settings = $.parseJSON( $('.yinstagram-widget-settings', this).val() ),
         yinstagram_widget_images = $.parseJSON( $('.yinstagram-widget-images', this).val() ),
+        contentWidthAu = parseInt( $('.yinstagram_grid', this).width() ),
         timeDelayW = 0;
       
       if ( yinstagram_widget_images ) {
         $.each(yinstagram_widget_images, function(i, item) {
           setTimeout( function() {
             $('.load_w-'+yinstagram_widget_images[i].id).html('<em style="width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;"></em>');
+
+            if (yinstagram_widget_settings['dimensions'] === "") {
+              yinstagram_widget_settings['dimensions'] = contentWidthAu;
+            }
 
             $( '<img class="img_w-' + yinstagram_widget_images[i].id + '" title="' + yinstagram_widget_images[i].title +'" src="' + yinstagram_widget_images[i].src + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
               $( '.load_w-'+yinstagram_widget_images[i].id ).replaceWith(this);
@@ -115,20 +120,30 @@ jQuery(function($){
       }
     });
     
-    var yinstagram_widget_settings = $.parseJSON( $('.yinstagram-widget-settings:first-child').val() );
+    var yinstagram_widget_settings = $.parseJSON( $('.yinstagram-widget-settings:first').val() );
     
     // widget lightbox
     modalDialog(yinstagram_widget_settings);
+
+    if (yinstagram_widget_settings['dimensions'] === "") {
+      resizeWidgetImages();
+      
+      //Adjusts image when browser resized
+      $(window).bind("resize", function(){
+        resizeWidgetImages();
+      });
+    }
+
   }
   // end of image widget
   
   // profile widget
   if ( $('.widget_yinstagram').find('.yinstagram_profile').length >= 1 ) {
-    resizeWidgetProfileImages();
+    resizeWidgetProfile();
     
     //Adjusts image when browser resized
     $(window).bind("resize", function(){
-      resizeWidgetProfileImages();
+      resizeWidgetProfile();
     });
   }
   
@@ -328,36 +343,50 @@ jQuery(function($){
  */
 function resizeShortcodeImagesAuto() {
   jQuery(function($){
-    var contentWidthAu = parseInt($('.simply-scroll-clip').width()),
-      AuDimensions = ( contentWidthAu * 24.9 ) / 100;
+    $('.yinstagram-shortcode-auto').each(function() {
+      var contentWidthAu = parseInt($('.simply-scroll-clip', this).width()),
+        AuDimensions = ( contentWidthAu * 24.9 ) / 100;
       
-    $('.yinstagram-scroller-auto li img').attr( 'style', 'width: ' + AuDimensions + 'px; height: ' + AuDimensions + 'px;');
+      $('.yinstagram-scroller-auto li img', this).attr( 'style', 'width: ' + AuDimensions + 'px; height: ' + AuDimensions + 'px;');
     
-    $('.yinstagram-scroller-auto li span em').attr( 'style', 'width: ' + AuDimensions + 'px; height: ' + AuDimensions + 'px;');
-    
-    $('.vert .simply-scroll-list li').attr( 'style', 'height:' + AuDimensions + 'px;');
+      $('.yinstagram-scroller-auto li span em', this).attr( 'style', 'width: ' + AuDimensions + 'px; height: ' + AuDimensions + 'px;');
+      
+      $('.vert .simply-scroll-list li', this).attr( 'style', 'height:' + AuDimensions + 'px;');
+    });
   });
 }
 
 function resizeShortcodeImagesInfinite() {
   jQuery(function($){
-    var contentWidthInf = parseInt($('.yinstagram-scroller-infinite').width()),
-      infDimensions = ( contentWidthInf * 24.9 ) / 100;
+    $('.yinstagram-shortcode-infinite').each(function() {
+      var contentWidthInf = parseInt($('.yinstagram-scroller-infinite', this).width()),
+        infDimensions = ( contentWidthInf * 24.9 ) / 100;
       
-    $('.yinstagram-scroller-infinite li img').attr( 'style', 'width: ' + infDimensions + 'px; height: ' + infDimensions + 'px;');
-    
-    $('.yinstagram-scroller-infinite li span em').attr( 'style', 'width: ' + infDimensions + 'px; height: ' + infDimensions +'px;');
-    
-    
+      $('.yinstagram-scroller-infinite li img', this).attr( 'style', 'width: ' + infDimensions + 'px; height: ' + infDimensions + 'px;');
+      
+      $('.yinstagram-scroller-infinite li span em', this).attr( 'style', 'width: ' + infDimensions + 'px; height: ' + infDimensions +'px;');
+    });
   });
 }
 
-function resizeWidgetProfileImages() {
+function resizeWidgetImages() {
   jQuery(function($){
-    var contentWidthAu = parseInt($('.yinstagram_profile ul.images').width()),
-    dimensions = ( contentWidthAu * 24.9 ) / 100;
-    
-    $('.yinstagram_profile ul.images li img').attr( 'style', 'width: '+dimensions+'px; height:'+dimensions+'px;');
+    $('.yinstagram_grid').each(function() {
+      var contentWidthAu = parseInt($(this).width());
+
+      $(this).find('li img').attr( 'style', 'width: '+contentWidthAu+'px; height:'+contentWidthAu+'px;');
+    });
+  });
+}
+
+function resizeWidgetProfile() {
+  jQuery(function($){
+    $('.yinstagram_profile').each(function() {
+      var contentWidthAu = parseInt($('ul.images', this).width()),
+        dimensions = ( contentWidthAu * 24.9 ) / 100;
+
+      $('ul.images li img', this).attr( 'style', 'width: '+dimensions+'px; height:'+dimensions+'px;');
+    });
   });
 }
 
