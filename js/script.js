@@ -80,6 +80,11 @@ jQuery(function($){
           loadInfiniteImages(yinstagram_shortcode_images_au_inf, infDimensions, ySinfinite);
         }
       });
+
+      $('.yinstagram-load-more').click(function(e) {
+        loadInfiniteImages(yinstagram_shortcode_images_au_inf, infDimensions, ySinfinite);
+        e.preventDefault();
+      });
       
     });
     
@@ -394,6 +399,8 @@ function loadInfiniteImages(yinstagram_shortcode_images_au_inf, infDimensions, y
   jQuery(function($){
     var iBreak = parseInt($('.yinstagram-inf-images-i', ySinfinite).val(), 10),
       timeDelayInfS = 0;
+      
+    $('.yinstagram-load-more').hide();
     
     $.each(yinstagram_shortcode_images_au_inf, function(i, item) {
       i = i + ( iBreak - 15 );
@@ -420,6 +427,17 @@ function loadInfiniteImages(yinstagram_shortcode_images_au_inf, infDimensions, y
         return false;
       }
     });
+
+    //show load more button after load finished
+    timeDelayButton = timeDelayInfS + 512;
+    setTimeout( function() {
+      $('.yinstagram-load-more').show();
+    }, timeDelayButton);
+
+    //remove load more button if no image again
+    if ( iBreak > $('.yinstagram-inf-images-i').attr('peak') ) {
+      $('.yinstagram-load-more').remove();
+    }
   });
 }
 

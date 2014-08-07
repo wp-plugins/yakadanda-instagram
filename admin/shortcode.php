@@ -71,8 +71,6 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   
   $output = '<div class="yinstagram-shortcode-auto">';
   
-  $output .= '<input class="yinstagram-shortcode-settings-au" name="yinstagram-shortcode-settings-au" type="hidden" value="' . htmlentities( json_encode( array( 'frame_rate' => $yinstagram_options['frame_rate'], 'speed' => $yinstagram_options['speed'], 'direction' => $yinstagram_options['direction'] ) ) ) . '">';
-  
   $output .= '<ul class="yinstagram-scroller-auto">';
   
   foreach ( $data as $datum ) {
@@ -103,6 +101,8 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   if ($j != $limit) $output .= '</li>';
   
   $output .= '</ul>';
+
+  $output .= '<input class="yinstagram-shortcode-settings-au" name="yinstagram-shortcode-settings-au" type="hidden" value="' . htmlentities( json_encode( array( 'frame_rate' => $yinstagram_options['frame_rate'], 'speed' => $yinstagram_options['speed'], 'direction' => $yinstagram_options['direction'] ) ) ) . '">';
   
   if ( $yinstagram_options['direction'] == 'backwards' ) $images = array_reverse( $images );
   
@@ -121,10 +121,6 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   if ($yinstagram_options['lightbox'] == 'thickbox') { add_thickbox(); }
   
   $output = '<div class="vert yinstagram-shortcode-infinite">';
-  
-  $output .= '<input class="yinstagram-shortcode-settings-inf" name="yinstagram-shortcode-settings-inf" type="hidden" value="' . htmlentities( json_encode( array( 'lightbox' => $yinstagram_options['lightbox'], 'colorbox_theme' => $yinstagram_options['theme'], 'colorbox_effect' => $yinstagram_options['effect'] ) ) ) . '">';
-  
-  $output .= '<input class="yinstagram-inf-images-i" name="yinstagram-inf-images-i" type="hidden" value="15">';
   
   $output .= '<ul class="yinstagram-scroller-infinite clearfix">';
   
@@ -171,10 +167,18 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   if ($j != $limit) $output .= '</li>';
   
   $output .= '</ul>';
+
+  $output .= '<input class="yinstagram-shortcode-settings-inf" name="yinstagram-shortcode-settings-inf" type="hidden" value="' . htmlentities( json_encode( array( 'lightbox' => $yinstagram_options['lightbox'], 'colorbox_theme' => $yinstagram_options['theme'], 'colorbox_effect' => $yinstagram_options['effect'] ) ) ) . '">';
+  
+  $output .= '<input class="yinstagram-inf-images-i" name="yinstagram-inf-images-i" type="hidden" value="15" peak="' . count($images) . '">';
   
   $output .= '<textarea class="yinstagram-shortcode-images-infinite" name="yinstagram-shortcode-images-infinite" style="display: none;">' . json_encode($images) . '</textarea>';
   
   $output .= '</div>';
+  
+  $style = ($yinstagram_options['display_social_links']) ? null : ' style="margin-bottom: 1.5em;"';
+  
+  $output .= '<a href="#" class="yinstagram-load-more"' . $style . '>Load More</a>';
   
   return $output;
 }

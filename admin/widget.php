@@ -68,13 +68,16 @@ class YInstagram_Widget extends WP_Widget {
             echo '</ul><img class="icon" alt="instagram-icon" src="' . YINSTAGRAM_PLUGIN_URL . '/img/instagram-icon-32x32.png"></div>';
 
             echo '<div class="info"><img class="circular" title="' . $u_info->full_name . '" alt="' . $u_info->username . '" src="' . $u_info->profile_picture . '">';
-            echo '<p class="fullname" title="' . $u_info->username . '"><a href="http://instagram.com/' . $u_info->username . '" target="_blank">' . $u_info->full_name . '</a></p>';
+            echo '<p class="fullname" title="' . $u_info->username . '">' . $u_info->full_name . '</p>';
             if ( $u_info->website ) echo '<p class="website"><a href="' . $u_info->website . '" target="_blank">' . preg_replace('#^https?://#', '', $u_info->website) . '</a></p>';
             if ( $u_info->bio ) echo '<p class="bio">' . $u_info->bio . '</p>';
 
             echo '<ul class="counts"><li>Posts: ' . $u_info->counts->media . '</li>';
             echo '<li>Followers: ' . $u_info->counts->followed_by . '</li>';
             echo '<li>Following: ' . $u_info->counts->follows . '</li></ul>';
+            echo '<a href="http://instagram.com/' . $u_info->username . '?ref=badge" class="ig-b- ig-b-v-24">';
+            echo '<img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" />';
+            echo '</a>';
             echo '</div></div>';
 
           } else {

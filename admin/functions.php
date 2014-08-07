@@ -134,7 +134,11 @@ function yinstagram_page_settings() {
       if ($response['response']['code'] == '200') {
         $value = (array) json_decode($response['body']);
         update_option('yinstagram_access_token', $value);
-        $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Connection to Instagram succeeded.'));
+        
+        $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => 'Connection to Instagram failed.'));
+        if (get_option('yinstagram_access_token')) {
+          $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Connection to Instagram succeeded.'));
+        }
       } else {
         $body = json_decode($response['body']);
         $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => $body->error_message));
@@ -243,11 +247,11 @@ function yinstagram_help_tab() {
 function yinstagram_section_setup() {
   $output = '<h1>How to get your Instagram Client ID and Client Secret</h1>';
   $output .= '<ol>';
-  $output .= '<li>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> then login if not logged in.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-1.png"/></li>';
-  $output .= '<li>Click Manage Clients, or Register Your Application button.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-2.png"/></li>';
-  $output .= '<li>Register new OAuth Client by click Register a New Client button.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png"/></li>';
-  $output .= '<li>Setup Register new OAuth Client form.<br><br>';
-  $output .= 'a. Fill textboxes and textarea with suitable information<br>';
+  $output .= '<li>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> then login.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-1.png"/></li>';
+  $output .= '<li>Click Manage Clients menu, or Register Your Application button.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-2.png"/></li>';
+  $output .= '<li>Register a New Client.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png"/></li>';
+  $output .= '<li>Setup Register new Client ID form.<br>';
+  $output .= 'a. Fill textboxes, textarea, and checkboxes with your suitable information, and preferences.<br>';
   $output .= 'b. Fill OAuth redirect_uri textbox with <code>' . admin_url('admin.php?page=yinstagram/settings.php') . '</code><br>';
   $output .= '<img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-4.png"/></li>';
   $output .= '<li>Congratulation, now you have Client ID and Client Secret.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png"/></li>';
