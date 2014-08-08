@@ -3,7 +3,7 @@ Contributors: Yakadanda.com
 Donate link: http://www.yakadanda.com/
 Tags: images, pictures, photos, instagram, yakadanda
 Requires at least: 3.8
-Tested up to: 3.9.1
+Tested up to: 3.9.2
 Stable tag: 0.1.6
 License: GPLv2 or later
 
