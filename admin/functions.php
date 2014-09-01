@@ -108,43 +108,13 @@ function yinstagram_page_settings() {
   
   /* authentication */
   if (isset($_GET['code'])) {
-    $data = yinstagram_get_options('settings');
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => 'Connection to Instagram failed.'));
     
-    $response = (array) wp_remote_post("https://api.instagram.com/oauth/access_token", array(
-          'method' => 'POST',
-          'timeout' => 45,
-          'redirection' => 5,
-          'httpversion' => '1.0',
-          'blocking' => true,
-          'headers' => array(),
-          'body' => array(
-            'client_id' => $data['client_id'],
-            'client_secret' => $data['client_secret'],
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => admin_url('admin.php?page=yinstagram/settings.php'),
-            'code' => $_GET['code'],
-            'response_type' => 'authorization_code'
-          ),
-          'cookies' => array(),
-          'sslverify' => apply_filters('https_local_ssl_verify', false)
-        )
-      );
+    $response = json_decode( yinstagram_access_token($_GET['code']) );
     
-    if (!is_wp_error($response) && isset($response['headers'])) {
-      if ($response['response']['code'] == '200') {
-        $value = (array) json_decode($response['body']);
-        update_option('yinstagram_access_token', $value);
-        
-        $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => 'Connection to Instagram failed.'));
-        if (get_option('yinstagram_access_token')) {
-          $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Connection to Instagram succeeded.'));
-        }
-      } else {
-        $body = json_decode($response['body']);
-        $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => $body->error_message));
-      }
-    } else {
-      $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => $response['errors']['http_request_failed'][0]));
+    if ( isset($response->access_token) ) {
+      update_option('yinstagram_access_token', $response);
+      $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Connection to Instagram succeeded.'));
     }
     
     setcookie('yinstagram_response', $message, time()+1, '/');
@@ -192,7 +162,7 @@ function yinstagram_page_settings() {
       update_option('yinstagram_access_token', null);
       
       $encodeURIComponent = yinstagram_encodeURIComponent(admin_url('admin.php?page=yinstagram/settings.php'));
-      $url = 'https://api.instagram.com/oauth/authorize/?response_type=code&client_id=' . $_POST['client_id'] . '&redirect_uri=' . $encodeURIComponent;
+      $url = 'https://api.instagram.com/oauth/authorize/?client_id=' . $_POST['client_id'] . '&redirect_uri=' . $encodeURIComponent . '&response_type=code';
       
       wp_redirect($url); exit;
     }
@@ -374,4 +344,42 @@ function yinstagram_restore_display_options_callback() {
     echo admin_url('admin.php?page=yinstagram/display-options.php');
   }
   die();
+}
+
+function yinstagram_access_token($code) {
+  $data = yinstagram_get_options('settings');
+  
+  // Get cURL resource
+  $curl = curl_init();
+  // Set some options - we are passing in a useragent too here
+  curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => 'https://api.instagram.com/oauth/access_token',
+    CURLOPT_USERAGENT => 'Yakadanda Instagram Access Token Request',
+    CURLOPT_POST => 1,
+    CURLOPT_POSTFIELDS => array(
+      'client_id' => $data['client_id'],
+      'client_secret' => $data['client_secret'],
+      'grant_type' => 'authorization_code',
+      'redirect_uri' => admin_url('admin.php?page=yinstagram/settings.php'),
+      'code' => $code
+    )
+  ));
+  // Send the request & save response to $resp
+  $resp = curl_exec($curl);
+  // Close request to clear up some resources
+  curl_close($curl);
+  
+  return $resp;
+}
+
+function yinstagram_fetch_data($url) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $result = curl_exec($ch);
+  curl_close($ch);
+  return $result;
 }

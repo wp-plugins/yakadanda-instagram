@@ -2,13 +2,16 @@
 add_shortcode('yinstagram', 'yinstagram_shortcode');
 function yinstagram_shortcode($atts) {
   global $wp, $yinstagram_options;
-  
+
   $a = shortcode_atts( array(
       'display_images' => null, //display_your_images - recent, feed, liked, hashtag
       'username' => null, //username_of_user_id
       'hashtags' => null //display_the_following_hashtags
     ), $atts);
-  
+
+  // Enqueue scripts
+  yinstagram_wp_enqueue_scripts($yinstagram_options);
+
   $display_your_images = empty($a['display_images']) ? $yinstagram_options['display_your_images'] : $a['display_images'];
   
   if ( !empty($a['hashtags']) ) { $display_your_images = 'hashtag'; }
@@ -181,17 +184,6 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   $output .= '<a href="#" class="yinstagram-load-more"' . $style . '>Load More</a>';
   
   return $output;
-}
-
-function yinstagram_fetch_data($url) {
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  $result = curl_exec($ch);
-  curl_close($ch);
-  return $result;
 }
 
 function yinstagram_extract_hashtags($data) {

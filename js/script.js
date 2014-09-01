@@ -113,7 +113,7 @@ jQuery(function($){
               yinstagram_widget_settings['dimensions'] = contentWidthAu;
             }
 
-            $( '<img class="img_w-' + yinstagram_widget_images[i].id + '" title="' + yinstagram_widget_images[i].title +'" src="' + yinstagram_widget_images[i].src + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
+            $( '<img class="img_w-' + yinstagram_widget_images[i].id + '" src="' + yinstagram_widget_images[i].src + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
               $( '.load_w-'+yinstagram_widget_images[i].id ).replaceWith(this);
               $('.img_w-'+yinstagram_widget_images[i].id).fadeIn();
             });
@@ -158,7 +158,7 @@ jQuery(function($){
   $(document.body).on('click', '#TB_closeWindowButton',function(e) {
     e.preventDefault();
   });
-  
+
   /*
    * backend
    */

@@ -9,6 +9,9 @@ class YInstagram_Widget extends WP_Widget {
   
   public function widget($args, $instance) {
     global $yinstagram_options;
+
+    // Enqueue scripts
+    yinstagram_wp_enqueue_scripts($yinstagram_options);
     
     extract($args);
     $title = apply_filters('widget_title', empty($instance['title']) ? null : $instance['title'], $instance, $this->id_base);
@@ -161,7 +164,7 @@ class YInstagram_Widget extends WP_Widget {
   }
 
   public function form($instance) {
-    $auth = get_option('yinstagram_access_token');
+    $auth = yinstagram_get_options('token');
     $title = isset($instance['title']) ? $instance['title'] : __(null, 'text_domain');
     $type = isset($instance['type']) ? $instance['type'] : 'images';
     $display_images = isset($instance['display_images']) ? $instance['display_images'] : 'recent';
@@ -217,7 +220,7 @@ class YInstagram_Widget extends WP_Widget {
       <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limit (max 33):'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" type="text" value="<?php echo esc_attr($limit); ?>" />
     </p>
-      <p>
+    <p>
       <label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Order:'); ?></label><br>
       <select id="<?php echo $this->get_field_id('order'); ?>" name="<?php echo $this->get_field_name('order'); ?>">
         <option value="default" <?php echo ($order == 'default') ? 'selected="selected"' : null; ?>>Default&nbsp;</option>

@@ -1,6 +1,11 @@
 <div class="wrap">
   <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div>
   <h2>Settings</h2>
+  <?php if (!function_exists('curl_version')): ?>
+    <div class="error">
+      <p>Please enable cURL.</p>
+    </div>  
+  <?php endif; ?>
   <?php if ($message): ?>
     <div class="<?php echo $message['class']; ?>">
       <p><?php echo $message['msg']; ?></p>

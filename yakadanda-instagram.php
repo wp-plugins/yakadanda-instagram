@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images of user or hashtags.
-  Version: 0.1.6
+  Version: 0.1.7
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -12,12 +12,9 @@
 /* Put setup procedures to be run when the plugin is activated in the following function */
 register_activation_hook(__FILE__, 'yinstagram_activate');
 function yinstagram_activate() {
-  if (!get_option('yinstagram_settings'))
-    add_option('yinstagram_settings', null, false, false);
-  if (!get_option('yinstagram_display_options'))
-    add_option('yinstagram_display_options', null, false, false);
-  if (!get_option('yinstagram_access_token'))
-    add_option('yinstagram_access_token', null, false, false);
+  if (!get_option('yinstagram_settings')) { add_option('yinstagram_settings', null, false, false); }
+  if (!get_option('yinstagram_display_options')) { add_option('yinstagram_display_options', null, false, false); }
+  if (!get_option('yinstagram_access_token')) { add_option('yinstagram_access_token', null, false, false); }
 }
 
 // On deacativation, clean up anything your component has added.
@@ -27,7 +24,7 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.6');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.7');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
@@ -47,7 +44,7 @@ function yinstagram_action_links($links, $file) {
   return $links;
 }
 
-// Register scripts & styles
+// Register scripts
 add_action('init', 'yinstagram_register');
 function yinstagram_register() {
   global $yinstagram_options;
@@ -69,44 +66,28 @@ function yinstagram_register() {
   // YInstagram
   wp_register_script('yinstagram-script', YINSTAGRAM_PLUGIN_URL . '/js/script.js', array('jquery'), YINSTAGRAM_VER, true);
   
+  // ajax
   wp_localize_script('yinstagram-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ));
-}
-
-// Enqueue styles for admin
-add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_styles');
-function yinstagram_admin_enqueue_styles() {
-  if (yinstagram_is_plugin_page(yinstagram_get_page())) {
-    wp_enqueue_style('yinstagram-admin');
-  }
-}
-// Enqueue then call styles in frontend
-add_action('wp_enqueue_scripts', 'yinstagram_wp_enqueue_styles');
-function yinstagram_wp_enqueue_styles() {
-  global $yinstagram_options;
-  
-  if ($yinstagram_options['lightbox'] == 'colorbox') { wp_enqueue_style('yinstagram-colorbox'); }
-  
-  wp_enqueue_style('yinstagram-style');
 }
 
 // Enqueue scripts for admin
 add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_scripts');
 function yinstagram_admin_enqueue_scripts() {
   if (yinstagram_is_plugin_page(yinstagram_get_page())) {
+    wp_enqueue_style('yinstagram-admin');
+    
     wp_enqueue_script('jquery-ui-dialog');
     wp_enqueue_script('yinstagram-script');
   }
 }
-// Enqueue then call scripts in frontend
-add_action('wp_enqueue_scripts', 'yinstagram_wp_enqueue_scripts');
-function yinstagram_wp_enqueue_scripts() {
-  global $yinstagram_options;
 
-  wp_enqueue_script('jquery');
-  wp_enqueue_script('yinstagram-simplyScroll');
+// Enqueue scripts for frontend
+function yinstagram_wp_enqueue_scripts($yinstagram_options) {
+  if ($yinstagram_options['lightbox'] == 'colorbox') { wp_enqueue_style('yinstagram-colorbox'); }
+  wp_enqueue_style('yinstagram-style');
 
+  if ($yinstagram_options['scroll'] == 'auto') { wp_enqueue_script('yinstagram-simplyScroll'); }
   if ($yinstagram_options['lightbox'] == 'colorbox') { wp_enqueue_script('yinstagram-colorbox'); }
-
   wp_enqueue_script('yinstagram-script');
 }
 
