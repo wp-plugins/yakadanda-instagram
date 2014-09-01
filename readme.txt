@@ -35,21 +35,28 @@ Installation as usual.
 = Do I need an account on Instagram? =
 You only need an Instagram account to embed feeds but not to embed a single Instagram.
 
+= How do I change default style to my preferences? =
+Use yakadanda-instagram.css in yakadanda-instagram/css/yakadanda-instagram.css as reference. Copy that file to your active-theme/css/ as yakadanda-instagram.css
+
 = Why are the images not showing? =
 Not connected or possibility you have entered tags that does not exist in Instagram.
 
 = Shortcode Reference =
-**e.g.**
+
+**Examples**
+
 * `[yinstagram]`
 * `[yinstagram display_images="liked"]`
 * `[yinstagram username="motogp"]`
 * `[yinstagram hashtags="#supercar, #hypercar"]`
 
 **Attributes**
+
 No attribute will retrieves Instagram images based on plugin settings, and if have attribute will override plugin settings.
-1. display_images	=	Get the authenticated user's `"feed"`, list of media they've `"liked"`, or get the most `"recent"` media published by a user.
-2. username	=	Get the most recent images published by a username, e.g. `"motogp"`
-3. hashtags	=	Get a list of recently tagged media, e.g. `"#supercar, #hypercar"`
+
+1. display_images	=	Get the authenticated user's `feed`, list of media they've `liked`, or get the most `recent` media published by a user.
+2. username	=	Get the most recent images published by a username, e.g. `motogp`
+3. hashtags	=	Get a list of recently tagged media, e.g. `#supercar`, `#hypercar`
 
 == Screenshots ==
 
