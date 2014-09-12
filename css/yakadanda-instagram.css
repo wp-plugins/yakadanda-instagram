@@ -1,0 +1,572 @@
+/*
+ * simplyScroll 2 - a scroll-tastic jQuery plugin
+ *
+ * http://logicbox.net/jquery/simplyscroll
+ *
+ * Copyright (c) 2009-2012 Will Kelly - http://logicbox.net
+ *
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ * Last revised: 31/01/2012
+ *
+*/
+
+/* Default/Master classes 
+
+Example markup format (for horizontal scroller)
+Note all DIVs are generated and should not be hard-coded
+
+<div class="your-custom-class simply-scroll-container">
+  <div class="simply-scroll-btn simply-scroll-btn-left"></div>
+  <div class="simply-scroll-btn simply-scroll-btn-right"></div>
+  <div class="simply-scroll-clip">
+    <ul class="simply-scroll-list">
+      <li>...</li>
+      ...
+    </ul>
+  </div>
+</div>
+
+
+*/
+
+.simply-scroll-container { /* Container DIV - automatically generated */
+  position: relative;
+}
+
+.simply-scroll-clip { /* Clip DIV - automatically generated */
+  position: relative;
+  overflow: hidden;
+}
+
+.simply-scroll-list { /* UL/OL/DIV - the element that simplyScroll is inited on */
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+.simply-scroll-list li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+.simply-scroll-list li img,
+.simply-scroll-list li span em,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img {
+  border: none;
+  display: block;
+}
+
+.simply-scroll-list li span em {
+  background: transparent url('../img/ajax-loader.gif') no-repeat center center;
+}
+
+.simply-scroll-btn {
+  position: absolute;
+  background-image: url(buttons.png);
+  width: 42px;
+  height: 44px;
+  z-index:3;
+  cursor: pointer;
+}
+
+.simply-scroll-btn-left {
+  left: 6px;
+  bottom: 6px;
+  background-position: 0 -44px;
+}
+.simply-scroll-btn-left.disabled {
+  background-position: 0 0 !important;
+}
+.simply-scroll-btn-left:hover, .simply-scroll-btn-left:focus {
+  background-position: 0 -88px;
+}
+
+.simply-scroll-btn-right {
+  right: 6px;
+  bottom: 6px;
+  background-position: -84px -44px;
+}
+.simply-scroll-btn-right.disabled {
+  background-position: -84px 0 !important;
+}
+.simply-scroll-btn-right:hover, .simply-scroll-btn-right:focus {
+  background-position: -84px -88px;
+}
+
+.simply-scroll-btn-up {
+  right: 6px;
+  top: 6px;
+  background-position: -126px -44px;
+}
+.simply-scroll-btn-up.disabled {
+  background-position: -126px 0 !important;
+}
+.simply-scroll-btn-up:hover, .simply-scroll-btn-up:focus {
+  background-position: -126px -88px;
+}
+
+.simply-scroll-btn-down {
+  right: 6px;
+  bottom: 6px;
+  background-position: -42px -44px;
+}
+.simply-scroll-btn-down.disabled {
+  background-position: -42px 0 !important;
+}
+.simply-scroll-btn-down:hover, .simply-scroll-btn-down:focus {
+  background-position: -42px -88px;
+}
+
+.simply-scroll-btn-pause {
+  right: 6px;
+  bottom: 6px;
+  background-position: -168px -44px;
+}
+.simply-scroll-btn-pause:hover, .simply-scroll-btn-pause:focus {
+  background-position: -168px -88px;
+}
+
+.simply-scroll-btn-pause.active {
+  background-position: -84px -44px;
+}
+.simply-scroll-btn-pause.active:hover, .simply-scroll-btn-pause.active:focus {
+  background-position: -84px -88px;
+}
+
+/* Custom class modifications - override classees
+
+.simply-scroll is default
+
+*/
+
+.simply-scroll { /* Customisable base class for style override DIV */
+  width: 576px;
+  height: 200px;
+  margin-bottom: 1em;
+}
+
+.simply-scroll .simply-scroll-clip {
+  width: 576px;
+  height: 200px;
+}
+
+.simply-scroll .simply-scroll-list {}
+
+.simply-scroll .simply-scroll-list li {
+  float: left;
+  width: 290px;
+  height: 200px;
+}
+.simply-scroll .simply-scroll-list li img {}
+
+.simply-scroll .simply-scroll-btn {}
+
+.simply-scroll .simply-scroll-btn-left {}
+.simply-scroll .simply-scroll-btn-left.disabled {}
+.simply-scroll .simply-scroll-btn-left:hover {}
+
+.simply-scroll .simply-scroll-btn-right {}
+.simply-scroll .simply-scroll-btn-right.disabled {}
+.simply-scroll .simply-scroll-btn-right:hover {}
+
+.simply-scroll .simply-scroll-btn-up {}
+.simply-scroll .simply-scroll-btn-up.disabled {}
+.simply-scroll .simply-scroll-btn-up:hover {}
+
+.simply-scroll .simply-scroll-btn-down {}
+.simply-scroll .simply-scroll-btn-down.disabled {}
+.simply-scroll .simply-scroll-btn-down:hover {}
+
+
+
+/* Vertical scroller example */
+
+.vert { /* wider than clip to position buttons to side */
+  width: auto;
+  margin-bottom: 1.5em;
+}
+
+.vert .simply-scroll-clip {
+  width: auto;
+}
+
+.vert .simply-scroll-list {}
+
+.vert .simply-scroll-list li {
+  width: auto;
+  height: 150px;
+}
+.vert .simply-scroll-list li img,
+.vert .simply-scroll-list li span em,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li span em {
+  float: left;
+}
+
+.vert .simply-scroll-btn {}
+
+.vert .simply-scroll-btn-up { /* modified btn pos */
+  right: 0;
+  top: 0;
+}
+.vert .simply-scroll-btn-up.disabled {}
+.vert .simply-scroll-btn-up:hover {}
+
+.vert .simply-scroll-btn-down { /* modified btn pos */
+  right: 0;
+  top: 52px;
+}
+.vert .simply-scroll-btn-down.disabled {}
+.vert .simply-scroll-btn-down:hover {}
+
+/* NOTE left-right classes wouldn't be needed on vertical scroller */
+
+.yinstagram-shortcode-auto .yinstagram-scroller-auto,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite {
+  list-style-type: none;
+}
+
+.yinstagram-shortcode-auto .yinstagram-scroller-auto,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li img,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li span em,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li span em {
+  margin: 0;
+  padding: 0;
+}
+
+.widget ul.yinstagram_grid {
+  padding: 0;
+  margin: 20px auto 0;
+  width: 100%;  
+  list-style: none;
+  list-style-type: none;
+  list-style-position: outside;
+}
+
+.yinstagram_grid li {
+  float: left;
+  padding: 0;
+  margin: 0 5px 10px 5px;
+  list-style: none;
+  list-style-type: none;
+  list-style-position: outside;
+}
+
+.yinstagram_grid li a {
+  display: block;
+  line-height: 0;
+}
+
+.yinstagram_grid li img, .yinstagram_grid li span em {
+  background-color: white;
+  margin: 0;
+}
+
+.yinstagram_grid:after {
+  visibility: hidden;
+  display: block;
+  content: "";
+  clear: both;
+  height: 0;
+}
+
+.yinstagram_grid li a span {
+  display: block;
+}
+
+.yinstagram_grid li a span em,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li span em {
+  background: transparent url('../img/ajax-loader.gif') no-repeat center center;
+  display: block;
+}
+
+* html .yinstagram_grid { zoom: 1; } /* IE6 */
+*:first-child+html .yinstagram_grid { zoom: 1; } /* IE7 */
+
+/* profile widget */
+div .widget_yinstagram .yinstagram_profile {
+  text-align: center;
+  margin: 0 auto;
+  background: #FFF;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+
+div .widget_yinstagram .yinstagram_profile .yinstagram_circular {
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+  margin: -35px 0 5px 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+div .widget_yinstagram .yinstagram_profile .info {
+  border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 0 0 3px 3px;
+  -moz-border-radius: 0 0 3px 3px;
+  border-right: 1px #E8E8E8 solid;
+  border-bottom: 1px #E8E8E8 solid;
+  border-left: 1px #E8E8E8 solid;
+}
+
+div .widget_yinstagram .yinstagram_profile p {
+  line-height: 15px;
+  margin: 5px 10px 5px 10px;
+  color: #757575;
+}
+
+div .widget_yinstagram .yinstagram_profile p.bio {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.counts {
+  color: #757575;
+  padding: 5px 10px 10px 10px;
+  font-weight: bold;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.counts li {
+  display: inline-block;
+  list-style: none;
+  list-style-type: none;
+  list-style-position: outside;
+  font-size: 11px;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.counts li:first-child,
+div .widget_yinstagram .yinstagram_profile ul.counts li:nth-child(2) {
+  margin-right: 5px;
+}
+
+div .widget_yinstagram .yinstagram_profile p.fullname {
+  font-size: 18px;
+  color: #262626;
+}
+
+div .widget_yinstagram .yinstagram_profile p.website a:link,
+div .widget_yinstagram .yinstagram_profile p.website a:visited,
+div .widget_yinstagram .yinstagram_profile p.website a:hover,
+div .widget_yinstagram .yinstagram_profile p.website a:active {
+  text-decoration: none;
+  font-size: 11px;
+  color: #b0b7bc;
+}
+
+div .widget_yinstagram .yinstagram_profile .header {
+  position: relative;
+}
+
+div .widget_yinstagram .yinstagram_profile .header .icon {
+	background-image: url('../img/instagram-icon-32x32.png');
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -16px 0 0 -16px;
+  box-shadow: none;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images {
+  padding: 0;
+  margin: 0;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li {
+  font-size: 0;
+  line-height: 0;
+  list-style-position: outside;
+  list-style: none;
+  list-style-type: none;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li img,
+.yinstagram-shortcode-auto .yinstagram-scroller-auto li img,
+.yinstagram-shortcode-infinite .yinstagram-scroller-infinite li img {
+  padding: 0;
+  margin: 0;
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  box-shadow: none;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:first-child {
+  border-radius: 3px 0 0 0;
+  -webkit-border-radius: 3px 0 0 0;
+  -moz-border-radius: 3px 0 0 0;
+}
+
+div .widget_yinstagram .yinstagram_profile ul.images li:first-child img:nth-child(4) {
+  border-radius: 0 3px 0 0;
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+}
+
+.lightbox_on li a:hover img {
+  opacity:0.5; filter:alpha(opacity=50);
+}
+
+.yinstagram-social ul.links {
+  list-style: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+.yinstagram-social ul.links li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 100px;
+}
+
+.yinstagram-social ul.links li iframe {
+  margin: 0;
+  padding: 0;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
+/* instagram badge */
+.ig-b- {
+  display: inline-block;
+  margin-bottom: 10px
+}
+.ig-b- img {
+  visibility: hidden;
+}
+.ig-b-:hover {
+  background-position: 0 -60px;
+}
+.ig-b-:active {
+  background-position: 0 -120px;
+}
+.ig-b-48 {
+  width: 48px;
+  height: 48px;
+  background: url(//badges.instagram.com/static/images/ig-badge-sprite-48.png) no-repeat 0 0;
+}
+.ig-b-32 {
+  width: 32px;
+  height: 32px;
+  background: url(//badges.instagram.com/static/images/ig-badge-sprite-32.png) no-repeat 0 0;
+}
+.ig-b-24 {
+  width: 24px;
+  height: 24px;
+  background: url(//badges.instagram.com/static/images/ig-badge-sprite-24.png) no-repeat 0 0;
+}
+.ig-b-16 {
+  width: 16px;
+  height: 16px;
+  background: url(//badges.instagram.com/static/images/ig-badge-sprite-16.png) no-repeat 0 0;
+}
+.ig-b-v-24 {
+  width: 137px;
+  height: 24px;
+  background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2 / 1),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
+  .ig-b-48 {
+    background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-48@2x.png);
+  }
+  .ig-b-32 {
+    background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-32@2x.png);
+  }
+  .ig-b-24 {
+    background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-24@2x.png);
+  }
+  .ig-b-16 {
+    background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-16@2x.png);
+  }
+  .ig-b-48, .ig-b-32, .ig-b-24, .ig-b-16 {
+    background-size: 60px 178px;
+  }
+  .ig-b-v-24 {
+    background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png);
+    background-size: 160px 178px;
+  }
+}
+
+/* Load More button */
+.yinstagram-load-more {
+  -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+  box-shadow:inset 0px 1px 0px 0px #ffffff;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9) );
+  background:-moz-linear-gradient( center top, #f9f9f9 5%, #e9e9e9 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9');
+  background-color:#f9f9f9;
+  -webkit-border-top-left-radius:6px;
+  -moz-border-radius-topleft:6px;
+  border-top-left-radius:6px;
+  -webkit-border-top-right-radius:6px;
+  -moz-border-radius-topright:6px;
+  border-top-right-radius:6px;
+  -webkit-border-bottom-right-radius:6px;
+  -moz-border-radius-bottomright:6px;
+  border-bottom-right-radius:6px;
+  -webkit-border-bottom-left-radius:6px;
+  -moz-border-radius-bottomleft:6px;
+  border-bottom-left-radius:6px;
+  text-indent:0;
+  border:1px solid #dcdcdc;
+  display:inline-block;
+  color:#666666;
+  font-family:Arial;
+  font-size:15px;
+  font-weight:bold;
+  font-style:normal;
+  height:35px;
+  line-height:35px;
+  width:100%;
+  text-decoration:none;
+  text-align:center;
+  text-shadow:1px 1px 0px #ffffff;
+}
+.yinstagram-load-more:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9) );
+  background:-moz-linear-gradient( center top, #e9e9e9 5%, #f9f9f9 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9');
+  background-color:#e9e9e9;
+}.yinstagram-load-more:active {
+  position:relative;
+  top:1px;
+}
+
+/* qtip content */
+.yinstagram-qtip-content p {
+  padding: 0;
+  margin: 0 0 5px 0;
+}
