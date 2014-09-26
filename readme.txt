@@ -4,7 +4,7 @@ Donate link: http://www.yakadanda.com/
 Tags: images, pictures, photos, instagram, yakadanda
 Requires at least: 3.8
 Tested up to: 4.0
-Stable tag: 0.1.7
+Stable tag: 0.1.8
 License: GPLv2 or later
 
 A Wordpress plugin that pulls in Instagram images of user or hashtags.
@@ -14,12 +14,12 @@ A Wordpress plugin that pulls in Instagram images of user or hashtags.
 A Wordpress plugin that pulls in Instagram images of user or hashtags.
 
 = Features =
-* Display your images or display other images in Instagram based on tags
+* Display your images or display other images in Instagram based on username, tags, feed, or liked
 * Set up speed, frame rate, height, and directions (up and down) to adjust the way how Instagram images scrolling
-* Social network links
 * Responsive scrolling images
+* Tooltip, lightboxes, and social network links feature
 * Works in WordPressMU
-* Yakadanda Instagram widget
+* Instagram widget
 
 == Installation ==
 
@@ -65,6 +65,11 @@ No attribute will retrieves Instagram images based on plugin settings, and if ha
 3. Profile widget
 
 == Changelog ==
+
+= 0.1.8 =
+* Add qtip2 feature
+* Improve menu icon
+* Update Colorbox
 
 = 0.1.7 =
 * Change request the access_token method
@@ -162,6 +167,9 @@ No attribute will retrieves Instagram images based on plugin settings, and if ha
 * Update to fit with WordPress 3.5 and Twenty Twelve theme
 
 == Upgrade Notice ==
+
+= 0.1.8 =
+* -
 
 = 0.1.7 =
 * Fix auth on widget

@@ -11,7 +11,7 @@ class YInstagram_Widget extends WP_Widget {
     global $yinstagram_options;
 
     // Enqueue scripts
-    yinstagram_wp_enqueue_scripts($yinstagram_options);
+    yinstagram_wp_enqueue_scripts_load($yinstagram_options);
     
     extract($args);
     $title = apply_filters('widget_title', empty($instance['title']) ? null : $instance['title'], $instance, $this->id_base);
@@ -27,7 +27,9 @@ class YInstagram_Widget extends WP_Widget {
     $style = null;
     if ($instance['custom_size'])
       $style = 'style="width:' . $instance['custom_size'] . 'px; height:' . $instance['custom_size'] . 'px"';
-    
+
+    $qtipcontent = null;
+
     echo $before_widget;
     
     if (!empty($title)) echo $before_title . $title . $after_title;
@@ -59,18 +61,21 @@ class YInstagram_Widget extends WP_Widget {
 
               echo ($i == 1) ? '<li>' : null;
 
-              echo '<img src="' . $datum->images->thumbnail->url . '"/>';
+              echo '<img class="img_pw-' . $datum->id . '" title="' . str_replace('"', "'", (string) $datum->caption->text) . '" src="' . $datum->images->thumbnail->url . '"/>';
 
               echo ($i == 4) ? '</li>' : null;
               $i = ($i == 4) ? 0 : $i;
+
+              if ($yinstagram_options['tooltip'] == 'on')
+                $qtipcontent .= '<div class="qtip_pw-' . $datum->id . ' yinstagram-qtip-content" style="display: none;" username="' . $datum->user->username . '">' . yinstagram_get_qtip_content($datum) . '</div>';
 
               if ($j == 12) break;
             }
 
             echo ( ($j != 4) || ($j != 8) || ($j != 12)) ? '</li>' : null;
-            echo '</ul><img class="icon" alt="instagram-icon" src="' . YINSTAGRAM_PLUGIN_URL . '/img/instagram-icon-32x32.png"></div>';
+            echo '</ul><span class="icon"></span></div>';
 
-            echo '<div class="info"><img class="circular" title="' . $u_info->full_name . '" alt="' . $u_info->username . '" src="' . $u_info->profile_picture . '">';
+            echo '<div class="info"><img class="yinstagram_circular" title="' . $u_info->full_name . '" alt="' . $u_info->username . '" src="' . $u_info->profile_picture . '">';
             echo '<p class="fullname" title="' . $u_info->username . '">' . $u_info->full_name . '</p>';
             if ( $u_info->website ) echo '<p class="website"><a href="' . $u_info->website . '" target="_blank">' . preg_replace('#^https?://#', '', $u_info->website) . '</a></p>';
             if ( $u_info->bio ) echo '<p class="bio">' . $u_info->bio . '</p>';
@@ -82,6 +87,8 @@ class YInstagram_Widget extends WP_Widget {
             echo '<img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" />';
             echo '</a>';
             echo '</div></div>';
+
+            if ($yinstagram_options['tooltip'] == 'on') echo $qtipcontent;
 
           } else {
             echo '<p>Request timed out.</p>';
@@ -112,14 +119,17 @@ class YInstagram_Widget extends WP_Widget {
                   'src' => $img_src
                 );
 
+              if ($yinstagram_options['tooltip'] == 'on')
+                $qtipcontent .= '<div class="qtip_iw-' . $datum->id . ' yinstagram-qtip-content" style="display: none;" username="' . $datum->user->username . '">' . yinstagram_get_qtip_content($datum) . '</div>';
+
               echo '<li>';
 
               switch($yinstagram_options['lightbox']) {
                 case 'thickbox':
-                  echo '<a class="yinstagram-lbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '" rel="gallery-yinstagram">';
+                  echo '<a class="yinstagram-lbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" rel="gallery-yinstagram">';
                   break;
                 case 'colorbox':
-                  echo '<a class="yinstagram-lbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+                  echo '<a class="yinstagram-lbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '">';
                   break;
                 default:
                   echo '<a target="_blank" href="' . $datum->images->standard_resolution->url . '">';
@@ -135,6 +145,8 @@ class YInstagram_Widget extends WP_Widget {
             echo '</ul>';
 
             echo '<textarea class="yinstagram-widget-images" style="display: none;">' . json_encode($images) . '</textarea>';
+
+            if ($yinstagram_options['tooltip'] == 'on') echo $qtipcontent;
 
           } else {
             echo '<p>Request timed out, or no have ' . $instance['display_images'] . ' images.</p>';

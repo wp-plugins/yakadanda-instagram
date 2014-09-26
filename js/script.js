@@ -113,9 +113,9 @@ jQuery(function($){
               yinstagram_widget_settings['dimensions'] = contentWidthAu;
             }
 
-            $( '<img class="img_w-' + yinstagram_widget_images[i].id + '" src="' + yinstagram_widget_images[i].src + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
+            $( '<img class="img_iw-' + yinstagram_widget_images[i].id + '" src="' + yinstagram_widget_images[i].src + '" title="' + yinstagram_widget_images[i].title + '" style="display: none; width: ' + yinstagram_widget_settings['dimensions'] + 'px; height: ' + yinstagram_widget_settings['dimensions'] + 'px;">' ).load(function() {
               $( '.load_w-'+yinstagram_widget_images[i].id ).replaceWith(this);
-              $('.img_w-'+yinstagram_widget_images[i].id).fadeIn();
+              $('.img_iw-'+yinstagram_widget_images[i].id).fadeIn();
             });
 
           }, timeDelayW);
@@ -158,6 +158,38 @@ jQuery(function($){
   $(document.body).on('click', '#TB_closeWindowButton',function(e) {
     e.preventDefault();
   });
+
+  // qtip
+  if ( $.isFunction($.fn.qtip) ) {
+    $('body').on('mouseover', function(e) {
+      // auto scroll
+      if ( $('body').find('.yinstagram-shortcode-auto').length >= 1 ) {
+        $('.yinstagram-scroller-auto img').each(function() {
+          yinstagramQtip(this, 'img_as', 'qtip_as');
+        });
+      }
+      // infinite scroll
+      if ( $('body').find('.yinstagram-scroller-infinite').length >= 1 ) {
+        $('.yinstagram-scroller-infinite img').each(function() {
+          yinstagramQtip(this, 'img_is', 'qtip_is');
+        });
+      }
+      // profile widget
+      if ( $('body').find('.yinstagram_profile').length >= 1 ) {
+        $('.yinstagram_profile img').each(function() {
+          yinstagramQtip(this, 'img_pw', 'qtip_pw');
+        });
+        $('.yinstagram_circular').qtip('destroy');
+      }
+      // images widget
+      if ( $('body').find('.yinstagram_grid').length >= 1 ) {
+        $('.yinstagram_grid img').each(function() {
+          yinstagramQtip(this, 'img_iw', 'qtip_iw');
+        });
+      }
+      e.preventDefault();
+    });
+  }
 
   /*
    * backend
@@ -329,7 +361,7 @@ jQuery(function($){
   
   // lightbox options
   $('#lightbox').change(function() {
-    var arr_cb = [ 7, 8 ];
+    var arr_cb = [ 8, 9 ];
     if ($(this).val() === 'colorbox') {
       $.each(arr_cb, function(key, value) {
         $('table.form-table tbody tr:nth-child(' + value + ')').show();
@@ -452,6 +484,36 @@ function modalDialog(boxOptions) {
         $(".yinstagram-lbox").colorbox({rel: 'yinstagram-lbox', scalePhotos: true, maxHeight: '90%'});
       }
     }
+  });
+}
+
+function getQtipContentSelector(imgSelector, searchvalue, newvalue) {
+  var selector = imgSelector;
+
+  return selector ? selector.replace(searchvalue, newvalue) : '';
+}
+
+function getInstagramUserLink(userName) {
+  return '<a href="http://instagram.com/' + userName + '" target="_blank">' + userName + '</a>';
+}
+
+function yinstagramQtip(selector, prefixImgSelector, prefixQtipContentSelector) {
+  jQuery(function($){
+    $(selector).qtip({
+      overwrite: false,
+      position: {
+        my: 'top center',
+        at: 'bottom center'
+      },
+      hide: {
+        fixed: true,
+        delay: 250
+      },
+      content: {
+        title: getInstagramUserLink( $(document.getElementsByClassName( getQtipContentSelector( $(selector).attr('class'), prefixImgSelector, prefixQtipContentSelector ) )).attr('username') ),
+        text: $(document.getElementsByClassName( getQtipContentSelector( $(selector).attr('class'), prefixImgSelector, prefixQtipContentSelector ) ))
+      }
+    });
   });
 }
 

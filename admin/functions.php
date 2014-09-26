@@ -42,6 +42,7 @@ function yinstagram_get_options($admin_page = 'all') {
         'frame_rate' => 24,
         'speed' => 1,
         'direction' => 'forwards',
+        'tooltip' => 'off',
         'lightbox' => (isset($display_options['colorbox']) && ($display_options['colorbox'] == '1')) ? 'colorbox' : 'disable',
         'theme' => '1',
         'effect' => 'elastic',
@@ -90,7 +91,7 @@ function yinstagram_is_plugin_page($url) {
 
 add_action('admin_menu', 'yinstagram_register_menu_page');
 function yinstagram_register_menu_page() {
-  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_page_settings', network_home_url('wp-content/plugins/yakadanda-instagram/img/instagram-icon-16x16.png'), 205);
+  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_page_settings', 'none', 205);
 
   $settings_page = add_submenu_page('yinstagram/settings.php', 'Settings', 'Settings', 'manage_options', 'yinstagram/settings.php', 'yinstagram_page_settings');
   add_action('load-' . $settings_page, 'yinstagram_help_tab');
@@ -272,6 +273,13 @@ function yinstagram_get_relationships($yinstagram_options) {
   
   if ( $responses->meta->code == 200 )
     $output = $responses;
+  
+  return $output;
+}
+
+function yinstagram_get_qtip_content($datum) {
+  $output = '<p>'. $datum->caption->text . '</p>';
+  $output .= '<a href="' . $datum->link . '" target="_blank">' . $datum->link . '</a>';
   
   return $output;
 }

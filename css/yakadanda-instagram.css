@@ -304,7 +304,7 @@ div .widget_yinstagram .yinstagram_profile {
   -moz-border-radius: 3px;
 }
 
-div .widget_yinstagram .yinstagram_profile .circular {
+div .widget_yinstagram .yinstagram_profile .yinstagram_circular {
   width: 70px;
   height: 70px;
   border-radius: 35px;
@@ -373,6 +373,9 @@ div .widget_yinstagram .yinstagram_profile .header {
 }
 
 div .widget_yinstagram .yinstagram_profile .header .icon {
+	background-image: url('../img/instagram-icon-32x32.png');
+  width: 32px;
+  height: 32px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -560,4 +563,10 @@ only screen and (min-resolution: 2dppx) {
 }.yinstagram-load-more:active {
   position:relative;
   top:1px;
+}
+
+/* qtip content */
+.yinstagram-qtip-content p {
+  padding: 0;
+  margin: 0 0 5px 0;
 }

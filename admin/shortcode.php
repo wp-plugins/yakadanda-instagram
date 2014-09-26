@@ -10,7 +10,7 @@ function yinstagram_shortcode($atts) {
     ), $atts);
 
   // Enqueue scripts
-  yinstagram_wp_enqueue_scripts($yinstagram_options);
+  yinstagram_wp_enqueue_scripts_load($yinstagram_options);
 
   $display_your_images = empty($a['display_images']) ? $yinstagram_options['display_your_images'] : $a['display_images'];
   
@@ -71,6 +71,8 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   $i = $j = 0;
   $images = array();
   $limit = yinstagram_get_number_of_images($yinstagram_options['number_of_images']);
+
+  $qtipcontent = null;
   
   $output = '<div class="yinstagram-shortcode-auto">';
   
@@ -97,6 +99,9 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
         'title' => str_replace('"', "'", (string) $datum->caption->text),
         'src' => $img_src
       );
+
+    if ($yinstagram_options['tooltip'] == 'on')
+      $qtipcontent .= '<div class="qtip_as-' . $datum->id . ' yinstagram-qtip-content" style="display: none;" username="' . $datum->user->username . '">' . yinstagram_get_qtip_content($datum) . '</div>';
     
     if ($j == $limit) break;
   }
@@ -112,6 +117,8 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   $output .= '<textarea class="yinstagram-shortcode-images-auto" name="yinstagram-shortcode-images-auto" style="display: none;">' . json_encode($images) . '</textarea>';
   
   $output .= '</div>';
+
+  if ($yinstagram_options['tooltip'] == 'on') $output .= $qtipcontent;
   
   return $output;
 }
@@ -122,6 +129,8 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   $limit = yinstagram_get_number_of_images($yinstagram_options['number_of_images']);
   
   if ($yinstagram_options['lightbox'] == 'thickbox') { add_thickbox(); }
+
+  $qtipcontent = null;
   
   $output = '<div class="vert yinstagram-shortcode-infinite">';
   
@@ -140,10 +149,10 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
     
     switch($yinstagram_options['lightbox']) {
       case 'thickbox':
-        $output .= '<a class="yinstagram-lbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '" rel="gallery-yinstagram">';
+        $output .= '<a class="yinstagram-lbox thickbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '?TB_iframe=true" rel="gallery-yinstagram">';
         break;
       case 'colorbox':
-        $output .= '<a class="yinstagram-lbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '" title="' . yinstagram_get_excerpt(str_replace('"', "'", (string) $datum->caption->text)) . '">';
+        $output .= '<a class="yinstagram-lbox" style="cursor: pointer;" href="' . $datum->images->standard_resolution->url . '">';
         break;
       default:
         $output .= '<a target="_blank" href="' . $datum->images->standard_resolution->url . '">';
@@ -163,6 +172,9 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
         'tags' => $datum->tags,
         'link' => $datum->link
       );
+
+    if ($yinstagram_options['tooltip'] == 'on')
+      $qtipcontent .= '<div class="qtip_is-' . $datum->id . ' yinstagram-qtip-content" style="display: none;" username="' . $datum->user->username . '">' . yinstagram_get_qtip_content($datum) . '</div>';
     
     if ($j == $limit) break;
   }
@@ -182,6 +194,8 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   $style = ($yinstagram_options['display_social_links']) ? null : ' style="margin-bottom: 1.5em;"';
   
   $output .= '<a href="#" class="yinstagram-load-more"' . $style . '>Load More</a>';
+
+  if ($yinstagram_options['tooltip'] == 'on') $output .= $qtipcontent;
   
   return $output;
 }
@@ -239,8 +253,8 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
         if ( isset($responses->data) ) {
           $output = array_merge($output, $responses->data);
 
-          if ($i == $number_of_images )
-            break;
+          if ($i == $number_of_images ) break;
+          
           $i++;
           $next_url = ($responses->pagination->next_url) ? $responses->pagination->next_url : null;
         }

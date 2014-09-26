@@ -59,6 +59,12 @@
           </td>
         </tr>
         <tr valign="top">
+          <th scope="row"><label for="tooltip">Tooltip</label></th>
+          <td>
+            <input type="checkbox" id="tooltip" name="ydo[tooltip]" <?php echo ($data['tooltip'] == 'on') ? 'checked="checked"' : null; ?>><label for="tooltip">qtip2</label>
+          </td>
+        </tr>
+        <tr valign="top">
           <th scope="row">Lightbox</th>
           <td>
             <select id="lightbox" name="ydo[lightbox]">
