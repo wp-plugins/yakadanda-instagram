@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images of user or hashtags.
-  Version: 0.1.8
+  Version: 0.1.9
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -24,7 +24,7 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.8');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.9');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
@@ -37,7 +37,7 @@ function yinstagram_action_links($links, $file) {
   if (!$yakadanda_instagram) $yakadanda_instagram = plugin_basename(__FILE__);
   
   if ($file == $yakadanda_instagram) {
-    $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=yinstagram/settings.php">Settings</a>';
+    $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=yinstagram-settings">Settings</a>';
     array_unshift($links, $settings_link);
   }
   
@@ -50,13 +50,15 @@ function yinstagram_register() {
   global $yinstagram_options;
   
   /* Register styles */
-  wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', false, YINSTAGRAM_VER, 'all');
   wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.5.14', 'all');
-  wp_register_style('yinstagram-qtip', YINSTAGRAM_PLUGIN_URL . '/css/jquery.qtip.min.css', false, '2.2.0', 'all');
+  wp_register_style('yinstagram-qtip', YINSTAGRAM_PLUGIN_URL . '/css/jquery.qtip.min.css', array(), '2.2.1', 'all');
+  wp_register_style('yinstagram-jquery-ui', YINSTAGRAM_PLUGIN_URL . '/css/jquery-ui.css', array(), YINSTAGRAM_VER ,'all');
+  wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', array(), YINSTAGRAM_VER, 'all');
+  
   if (file_exists(YINSTAGRAM_THEME_DIR . '/css/yakadanda-instagram.css')) {
-    wp_register_style('yinstagram-style', YINSTAGRAM_THEME_URL . '/css/yakadanda-instagram.css', false, YINSTAGRAM_VER, 'all');
+    wp_register_style('yinstagram-style', YINSTAGRAM_THEME_URL . '/css/yakadanda-instagram.css', array(), YINSTAGRAM_VER, 'all');
   } else {
-    wp_register_style('yinstagram-style', YINSTAGRAM_PLUGIN_URL . '/css/yakadanda-instagram.css', false, YINSTAGRAM_VER, 'all');
+    wp_register_style('yinstagram-style', YINSTAGRAM_PLUGIN_URL . '/css/yakadanda-instagram.css', array(), YINSTAGRAM_VER, 'all');
   }
   
   /* Register scripts */
@@ -65,7 +67,7 @@ function yinstagram_register() {
   // ColorBox
   wp_register_script('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/js/jquery.colorbox-min.js', array('jquery'), '1.5.14', true);
   // qtip
-  wp_register_script('yinstagram-qtip', YINSTAGRAM_PLUGIN_URL . '/js/jquery.qtip.min.js', array('jquery'), '2.2.0', true);
+  wp_register_script('yinstagram-qtip', YINSTAGRAM_PLUGIN_URL . '/js/jquery.qtip.min.js', array('jquery'), '2.2.1', true);
   // YInstagram
   wp_register_script('yinstagram-script', YINSTAGRAM_PLUGIN_URL . '/js/script.js', array('jquery'), YINSTAGRAM_VER, true);
   
@@ -76,14 +78,15 @@ function yinstagram_register() {
 // Enqueue scripts for admin
 add_action('admin_enqueue_scripts', 'yinstagram_admin_enqueue_scripts');
 function yinstagram_admin_enqueue_scripts() {
+  wp_enqueue_style('yinstagram-admin');
+  
   if (yinstagram_is_plugin_page(yinstagram_get_page())) {
-    wp_enqueue_style('yinstagram-admin');
+    // load stylesheets
+    wp_enqueue_style('yinstagram-jquery-ui');
     
+    // load javascripts
     wp_enqueue_script('jquery-ui-dialog');
     wp_enqueue_script('yinstagram-script');
-  } else {
-    // load stylesheets
-    wp_enqueue_style('yinstagram-admin-menu', YINSTAGRAM_PLUGIN_URL . '/css/menu.css', array(), YINSTAGRAM_VER ,'all');
   }
 }
 

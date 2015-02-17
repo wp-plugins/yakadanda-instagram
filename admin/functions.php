@@ -75,10 +75,10 @@ function yinstagram_is_plugin_page($url) {
   $output = false;
   
   switch ($url) {
-    case 'admin.php?page=yinstagram/settings.php':
+    case 'admin.php?page=yinstagram-settings':
       $output = true;
       break;
-    case 'admin.php?page=yinstagram/display-options.php':
+    case 'admin.php?page=yinstagram-display-options':
       $output = true;
       break;
     case 'widgets.php':
@@ -91,13 +91,28 @@ function yinstagram_is_plugin_page($url) {
 
 add_action('admin_menu', 'yinstagram_register_menu_page');
 function yinstagram_register_menu_page() {
-  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram/settings.php', 'yinstagram_page_settings', 'none', 205);
+  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram-settings', 'yinstagram_page_settings', 'none', 205);
 
-  $settings_page = add_submenu_page('yinstagram/settings.php', 'Settings', 'Settings', 'manage_options', 'yinstagram/settings.php', 'yinstagram_page_settings');
+  $settings_page = add_submenu_page('yinstagram-settings', 'Settings', 'Settings', 'manage_options', 'yinstagram-settings', 'yinstagram_page_settings');
   add_action('load-' . $settings_page, 'yinstagram_help_tab');
 
-  $display_options_page = add_submenu_page('yinstagram/settings.php', 'Display Options', 'Display Options', 'manage_options', 'yinstagram/display-options.php', 'yinstagram_page_display_options');
+  $display_options_page = add_submenu_page('yinstagram-settings', 'Display Options', 'Display Options', 'manage_options', 'yinstagram-display-options', 'yinstagram_page_display_options');
   add_action('load-' . $display_options_page, 'yinstagram_help_tab');
+}
+
+// handle deprecated page addresses
+add_action('init', 'yinstagram_redirect_deprecated_address');
+function yinstagram_redirect_deprecated_address() {
+  $page_address = yinstagram_get_page();
+  
+  switch ($page_address) {
+    case 'admin.php?page=yinstagram/settings.php':
+      wp_redirect(admin_url('admin.php?page=yinstagram-settings')); exit;
+      break;
+    case 'admin.php?page=yinstagram/display-options.php':
+      wp_redirect(admin_url('admin.php?page=yinstagram-display-options')); exit;
+      break;
+  }
 }
 
 function yinstagram_page_settings() {
@@ -119,7 +134,7 @@ function yinstagram_page_settings() {
     }
     
     setcookie('yinstagram_response', $message, time()+1, '/');
-    wp_redirect(admin_url('admin.php?page=yinstagram/settings.php')); exit;
+    wp_redirect(admin_url('admin.php?page=yinstagram-settings')); exit;
   }
   /* end of authentication */
   
@@ -162,7 +177,7 @@ function yinstagram_page_settings() {
       // make null the token from database
       update_option('yinstagram_access_token', null);
       
-      $encodeURIComponent = yinstagram_encodeURIComponent(admin_url('admin.php?page=yinstagram/settings.php'));
+      $encodeURIComponent = yinstagram_encodeURIComponent(admin_url('admin.php?page=yinstagram-settings'));
       $url = 'https://api.instagram.com/oauth/authorize/?client_id=' . $_POST['client_id'] . '&redirect_uri=' . $encodeURIComponent . '&response_type=code';
       
       wp_redirect($url); exit;
@@ -223,7 +238,7 @@ function yinstagram_section_setup() {
   $output .= '<li>Register a New Client.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png"/></li>';
   $output .= '<li>Setup Register new Client ID form.<br>';
   $output .= 'a. Fill textboxes, textarea, and checkboxes with your suitable information, and preferences.<br>';
-  $output .= 'b. Fill OAuth redirect_uri textbox with <code>' . admin_url('admin.php?page=yinstagram/settings.php') . '</code><br>';
+  $output .= 'b. Fill OAuth redirect_uri textbox with <code>' . admin_url('admin.php?page=yinstagram-settings') . '</code><br>';
   $output .= '<img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-4.png"/></li>';
   $output .= '<li>Congratulation, now you have Client ID and Client Secret.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png"/></li>';
   $output .= '</ol>';
@@ -300,15 +315,15 @@ function yinstagram_get_user_id($access_token, $username) {
   return $id;
 }
 
-if (!get_option( 'yinstagram_ignore_notice' )) add_action('admin_notices', 'yinstagram_admin_notice');
+if (version_compare(get_option('yinstagram_ignore_notice'), YINSTAGRAM_VER, '<') || (get_option('yinstagram_ignore_notice') == '1')) add_action('admin_notices', 'yinstagram_admin_notice');
 function yinstagram_admin_notice() {
   $url = basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
   
-  if ( ($url == 'admin.php?page=yinstagram/settings.php') || ($url == 'admin.php?page=yinstagram/display-options.php') ) {
+  if ( ($url == 'admin.php?page=yinstagram-settings') || ($url == 'admin.php?page=yinstagram-display-options') ) {
     ?>
       <div class="updated yinstagram-notice">
         <p><a id="yinstagram-dismiss" href="#">Close</a></p>
-        <p>Since 0.0.90, OAuth redirect_uri or REDIRECT URI changed to <code><?php echo admin_url('admin.php?page=yinstagram/settings.php') ?></code>. You can change your OAuth redirect_uri at <a href="http://instagram.com/developer/clients/manage/" target="_blank">instagram.com/developer/clients/manage/</a>. Thank you.</p>
+        <p>Since 0.1.9, OAuth redirect_uri or REDIRECT URI changed to <code><?php echo admin_url('admin.php?page=yinstagram-settings') ?></code>. You can change your OAuth redirect_uri at <a href="http://instagram.com/developer/clients/manage/" target="_blank">instagram.com/developer/clients/manage/</a>. Thank you.</p>
       </div>
     <?php
   }
@@ -316,7 +331,7 @@ function yinstagram_admin_notice() {
 
 add_action('wp_ajax_yinstagram_dismiss', 'yinstagram_dismiss_callback');
 function yinstagram_dismiss_callback() {
-  update_option('yinstagram_ignore_notice', 1);
+  update_option('yinstagram_ignore_notice', YINSTAGRAM_VER);
   die();
 }
 
@@ -326,7 +341,7 @@ function yinstagram_logout_callback() {
   if ($action) {
     $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Disconnected.'));
     setcookie('yinstagram_response', $message, time()+1, '/');
-    echo admin_url('admin.php?page=yinstagram/settings.php');
+    echo admin_url('admin.php?page=yinstagram-settings');
   }
   die();
 }
@@ -338,7 +353,7 @@ function yinstagram_restore_settings_callback() {
   if ($action) {
     $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Settings restored to default settings.'));
     setcookie('yinstagram_response', $message, time()+1, '/');
-    echo admin_url('admin.php?page=yinstagram/settings.php');
+    echo admin_url('admin.php?page=yinstagram-settings');
   }
   die();
 }
@@ -349,7 +364,7 @@ function yinstagram_restore_display_options_callback() {
   if ($action) {
     $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Display options restored to default settings.'));
     setcookie('yinstagram_response', $message, time()+1, '/');
-    echo admin_url('admin.php?page=yinstagram/display-options.php');
+    echo admin_url('admin.php?page=yinstagram-display-options');
   }
   die();
 }
@@ -361,6 +376,7 @@ function yinstagram_access_token($code) {
   $curl = curl_init();
   // Set some options - we are passing in a useragent too here
   curl_setopt_array($curl, array(
+    CURLOPT_SSL_VERIFYPEER => 0, //https://wordpress.org/support/topic/not-connected-2
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => 'https://api.instagram.com/oauth/access_token',
     CURLOPT_USERAGENT => 'Yakadanda Instagram Access Token Request',
@@ -369,7 +385,7 @@ function yinstagram_access_token($code) {
       'client_id' => $data['client_id'],
       'client_secret' => $data['client_secret'],
       'grant_type' => 'authorization_code',
-      'redirect_uri' => admin_url('admin.php?page=yinstagram/settings.php'),
+      'redirect_uri' => admin_url('admin.php?page=yinstagram-settings'),
       'code' => $code
     )
   ));
@@ -390,4 +406,19 @@ function yinstagram_fetch_data($url) {
   $result = curl_exec($ch);
   curl_close($ch);
   return $result;
+}
+
+function yinstagram_contain_search($yinstagram_options, $tags = array()) {
+  $output = false;
+
+  $filter_tags = yinstagram_extract_hashtags($yinstagram_options['filter_by_tags']);
+
+  if ( count($filter_tags) && ($yinstagram_options['display_your_images'] == 'recent') ) {
+    $output = true;
+    if (count(array_intersect($filter_tags, $tags)) > 0) {
+      $output = false;
+    }
+  }
+
+  return $output;
 }

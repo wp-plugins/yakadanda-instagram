@@ -570,3 +570,8 @@ only screen and (min-resolution: 2dppx) {
   padding: 0;
   margin: 0 0 5px 0;
 }
+
+/* thickbox */
+#TB_ImageOff .screen-reader-text, #TB_closeWindowButton .tb-close-icon {
+  display: none;
+}

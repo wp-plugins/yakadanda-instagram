@@ -204,16 +204,16 @@ jQuery(function($){
       
       if ( $(this).val() === 'hashtag' ) {
         $('input:radio[name=option_display_the_following_hashtags]').filter('[value=1]').prop('checked', true);
-        $('#showHashtags').attr('style', '');
+        $('#showHashtags').show();
       } else {
         $('input:radio[name=option_display_the_following_hashtags]').filter('[value=0]').prop('checked', true);
-        $('#showHashtags').attr('style', 'display: none;');
+        $('#showHashtags').hide();
       }
       
       if ( $(this).val() === 'recent' ) {
-        $('#showUsername').attr('style', '');
+        $('#showUsername').show();
       } else {
-        $('#showUsername').attr('style', 'display: none;');
+        $('#showUsername').hide();
       }
       
     });
@@ -225,10 +225,10 @@ jQuery(function($){
       di_radio_previous_value = $('input:hidden[name=di_radio_previous_value]').val();
       
       if ( showHashtags === '1' ) {
-        $('#showHashtags').attr('style', '');
+        $('#showHashtags').show();
         di_radios.filter('[value=hashtag]').prop('checked', true);
       } else {
-        $('#showHashtags').attr('style', 'display: none;');
+        $('#showHashtags').hide();
         
         if ( di_radio_previous_value === 'hashtag' ) { di_radio_previous_value = 'recent'; }
         di_radios.filter('[value='+di_radio_previous_value+']').prop('checked', true);

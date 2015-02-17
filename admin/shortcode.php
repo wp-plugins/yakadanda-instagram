@@ -107,7 +107,7 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   }
   
   if ($j != $limit) $output .= '</li>';
-  
+
   $output .= '</ul>';
 
   $output .= '<input class="yinstagram-shortcode-settings-au" name="yinstagram-shortcode-settings-au" type="hidden" value="' . htmlentities( json_encode( array( 'frame_rate' => $yinstagram_options['frame_rate'], 'speed' => $yinstagram_options['speed'], 'direction' => $yinstagram_options['direction'] ) ) ) . '">';
@@ -119,7 +119,11 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   $output .= '</div>';
 
   if ($yinstagram_options['tooltip'] == 'on') $output .= $qtipcontent;
-  
+
+  if ($j == 0) {
+   $output = '<p>No Image.</p>'; 
+  }
+
   return $output;
 }
 
@@ -137,7 +141,8 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   $output .= '<ul class="yinstagram-scroller-infinite clearfix">';
   
   foreach ( $data as $datum ) {
-    if ( $datum->type != 'image' ) { continue; }
+    if ( $datum->type != 'image' ) continue;
+
     $i++; $j++;
     $img_src = $datum->images->thumbnail->url;
     if ($yinstagram_options['size'] == 'low_resolution')
@@ -196,16 +201,23 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   $output .= '<a href="#" class="yinstagram-load-more"' . $style . '>Load More</a>';
 
   if ($yinstagram_options['tooltip'] == 'on') $output .= $qtipcontent;
-  
+
+  if ($j == 0) {
+   $output = '<p>No Image.</p>'; 
+  }
+
   return $output;
 }
 
 function yinstagram_extract_hashtags($data) {
-  // remove # character and space character
-  $output = str_replace("#", "", $data);
-  $output = str_replace(" ", "", $output);
-
-  return explode(',', $output);
+  $output = null;
+  if ($data) {
+    // remove # character and space character
+    $output = str_replace("#", "", strtolower($data));
+    $output = str_replace(" ", "", $output);
+    $output = explode(',', $output);
+  }
+  return $output;
 }
 
 function yinstagram_get_own_images($access_token, $display_images, $number_of_images, $username, $is_shortcode, $a = null) {
@@ -213,31 +225,53 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
   
   switch ($display_images) {
     case 'feed':
-      //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
-      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $access_token . '&count=33');
+      // cache the responses
+      if (false === ( $special_query_feed = get_transient('special_query_feed') )) {
+        //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
+        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $access_token . '&count=33');
+
+        set_transient('special_query_feed', $responses, 60 * 15);
+      }
+      $responses = get_transient('special_query_feed');
       break;
     case 'liked':
-      //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
-      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $access_token . '&count=33');
+      if (false === ( $special_query_liked = get_transient('special_query_liked') )) {
+        //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
+        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $access_token . '&count=33');
+        
+        set_transient('special_query_liked', $responses, 60 * 15);
+      }
+      $responses = get_transient('special_query_liked');
       break;
     default:
       $username = ($username) ? $username: 'self';
       switch ($username) {
         case 'self':
-          //https://api.instagram.com/v1/users/3/media/recent/?access_token=ACCESS-TOKEN
-          $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $access_token . '&count=33');
+          if (false === ( $special_query_self = get_transient('special_query_self') )) {
+            //https://api.instagram.com/v1/users/3/media/recent/?access_token=ACCESS-TOKEN
+            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $access_token . '&count=33');
+
+            set_transient('special_query_self', $responses, 60 * 15);
+          }
+          $responses = get_transient('special_query_self');
           break;
         default:
           $user_id = yinstagram_get_user_id($access_token, $username);
-          if ($user_id)
+          if (!$user_id) break;
+          
+          if (false === ( $special_query_self = get_transient('special_query_' . $user_id) )) {
             $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $access_token . '&count=33');
+            
+            set_transient('special_query_' . $user_id, $responses, 60 * 15);
+          }
+          $responses = get_transient('special_query_' . $user_id);
       }
   }
-  
+
   $responses = json_decode($responses);
-  
+
   $output = array();
-  
+
   if ( isset($responses->data) ) {
     $output = $responses->data;
 
@@ -247,9 +281,16 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
       $i = 0;
       
       while ($next_url) {
-        $responses = yinstagram_fetch_data($next_url);
+        $transient_name = strval( md5($next_url) );
+        if (false === ( $special_query_next = get_transient($transient_name) )) {
+          $responses = yinstagram_fetch_data($next_url);
+
+          set_transient($transient_name, $responses, 60 * 15);
+        }
+        $responses = get_transient($transient_name);
+
         $responses = json_decode($responses);
-        
+
         if ( isset($responses->data) ) {
           $output = array_merge($output, $responses->data);
 
@@ -273,7 +314,13 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
   $output = array();
   
   foreach ($tags as $tag) {
-    $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $access_token . '&count=' . $count);
+    
+    if (false === ( $special_query_tag = get_transient('special_query_' . $tag) )) {
+      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $access_token . '&count=' . $count);
+      
+      set_transient('special_query_' . $tag, $responses, 60 * 15);
+    }
+    $responses = get_transient('special_query_' . $tag);
     
     $responses = json_decode($responses);
     
@@ -286,7 +333,14 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
         $i = 0;
         
         while ($next_url) {
-          $responses = yinstagram_fetch_data($next_url);
+          $transient_name = strval( md5($next_url) );
+          if (false === ( $special_query_next = get_transient($transient_name) )) {
+            $responses = yinstagram_fetch_data($next_url);
+
+            set_transient($transient_name, $responses, 60 * 15);
+          }
+          $responses = get_transient($transient_name);
+
           $responses = json_decode($responses);
           
           if ( isset($responses->data) ) {
@@ -301,7 +355,7 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
       }
     }
   }
-  
+
   return yinstagram_shuffle_assoc( $output );
 }
 

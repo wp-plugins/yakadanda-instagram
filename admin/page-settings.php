@@ -79,11 +79,11 @@
           </td>
         </tr>
         <tr valign="top" id="showHashtags" style="<?php echo ($data['option_display_the_following_hashtags']) ? '' : 'display: none;'; ?>">
-          <th scope="row">Display The Following Hashtags</th>
+          <th scope="row">Hashtags</th>
           <td>
             <fieldset>
               <legend class="screen-reader-text">
-                <span>Display The Following Hashtags</span>
+                <span>Hashtags</span>
               </legend>
               <label title="Yes" style="display: none;">
                 <input type="radio" value="1" name="option_display_the_following_hashtags" <?php echo ($data['option_display_the_following_hashtags'] == '1') ? 'checked="checked"' : null; ?>>
@@ -96,9 +96,9 @@
               </label>
               <div>
                 <p>
-                  <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="10" name="display_the_following_hashtags"><?php echo isset($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
+                  <textarea id="display_the_following_hashtags" class="large-text code" cols="50" rows="3" name="display_the_following_hashtags"><?php echo isset($data['display_the_following_hashtags']) ? $data['display_the_following_hashtags'] : null; ?></textarea>
                 </p>
-                <p class="description">Hashtags separated by comma, e.g. <code>#buildings, #graffiti, #art</code> etc.</p>
+                <p class="description">Tag separated by comma, e.g. <code>#buildings, #graffiti, #art</code> etc.</p>
               </div>
             </fieldset>
           </td>
