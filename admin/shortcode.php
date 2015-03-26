@@ -222,49 +222,51 @@ function yinstagram_extract_hashtags($data) {
 
 function yinstagram_get_own_images($access_token, $display_images, $number_of_images, $username, $is_shortcode, $a = null) {
   $responses = null;
-  
   switch ($display_images) {
     case 'feed':
       // cache the responses
-      if (false === ( $special_query_feed = get_transient('special_query_feed') )) {
+      $transient_name = strval( md5('special_query_feed' . $access_token) );
+      if (false === ( $special_query_feed = get_transient($transient_name) )) {
         //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
         $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $access_token . '&count=33');
 
-        set_transient('special_query_feed', $responses, 60 * 15);
+        set_transient($transient_name, $responses, 60 * 15);
       }
-      $responses = get_transient('special_query_feed');
+      $responses = get_transient($transient_name);
       break;
     case 'liked':
-      if (false === ( $special_query_liked = get_transient('special_query_liked') )) {
+      $transient_name = strval( md5('special_query_liked' . $access_token) );
+      if (false === ( $special_query_liked = get_transient($transient_name) )) {
         //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
         $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $access_token . '&count=33');
         
-        set_transient('special_query_liked', $responses, 60 * 15);
+        set_transient($transient_name, $responses, 60 * 15);
       }
-      $responses = get_transient('special_query_liked');
+      $responses = get_transient($transient_name);
       break;
     default:
       $username = ($username) ? $username: 'self';
       switch ($username) {
         case 'self':
-          if (false === ( $special_query_self = get_transient('special_query_self') )) {
+          $transient_name = strval( md5('special_query_self' . $access_token) );
+          if (false === ( $special_query_self = get_transient($transient_name) )) {
             //https://api.instagram.com/v1/users/3/media/recent/?access_token=ACCESS-TOKEN
             $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $access_token . '&count=33');
 
-            set_transient('special_query_self', $responses, 60 * 15);
+            set_transient($transient_name, $responses, 60 * 15);
           }
-          $responses = get_transient('special_query_self');
+          $responses = get_transient($transient_name);
           break;
         default:
           $user_id = yinstagram_get_user_id($access_token, $username);
           if (!$user_id) break;
-          
-          if (false === ( $special_query_self = get_transient('special_query_' . $user_id) )) {
+          $transient_name = strval( md5('special_query_' . $user_id . $access_token) );
+          if (false === ( $special_query_self = get_transient($transient_name) )) {
             $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $access_token . '&count=33');
             
-            set_transient('special_query_' . $user_id, $responses, 60 * 15);
+            set_transient($transient_name, $responses, 60 * 15);
           }
-          $responses = get_transient('special_query_' . $user_id);
+          $responses = get_transient($transient_name);
       }
   }
 
@@ -281,15 +283,13 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
       $i = 0;
       
       while ($next_url) {
-        $transient_name = strval( md5($next_url) );
+        $transient_name = strval( md5($next_url . $access_token) );
         if (false === ( $special_query_next = get_transient($transient_name) )) {
           $responses = yinstagram_fetch_data($next_url);
 
           set_transient($transient_name, $responses, 60 * 15);
         }
-        $responses = get_transient($transient_name);
-
-        $responses = json_decode($responses);
+        $responses = json_decode( get_transient($transient_name) );
 
         if ( isset($responses->data) ) {
           $output = array_merge($output, $responses->data);
@@ -314,15 +314,13 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
   $output = array();
   
   foreach ($tags as $tag) {
-    
-    if (false === ( $special_query_tag = get_transient('special_query_' . $tag) )) {
+    $transient_name = strval( md5('special_query_' . $tag . $access_token . $count) );
+    if (false === ( $special_query_tag = get_transient($transient_name) )) {
       $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $access_token . '&count=' . $count);
       
-      set_transient('special_query_' . $tag, $responses, 60 * 15);
+      set_transient($transient_name, $responses, 60 * 15);
     }
-    $responses = get_transient('special_query_' . $tag);
-    
-    $responses = json_decode($responses);
+    $responses = json_decode( get_transient($transient_name) );
     
     if ( isset($responses->data) ) {
       $output = array_merge( $output, $responses->data );
@@ -333,15 +331,13 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
         $i = 0;
         
         while ($next_url) {
-          $transient_name = strval( md5($next_url) );
+          $transient_name = strval( md5($next_url . $access_token) );
           if (false === ( $special_query_next = get_transient($transient_name) )) {
             $responses = yinstagram_fetch_data($next_url);
 
             set_transient($transient_name, $responses, 60 * 15);
           }
-          $responses = get_transient($transient_name);
-
-          $responses = json_decode($responses);
+          $responses = json_decode( get_transient($transient_name) );
           
           if ( isset($responses->data) ) {
             $output = array_merge($output, $responses->data);

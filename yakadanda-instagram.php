@@ -3,7 +3,7 @@
   Plugin Name: Yakadanda Instagram
   Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
   Description: A Wordpress plugin that pulls in Instagram images of user or hashtags.
-  Version: 0.1.9
+  Version: 0.2.0
   Author: Peter Ricci
   Author URI: http://www.yakadanda.com/
   License: GPLv2 or later
@@ -24,7 +24,7 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.1.9');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.2.0');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
@@ -50,7 +50,7 @@ function yinstagram_register() {
   global $yinstagram_options;
   
   /* Register styles */
-  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.5.14', 'all');
+  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.6.0', 'all');
   wp_register_style('yinstagram-qtip', YINSTAGRAM_PLUGIN_URL . '/css/jquery.qtip.min.css', array(), '2.2.1', 'all');
   wp_register_style('yinstagram-jquery-ui', YINSTAGRAM_PLUGIN_URL . '/css/jquery-ui.css', array(), YINSTAGRAM_VER ,'all');
   wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', array(), YINSTAGRAM_VER, 'all');
