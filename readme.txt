@@ -69,6 +69,7 @@ No attribute will retrieves Instagram images based on plugin settings, and if ha
 = 0.2.1 =
 * Add Internationalization
 * Improve admin notifications
+* Update colorbox
 
 = 0.2.0 =
 * Update colorbox
