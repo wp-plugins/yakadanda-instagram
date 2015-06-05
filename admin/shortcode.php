@@ -4,9 +4,9 @@ function yinstagram_shortcode($atts) {
   global $wp, $yinstagram_options;
 
   $a = shortcode_atts( array(
-      'display_images' => null, //display_your_images - recent, feed, liked, hashtag
-      'username' => null, //username_of_user_id
-      'hashtags' => null //display_the_following_hashtags
+      'display_images' => null, // display_your_images - recent, feed, liked, hashtag
+      'username' => null, // username_of_user_id
+      'hashtags' => null // display_the_following_hashtags
     ), $atts);
 
   // Enqueue scripts
@@ -23,7 +23,7 @@ function yinstagram_shortcode($atts) {
   }
   
   $data = null;
-  $output = '<p>Not Connected.</p>';
+  $output = '<p>' . __('Not Connected.', 'yakadanda-instagram') . '</p>';
   
   $yinstagram_options['number_of_images'] = isset($yinstagram_options['number_of_images']) ? $yinstagram_options['number_of_images'] : '1';
   $yinstagram_options['size'] = isset($yinstagram_options['size']) ? $yinstagram_options['size'] : 'thumbnail';
@@ -121,7 +121,7 @@ function yinstagram_get_scroll_auto($yinstagram_options, $data) {
   if ($yinstagram_options['tooltip'] == 'on') $output .= $qtipcontent;
 
   if ($j == 0) {
-   $output = '<p>No Image.</p>'; 
+   $output = '<p>' . __('No Image.', 'yakadanda-instagram') . '</p>'; 
   }
 
   return $output;
@@ -140,16 +140,17 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   
   $output .= '<ul class="yinstagram-scroller-infinite clearfix">';
   
-  foreach ( $data as $datum ) {
-    if ( $datum->type != 'image' ) continue;
+  foreach ($data as $datum) {
+    if ($datum->type != 'image') { continue; }
 
     $i++; $j++;
     $img_src = $datum->images->thumbnail->url;
-    if ($yinstagram_options['size'] == 'low_resolution')
+    if ($yinstagram_options['size'] == 'low_resolution') {
       $img_src = $datum->images->low_resolution->url;
-    elseif ($yinstagram_options['size'] == 'standard_resolution')
+    } elseif ($yinstagram_options['size'] == 'standard_resolution') {
       $img_src = $datum->images->standard_resolution->url;
-    
+    }
+
     $output .= ($i == 1) ? '<li>' : null;
     
     switch($yinstagram_options['lightbox']) {
@@ -198,12 +199,12 @@ function yinstagram_get_scroll_infinite($yinstagram_options, $data) {
   
   $style = ($yinstagram_options['display_social_links']) ? null : ' style="margin-bottom: 1.5em;"';
   
-  $output .= '<a href="#" class="yinstagram-load-more"' . $style . '>Load More</a>';
+  $output .= '<a href="#" class="yinstagram-load-more"' . $style . '>' . __('Load More', 'yakadanda-instagram') . '</a>';
 
   if ($yinstagram_options['tooltip'] == 'on') $output .= $qtipcontent;
 
   if ($j == 0) {
-   $output = '<p>No Image.</p>'; 
+   $output = '<p>' . __('No Image.', 'yakadanda-instagram') . '</p>'; 
   }
 
   return $output;

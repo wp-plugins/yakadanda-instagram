@@ -261,6 +261,13 @@ jQuery(function($){
   }
   // end of settings page
   
+  // toggle message
+  if ($('body').find('#yinstagram-msg').length === 1) {
+    setTimeout(function () {
+      $('#yinstagram-msg').toggle('slow');
+    }, 2000);
+  }
+  
   // help tab
   $('#yinstagram-setup-help-tab').on('click', function(e) {
     if ($('#screen-meta').is(":hidden")) {

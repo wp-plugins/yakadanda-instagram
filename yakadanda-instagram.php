@@ -1,12 +1,14 @@
 <?php
-/*
-  Plugin Name: Yakadanda Instagram
-  Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
-  Description: A Wordpress plugin that pulls in Instagram images of user or hashtags.
-  Version: 0.2.0
-  Author: Peter Ricci
-  Author URI: http://www.yakadanda.com/
-  License: GPLv2 or later
+/**
+ * Plugin Name: Yakadanda Instagram
+ * Plugin URI: http://www.yakadanda.com/plugins/yakadanda-instagram/
+ * Description: A Wordpress plugin that pulls in Instagram images of user or hashtags.
+ * Version: 0.2.1
+ * Author: Peter Ricci
+ * Author URI: http://www.yakadanda.com/
+ * Text Domain: yakadanda-instagram
+ * Domain Path: /languages/
+ * License: GPL2
  */
 
 /* Put setup procedures to be run when the plugin is activated in the following function */
@@ -24,11 +26,17 @@ function yinstagram_deactivate() {
   
 }
 
-if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.2.0');
+if (!defined('YINSTAGRAM_VER')) define('YINSTAGRAM_VER', '0.2.1');
 if (!defined('YINSTAGRAM_PLUGIN_DIR')) define('YINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 if (!defined('YINSTAGRAM_PLUGIN_URL')) define('YINSTAGRAM_PLUGIN_URL', plugins_url(null, __FILE__));
 if (!defined('YINSTAGRAM_THEME_DIR')) define('YINSTAGRAM_THEME_DIR', get_stylesheet_directory());
 if (!defined('YINSTAGRAM_THEME_URL')) define('YINSTAGRAM_THEME_URL', get_stylesheet_directory_uri());
+
+// Load plugin textdomain
+add_action('plugins_loaded', 'yinstagram_load_textdomain');
+function yinstagram_load_textdomain() {
+  load_plugin_textdomain('yakadanda-instagram', false, dirname( plugin_basename( __FILE__ ) ) . '/languages');
+}
 
 add_filter('plugin_action_links', 'yinstagram_action_links', 10, 2);
 function yinstagram_action_links($links, $file) {
@@ -50,7 +58,7 @@ function yinstagram_register() {
   global $yinstagram_options;
   
   /* Register styles */
-  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.6.0', 'all');
+  wp_register_style('yinstagram-colorbox', YINSTAGRAM_PLUGIN_URL . '/css/colorbox-' . $yinstagram_options['theme'] . '.css', false, '1.6.1', 'all');
   wp_register_style('yinstagram-qtip', YINSTAGRAM_PLUGIN_URL . '/css/jquery.qtip.min.css', array(), '2.2.1', 'all');
   wp_register_style('yinstagram-jquery-ui', YINSTAGRAM_PLUGIN_URL . '/css/jquery-ui.css', array(), YINSTAGRAM_VER ,'all');
   wp_register_style('yinstagram-admin', YINSTAGRAM_PLUGIN_URL . '/css/admin.css', array(), YINSTAGRAM_VER, 'all');

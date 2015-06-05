@@ -3,7 +3,7 @@ add_action('widgets_init', create_function('', 'register_widget( "yinstagram_wid
 class YInstagram_Widget extends WP_Widget {
   public function __construct() {
     parent::__construct(
-            'yinstagram', 'Yakadanda Instagram', array('description' => __('Yakadanda Instagram Widget', 'text_domain'))
+            'yinstagram', 'Yakadanda Instagram', array('description' => __('Yakadanda Instagram Widget', 'yakadanda-instagram'))
     );
   }
   
@@ -80,9 +80,9 @@ class YInstagram_Widget extends WP_Widget {
             if ( $u_info->website ) echo '<p class="website"><a href="' . $u_info->website . '" target="_blank">' . preg_replace('#^https?://#', '', $u_info->website) . '</a></p>';
             if ( $u_info->bio ) echo '<p class="bio">' . $u_info->bio . '</p>';
 
-            echo '<ul class="counts"><li>Posts: ' . $u_info->counts->media . '</li>';
-            echo '<li>Followers: ' . $u_info->counts->followed_by . '</li>';
-            echo '<li>Following: ' . $u_info->counts->follows . '</li></ul>';
+            echo '<ul class="counts"><li>' . __('Posts:', 'yakadanda-instagram') . ' ' . $u_info->counts->media . '</li>';
+            echo '<li>' . __('Followers:', 'yakadanda-instagram') . ' ' . $u_info->counts->followed_by . '</li>';
+            echo '<li>' . __('Following:', 'yakadanda-instagram') . ' ' . $u_info->counts->follows . '</li></ul>';
             echo '<a href="http://instagram.com/' . $u_info->username . '?ref=badge" class="ig-b- ig-b-v-24">';
             echo '<img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" />';
             echo '</a>';
@@ -91,7 +91,7 @@ class YInstagram_Widget extends WP_Widget {
             if ($yinstagram_options['tooltip'] == 'on') echo $qtipcontent;
 
           } else {
-            echo '<p>Request timed out.</p>';
+            echo '<p>' . __('Request timed out.', 'yakadanda-instagram') . '</p>';
           }
           /*end of profile type*/
           break;
@@ -149,12 +149,12 @@ class YInstagram_Widget extends WP_Widget {
             if ($yinstagram_options['tooltip'] == 'on') echo $qtipcontent;
 
           } else {
-            echo '<p>Request timed out, or no have ' . $instance['display_images'] . ' images.</p>';
+            echo '<p>' . sprintf(__('Request timed out, or no have %s images.', 'yakadanda-instagram'), $instance['display_images']) . '</p>';
           }
           /*end of images type*/
       }
     } else {
-      echo '<p>Not Connected.</p>';
+      echo '<p>' . __('Not Connected.', 'yakadanda-instagram') . '</p>';
     }
 
     echo $after_widget;
@@ -189,54 +189,54 @@ class YInstagram_Widget extends WP_Widget {
     
     ?>
     <p>
-      <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
+      <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'yakadanda-instagram'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
     </p>
     <p>
-      <label for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Type:'); ?></label><br>
+      <label for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Type:', 'yakadanda-instagram'); ?></label><br>
       <select id="<?php echo $this->get_field_id('type'); ?>" name="<?php echo $this->get_field_name('type'); ?>" class="yinstagram-type">
-        <option value="images" <?php echo ($type == 'images') ? 'selected="selected"' : null; ?>>Images&nbsp;</option>
-        <option value="profile" <?php echo ($type == 'profile') ? 'selected="selected"' : null; ?>>Profile&nbsp;</option>
+        <option value="images" <?php echo ($type == 'images') ? 'selected="selected"' : null; ?>><?php _e('Images', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="profile" <?php echo ($type == 'profile') ? 'selected="selected"' : null; ?>><?php _e('Profile', 'yakadanda-instagram'); ?>&nbsp;</option>
       </select>
     </p>
     <p>
-      <label for="<?php echo $this->get_field_id('display_images'); ?>"><?php _e('Display Images:'); ?></label><br>
+      <label for="<?php echo $this->get_field_id('display_images'); ?>"><?php _e('Display Images:', 'yakadanda-instagram'); ?></label><br>
       <select id="<?php echo $this->get_field_id('display_images'); ?>" name="<?php echo $this->get_field_name('display_images'); ?>" class="yinstagram-display-images">
-        <option value="recent" <?php echo ($display_images == 'recent') ? 'selected="selected"' : null; ?>>Recent&nbsp;</option>
-        <option value="feed" <?php echo ($display_images == 'feed') ? 'selected="selected"' : null; ?>>Feed&nbsp;</option>
-        <option value="liked" <?php echo ($display_images == 'liked') ? 'selected="selected"' : null; ?>>Liked&nbsp;</option>
-        <option value="tags" <?php echo ($display_images == 'tags') ? 'selected="selected"' : null; ?>>Tags&nbsp;</option>
+        <option value="recent" <?php echo ($display_images == 'recent') ? 'selected="selected"' : null; ?>><?php _e('Recent', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="feed" <?php echo ($display_images == 'feed') ? 'selected="selected"' : null; ?>><?php _e('Feed', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="liked" <?php echo ($display_images == 'liked') ? 'selected="selected"' : null; ?>><?php _e('Liked', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="tags" <?php echo ($display_images == 'tags') ? 'selected="selected"' : null; ?>><?php _e('Tags', 'yakadanda-instagram'); ?>&nbsp;</option>
       </select>
     </p>
     <p id="<?php echo $this->get_field_id('recent-container'); ?>" <?php echo ($display_images != 'recent') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('username_of_user_id'); ?>"><?php _e('Username:'); ?></label> 
+      <label for="<?php echo $this->get_field_id('username_of_user_id'); ?>"><?php _e('Username:', 'yakadanda-instagram'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('username_of_user_id'); ?>" name="<?php echo $this->get_field_name('username_of_user_id'); ?>" type="text" value="<?php echo esc_attr($username_of_user_id); ?>" placeholder="<?php echo isset( $auth['user']->username ) ? $auth['user']->username : null; ?>"/>
     </p>
     <p id="<?php echo $this->get_field_id('hashtags-container'); ?>" <?php echo ($display_images != 'tags') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('hashtags'); ?>"><?php _e('Hashtags (separated by comma):'); ?></label> 
-      <input class="widefat" id="<?php echo $this->get_field_id('hashtags'); ?>" name="<?php echo $this->get_field_name('hashtags'); ?>" type="text" value="<?php echo esc_attr($hashtags); ?>" placeholder="e.g. #art, #buildings, #graffiti etc."/>
+      <label for="<?php echo $this->get_field_id('hashtags'); ?>"><?php _e('Hashtags (separated by comma):', 'yakadanda-instagram'); ?></label> 
+      <input class="widefat" id="<?php echo $this->get_field_id('hashtags'); ?>" name="<?php echo $this->get_field_name('hashtags'); ?>" type="text" value="<?php echo esc_attr($hashtags); ?>" placeholder="<?php _e('e.g. #art, #buildings, #graffiti etc.', 'yakadanda-instagram'); ?>"/>
     </p>
     <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Image Size:'); ?></label><br>
+      <label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Image Size:', 'yakadanda-instagram'); ?></label><br>
       <select id="<?php echo $this->get_field_id('size'); ?>" name="<?php echo $this->get_field_name('size'); ?>">
-        <option value="thumbnail" <?php echo ($size == 'thumbnail') ? 'selected="selected"' : null; ?>>Thumbnail&nbsp;</option>
-        <option value="low_resolution" <?php echo ($size == 'low_resolution') ? 'selected="selected"' : null; ?>>Low Resolution&nbsp;</option>
-        <option value="standard_resolution" <?php echo ($size == 'standard_resolution') ? 'selected="selected"' : null; ?>>Standard Resolution&nbsp;</option>
+        <option value="thumbnail" <?php echo ($size == 'thumbnail') ? 'selected="selected"' : null; ?>><?php _e('Thumbnail', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="low_resolution" <?php echo ($size == 'low_resolution') ? 'selected="selected"' : null; ?>><?php _e('Low Resolution', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="standard_resolution" <?php echo ($size == 'standard_resolution') ? 'selected="selected"' : null; ?>><?php _e('Standard Resolution', 'yakadanda-instagram'); ?>&nbsp;</option>
       </select>
     </p>
     <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('custom_size'); ?>"><?php _e('Custom Image Size (pixel):'); ?></label> 
+      <label for="<?php echo $this->get_field_id('custom_size'); ?>"><?php _e('Custom Image Size (pixel):', 'yakadanda-instagram'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('custom_size'); ?>" name="<?php echo $this->get_field_name('custom_size'); ?>" type="text" value="<?php echo esc_attr($custom_size); ?>" />
     </p>
     <p class="<?php echo $this->get_field_id('type-container'); ?>" <?php echo ($type == 'profile') ? 'style="display: none;"' : null; ?>>
-      <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limit (max 33):'); ?></label> 
+      <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limit (max 33):', 'yakadanda-instagram'); ?></label> 
       <input class="widefat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" type="text" value="<?php echo esc_attr($limit); ?>" />
     </p>
     <p>
-      <label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Order:'); ?></label><br>
+      <label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Order:', 'yakadanda-instagram'); ?></label><br>
       <select id="<?php echo $this->get_field_id('order'); ?>" name="<?php echo $this->get_field_name('order'); ?>">
-        <option value="default" <?php echo ($order == 'default') ? 'selected="selected"' : null; ?>>Default&nbsp;</option>
-        <option value="shuffle" <?php echo ($order == 'shuffle') ? 'selected="selected"' : null; ?>>Shuffle&nbsp;</option>
+        <option value="default" <?php echo ($order == 'default') ? 'selected="selected"' : null; ?>><?php _e('Default', 'yakadanda-instagram'); ?>&nbsp;</option>
+        <option value="shuffle" <?php echo ($order == 'shuffle') ? 'selected="selected"' : null; ?>><?php _e('Shuffle', 'yakadanda-instagram'); ?>&nbsp;</option>
       </select>
     </p>
     <?php

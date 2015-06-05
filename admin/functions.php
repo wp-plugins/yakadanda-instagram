@@ -91,12 +91,12 @@ function yinstagram_is_plugin_page($url) {
 
 add_action('admin_menu', 'yinstagram_register_menu_page');
 function yinstagram_register_menu_page() {
-  add_menu_page('Settings', 'YInstagram', 'add_users', 'yinstagram-settings', 'yinstagram_page_settings', 'none', 205);
+  add_menu_page(__('Settings', 'yakadanda-instagram'), 'YInstagram', 'add_users', 'yinstagram-settings', 'yinstagram_page_settings', 'none', 205);
 
-  $settings_page = add_submenu_page('yinstagram-settings', 'Settings', 'Settings', 'manage_options', 'yinstagram-settings', 'yinstagram_page_settings');
+  $settings_page = add_submenu_page('yinstagram-settings', __('Settings', 'yakadanda-instagram'), __('Settings', 'yakadanda-instagram'), 'manage_options', 'yinstagram-settings', 'yinstagram_page_settings');
   add_action('load-' . $settings_page, 'yinstagram_help_tab');
 
-  $display_options_page = add_submenu_page('yinstagram-settings', 'Display Options', 'Display Options', 'manage_options', 'yinstagram-display-options', 'yinstagram_page_display_options');
+  $display_options_page = add_submenu_page('yinstagram-settings', __('Display Options', 'yakadanda-instagram'), __('Display Options', 'yakadanda-instagram'), 'manage_options', 'yinstagram-display-options', 'yinstagram_page_display_options');
   add_action('load-' . $display_options_page, 'yinstagram_help_tab');
 }
 
@@ -117,20 +117,20 @@ function yinstagram_redirect_deprecated_address() {
 
 function yinstagram_page_settings() {
   if (!current_user_can('manage_options')) {
-    wp_die(__('You do not have sufficient permissions to access this page.'));
+    wp_die(__('You do not have sufficient permissions to access this page.', 'yakadanda-instagram'));
   }
   
   $message = null;
   
   /* authentication */
   if (isset($_GET['code'])) {
-    $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => 'Connection to Instagram failed.'));
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'error', 'msg' => __('Connection to Instagram failed.', 'yakadanda-instagram')));
     
     $response = json_decode( yinstagram_access_token($_GET['code']) );
     
     if ( isset($response->access_token) ) {
       update_option('yinstagram_access_token', $response);
-      $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Connection to Instagram succeeded.'));
+      $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => __('Connection to Instagram succeeded.', 'yakadanda-instagram')));
     }
     
     setcookie('yinstagram_response', $message, time()+1, '/');
@@ -194,18 +194,20 @@ function yinstagram_page_settings() {
 }
 
 function yinstagram_page_display_options() {
-  if (!current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
-  
+  if (!current_user_can('manage_options')) { 
+    wp_die(__('You do not have sufficient permissions to access this page.', 'yakadanda-instagram'));
+  }
+
   $message = null;
   if (isset($_POST["update_display_options"])) {
     $action = update_option('yinstagram_display_options', $_POST['ydo']);
-    if ($action) $message = array('class' => 'updated', 'msg' => 'Display options changed.');
+    if ($action) { $message = array('class' => 'updated', 'msg' => __('Display options changed.', 'yakadanda-instagram')); }
   }
   
   $data = yinstagram_get_options('display_options');
   
   // message
-  if (isset($_COOKIE['yinstagram_response'])) $message = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response']));
+  if (isset($_COOKIE['yinstagram_response'])) { $message = maybe_unserialize(stripslashes($_COOKIE['yinstagram_response'])); }
   
   include dirname(__FILE__) . '/page-display-options.php';
 }
@@ -220,27 +222,27 @@ function yinstagram_help_tab() {
 
   $screen->add_help_tab(array(
       'id' => 'yinstagram-setup',
-      'title' => __('Setup'),
+      'title' => __('Setup', 'yakadanda-instagram'),
       'content' => yinstagram_section_setup(),
   ));
   $screen->add_help_tab(array(
       'id' => 'yinstagram-shortcode',
-      'title' => __('Shortcode'),
+      'title' => __('Shortcode', 'yakadanda-instagram'),
       'content' => yinstagram_section_shortcode(),
   ));
 }
 
 function yinstagram_section_setup() {
-  $output = '<h1>How to get your Instagram Client ID and Client Secret</h1>';
+  $output = '<h1>' . __('How to get your Instagram Client ID and Client Secret', 'yakadanda-instagram') . '</h1>';
   $output .= '<ol>';
-  $output .= '<li>Go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a> then login.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-1.png"/></li>';
-  $output .= '<li>Click Manage Clients menu, or Register Your Application button.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-2.png"/></li>';
-  $output .= '<li>Register a New Client.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png"/></li>';
-  $output .= '<li>Setup Register new Client ID form.<br>';
-  $output .= 'a. Fill textboxes, textarea, and checkboxes with your suitable information, and preferences.<br>';
-  $output .= 'b. Fill OAuth redirect_uri textbox with <code>' . admin_url('admin.php?page=yinstagram-settings') . '</code><br>';
+  $output .= sprintf(__('<li>Go to <a href="%s" target="_blank">http://instagram.com/developer</a> then login.<br><img src="%s"/></li>', 'yakadanda-instagram'), 'http://instagram.com/developer', YINSTAGRAM_PLUGIN_URL . '/img/manual-1.png');
+  $output .= sprintf(__('<li>Click Manage Clients menu, or Register Your Application button.<br><img src="%s"/></li>', 'yakadanda-instagram'), YINSTAGRAM_PLUGIN_URL . '/img/manual-2.png');
+  $output .= sprintf(__('<li>Register a New Client.<br><img src="%s"/></li>', 'yakadanda-instagram'), YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png');
+  $output .= '<li>' . __('Setup Register new Client ID form.', 'yakadanda-instagram') . '<br>';
+  $output .= __('a. Fill textboxes, textarea, and checkboxes with your suitable information, and preferences.', 'yakadanda-instagram') . '<br>';
+  $output .= sprintf(__('b. Fill OAuth redirect_uri textbox with <code>%s</code>', 'yakadanda-instagram'), admin_url('admin.php?page=yinstagram-settings')) . '<br>';
   $output .= '<img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-4.png"/></li>';
-  $output .= '<li>Congratulation, now you have Client ID and Client Secret.<br><img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png"/></li>';
+  $output .= sprintf(__('<li>Congratulation, now you have Client ID and Client Secret.<br><img src="%s"/></li>', 'yakadanda-instagram'), YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png');
   $output .= '</ol>';
 
   return $output;
@@ -248,19 +250,19 @@ function yinstagram_section_setup() {
 
 function yinstagram_section_shortcode() {
   $output = '<h1>Shortcode</h1>';
-  $output .= '<p><strong>Examples</strong></p>';
+  $output .= '<p><strong>' . __('Examples', 'yakadanda-instagram') . '</strong></p>';
   $output .= '<ul class="sc_examples">';
   $output .= '<li><code>[yinstagram]</code></li>';
   $output .= '<li><code>[yinstagram display_images="liked"]</code></li>';
   $output .= '<li><code>[yinstagram username="motogp"]</code></li>';
   $output .= '<li><code>[yinstagram hashtags="#supercar, #hypercar"]</code></li>';
   $output .= '</ul>';
-  $output .= '<p><strong>Attributes</strong></p>';
+  $output .= '<p><strong>' . __('Attributes', 'yakadanda-instagram') . '</strong></p>';
   $output .= '<table class="sc_key"><tbody>';
-  $output .= '<tr><td style="vertical-align: top;" colspan="3">No attribute will retrieves Instagram images based on plugin settings, and if have attribute will override plugin settings.</td></tr>';
-  $output .= '<tr><td style="vertical-align: top;">display_images</td><td style="vertical-align: top;">=</td><td>Get the authenticated user\'s <span>"feed"</span>, list of media they\'ve <span>"liked"</span>, or get the most <span>"recent"</span> media published by a user.</td></tr>';
-  $output .= '<tr><td style="vertical-align: top;">username</td><td style="vertical-align: top;">=</td><td>Get the most recent images published by a username, e.g. <span>"motogp"</td></tr>';
-  $output .= '<tr><td style="vertical-align: top;">hashtags</td><td style="vertical-align: top;">=</td><td>Get a list of recently tagged media, e.g. <span>"#supercar, #hypercar"</span></td></tr>';
+  $output .= '<tr><td style="vertical-align: top;" colspan="3">' . __('No attribute will retrieves Instagram images based on plugin settings, and if have attribute will override plugin settings.', 'yakadanda-instagram') . '</td></tr>';
+  $output .= sprintf(__('<tr><td style="vertical-align: top;">display_images</td><td style="vertical-align: top;">=</td><td>Get the authenticated user\'s <span>"feed"</span>, list of media they\'ve <span>"liked"</span>, or get the most <span>"recent"</span> media published by a user.</td></tr>', 'yakadanda-instagram'));
+  $output .= sprintf(__('<tr><td style="vertical-align: top;">username</td><td style="vertical-align: top;">=</td><td>Get the most recent images published by a username, e.g. <span>"motogp"</td></tr>', 'yakadanda-instagram'));
+  $output .= sprintf(__('<tr><td style="vertical-align: top;">hashtags</td><td style="vertical-align: top;">=</td><td>Get a list of recently tagged media, e.g. <span>"#supercar, #hypercar"</span></td></tr>', 'yakadanda-instagram'));
   $output .= '<tbody></table>';
   
   return $output;
@@ -322,8 +324,8 @@ function yinstagram_admin_notice() {
   if ( ($url == 'admin.php?page=yinstagram-settings') || ($url == 'admin.php?page=yinstagram-display-options') ) {
     ?>
       <div class="updated yinstagram-notice">
-        <p><a id="yinstagram-dismiss" href="#">Close</a></p>
-        <p>Since 0.1.9, OAuth redirect_uri or REDIRECT URI changed to <code><?php echo admin_url('admin.php?page=yinstagram-settings') ?></code>. You can change your OAuth redirect_uri at <a href="http://instagram.com/developer/clients/manage/" target="_blank">instagram.com/developer/clients/manage/</a>. Thank you.</p>
+        <p><a id="yinstagram-dismiss" href="#"><?php _e('Close', 'yakadanda-instagram'); ?></a></p>
+        <p><?php echo sprintf(__('Since 0.1.9, OAuth redirect_uri or REDIRECT URI changed to <code>%s</code>. You can change your OAuth redirect_uri at <a href="%s" target="_blank">instagram.com/developer/clients/manage/</a>. Thank you.', 'yakadanda-instagram'), admin_url('admin.php?page=yinstagram-settings'), 'http://instagram.com/developer/clients/manage/'); ?></p>
       </div>
     <?php
   }
@@ -339,7 +341,7 @@ add_action('wp_ajax_yinstagram_logout', 'yinstagram_logout_callback');
 function yinstagram_logout_callback() {
   $action = update_option('yinstagram_access_token', null);
   if ($action) {
-    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Disconnected.'));
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => __('Disconnected.', 'yakadanda-instagram')));
     setcookie('yinstagram_response', $message, time()+1, '/');
     echo admin_url('admin.php?page=yinstagram-settings');
   }
@@ -351,7 +353,7 @@ function yinstagram_restore_settings_callback() {
   update_option('yinstagram_access_token', null);
   $action = update_option('yinstagram_settings', null);
   if ($action) {
-    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Settings restored to default settings.'));
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => __('Settings restored to default settings.', 'yakadanda-instagram')));
     setcookie('yinstagram_response', $message, time()+1, '/');
     echo admin_url('admin.php?page=yinstagram-settings');
   }
@@ -362,7 +364,7 @@ add_action('wp_ajax_yinstagram_restore_display_options', 'yinstagram_restore_dis
 function yinstagram_restore_display_options_callback() {
   $action = update_option('yinstagram_display_options', null);
   if ($action) {
-    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => 'Display options restored to default settings.'));
+    $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => __('Display options restored to default settings.', 'yakadanda-instagram')));
     setcookie('yinstagram_response', $message, time()+1, '/');
     echo admin_url('admin.php?page=yinstagram-display-options');
   }
