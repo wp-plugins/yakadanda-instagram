@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap google-web-starter-kit">
   <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div>
   <h2><?php _e('Settings' ,'yakadanda-instagram'); ?></h2>
   <?php if (!function_exists('curl_version')): ?>
@@ -138,12 +138,12 @@
     </table>
     <p class="submit">
       <?php if ( isset($data['access_token']) && isset($data['user']) ): ?>
-        <input id="submit" class="button-primary" type="submit" value="Save Changes" name="submit">&nbsp;
-        <input id="yinstagram-logout" class="button-primary" type="button" value="<?php _e('Logout', 'yakadanda-instagram'); ?>" name="yinstagram-logout">&nbsp;
+        <input id="submit" class="button--primary" type="submit" value="Save Changes" name="submit">&nbsp;
+        <input id="yinstagram-logout" class="button--primary" type="button" value="<?php _e('Logout', 'yakadanda-instagram'); ?>" name="yinstagram-logout">&nbsp;
       <?php else: ?>
-        <input id="submit" class="button-primary" type="submit" value="<?php _e('Save and Connect', 'yakadanda-instagram'); ?>" name="submit">&nbsp;
+        <input id="submit" class="button--primary" type="submit" value="<?php _e('Save and Connect', 'yakadanda-instagram'); ?>" name="submit">&nbsp;
       <?php endif; ?>
-        <input id="yinstagram-restore-settings" class="button-primary" type="button" value="<?php _e('Reset', 'yakadanda-instagram'); ?>" name="yinstagram-restore-settings">
+        <input id="yinstagram-restore-settings" class="button--primary" type="button" value="<?php _e('Reset', 'yakadanda-instagram'); ?>" name="yinstagram-restore-settings">
     </p>
   </form>
 </div>

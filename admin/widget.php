@@ -38,10 +38,10 @@ class YInstagram_Widget extends WP_Widget {
       $data = null;
       switch($instance['display_images']) {
         case 'tags':
-          $data = yinstagram_get_tags_images($yinstagram_options['access_token'], $instance['hashtags'], null, false);
+          $data = yinstagram_get_tags_images($yinstagram_options['access_token'], $yinstagram_options['client_secret'], $yinstagram_options['transient_suffix_name'], $instance['hashtags'], null, false);
           break;
         default:
-          $data = yinstagram_get_own_images($yinstagram_options['access_token'], $instance['display_images'], 1, $instance['username_of_user_id'], false);
+          $data = yinstagram_get_own_images($yinstagram_options['access_token'], $yinstagram_options['client_secret'], $yinstagram_options['transient_suffix_name'], $instance['display_images'], 1, $instance['username_of_user_id'], false);
       }
       
       if ($instance['order'] == 'shuffle') { shuffle($data); }

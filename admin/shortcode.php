@@ -32,10 +32,10 @@ function yinstagram_shortcode($atts) {
     $output = '<p>Request timed out, or no have ' . $display_your_images . ' images.</p>';
     switch ($display_your_images) {
       case 'hashtag':
-        $data = yinstagram_get_tags_images($yinstagram_options['access_token'], $yinstagram_options['display_the_following_hashtags'], $yinstagram_options['number_of_images'], true, $a['hashtags']);
+        $data = yinstagram_get_tags_images($yinstagram_options['access_token'], $yinstagram_options['client_secret'], $yinstagram_options['transient_suffix_name'], $yinstagram_options['display_the_following_hashtags'], $yinstagram_options['number_of_images'], true, $a['hashtags']);
         break;
       default:
-        $data = yinstagram_get_own_images($yinstagram_options['access_token'], $display_your_images, $yinstagram_options['number_of_images'], $username_of_user_id, true, $a);
+        $data = yinstagram_get_own_images($yinstagram_options['access_token'], $yinstagram_options['client_secret'], $yinstagram_options['transient_suffix_name'], $display_your_images, $yinstagram_options['number_of_images'], $username_of_user_id, true, $a);
     }
     if ($yinstagram_options['order'] == 'shuffle') { shuffle($data); }
   }
@@ -221,25 +221,41 @@ function yinstagram_extract_hashtags($data) {
   return $output;
 }
 
-function yinstagram_get_own_images($access_token, $display_images, $number_of_images, $username, $is_shortcode, $a = null) {
+function yinstagram_get_own_images($access_token, $secret, $transient_suffix_name, $display_images, $number_of_images, $username, $is_shortcode, $a = null) {
   $responses = null;
   switch ($display_images) {
     case 'feed':
       // cache the responses
-      $transient_name = strval( md5('special_query_feed' . $access_token) );
+      $transient_name = strval( md5('special_query_feed' . $transient_suffix_name) );
       if (false === ( $special_query_feed = get_transient($transient_name) )) {
+        // Secure API Requests
+        $endpoint = '/users/self/feed';
+        $params = array(
+          'access_token' => $access_token,
+          'count' => 33
+        );
+        $sig = yinstagram_generate_sig($endpoint, $params, $secret);
+            
         //https://api.instagram.com/v1/users/self/feed?access_token=ACCESS-TOKEN
-        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $access_token . '&count=33');
+        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/feed/?access_token=' . $access_token . '&count=33&sig=' . $sig);
 
         set_transient($transient_name, $responses, 60 * 15);
       }
       $responses = get_transient($transient_name);
       break;
     case 'liked':
-      $transient_name = strval( md5('special_query_liked' . $access_token) );
+      $transient_name = strval( md5('special_query_liked' . $transient_suffix_name) );
       if (false === ( $special_query_liked = get_transient($transient_name) )) {
+        // Secure API Requests
+        $endpoint = '/users/self/media/liked';
+        $params = array(
+          'access_token' => $access_token,
+          'count' => 33
+        );
+        $sig = yinstagram_generate_sig($endpoint, $params, $secret);
+        
         //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
-        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $access_token . '&count=33');
+        $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/liked/?access_token=' . $access_token . '&count=33&sig=' . $sig);
         
         set_transient($transient_name, $responses, 60 * 15);
       }
@@ -249,10 +265,18 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
       $username = ($username) ? $username: 'self';
       switch ($username) {
         case 'self':
-          $transient_name = strval( md5('special_query_self' . $access_token) );
+          $transient_name = strval( md5('special_query_self' . $transient_suffix_name) );
           if (false === ( $special_query_self = get_transient($transient_name) )) {
+            // Secure API Requests
+            $endpoint = '/users/self/media/recent';
+            $params = array(
+              'access_token' => $access_token,
+              'count' => 33
+            );
+            $sig = yinstagram_generate_sig($endpoint, $params, $secret);
+            
             //https://api.instagram.com/v1/users/3/media/recent/?access_token=ACCESS-TOKEN
-            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $access_token . '&count=33');
+            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/self/media/recent/?access_token=' . $access_token . '&count=33&sig=' . $sig);
 
             set_transient($transient_name, $responses, 60 * 15);
           }
@@ -261,9 +285,17 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
         default:
           $user_id = yinstagram_get_user_id($access_token, $username);
           if (!$user_id) break;
-          $transient_name = strval( md5('special_query_' . $user_id . $access_token) );
+          $transient_name = strval( md5('special_query_' . $user_id . $transient_suffix_name) );
           if (false === ( $special_query_self = get_transient($transient_name) )) {
-            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $access_token . '&count=33');
+            // Secure API Requests
+            $endpoint = '/users/' . $user_id . '/media/recent';
+            $params = array(
+              'access_token' => $access_token,
+              'count' => 33
+            );
+            $sig = yinstagram_generate_sig($endpoint, $params, $secret);
+            
+            $responses = yinstagram_fetch_data('https://api.instagram.com/v1/users/' . $user_id . '/media/recent/?access_token=' . $access_token . '&count=33&sig=' . $sig);
             
             set_transient($transient_name, $responses, 60 * 15);
           }
@@ -284,7 +316,7 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
       $i = 0;
       
       while ($next_url) {
-        $transient_name = strval( md5($next_url . $access_token) );
+        $transient_name = strval( md5($next_url . $transient_suffix_name) );
         if (false === ( $special_query_next = get_transient($transient_name) )) {
           $responses = yinstagram_fetch_data($next_url);
 
@@ -307,7 +339,7 @@ function yinstagram_get_own_images($access_token, $display_images, $number_of_im
   return $output;
 }
 
-function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images = 1, $is_shortcode = true, $attr_hashtags = null) {
+function yinstagram_get_tags_images($access_token, $secret, $transient_suffix_name, $hashtags, $number_of_images = 1, $is_shortcode = true, $attr_hashtags = null) {
   $tags = empty($attr_hashtags) ? yinstagram_extract_hashtags($hashtags) : yinstagram_extract_hashtags($attr_hashtags);
   
   $number_of_hashtags = count($tags);
@@ -315,9 +347,17 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
   $output = array();
   
   foreach ($tags as $tag) {
-    $transient_name = strval( md5('special_query_' . $tag . $access_token . $count) );
+    $transient_name = strval( md5('special_query_' . $tag . $count . $transient_suffix_name) );
     if (false === ( $special_query_tag = get_transient($transient_name) )) {
-      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $access_token . '&count=' . $count);
+      // Secure API Requests
+      $endpoint = '/tags/' . $tag . '/media/recent';
+      $params = array(
+        'access_token' => $access_token,
+        'count' => $count
+      );
+      $sig = yinstagram_generate_sig($endpoint, $params, $secret);
+      
+      $responses = yinstagram_fetch_data('https://api.instagram.com/v1/tags/' . $tag . '/media/recent?access_token=' . $access_token . '&count=' . $count . '&sig=' . $sig);
       
       set_transient($transient_name, $responses, 60 * 15);
     }
@@ -332,7 +372,7 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
         $i = 0;
         
         while ($next_url) {
-          $transient_name = strval( md5($next_url . $access_token) );
+          $transient_name = strval( md5($next_url . $transient_suffix_name) );
           if (false === ( $special_query_next = get_transient($transient_name) )) {
             $responses = yinstagram_fetch_data($next_url);
 
@@ -343,8 +383,8 @@ function yinstagram_get_tags_images($access_token, $hashtags, $number_of_images 
           if ( isset($responses->data) ) {
             $output = array_merge($output, $responses->data);
             
-            if ($i == $number_of_images)
-              break;
+            if ($i == $number_of_images) break;
+            
             $i++;
             $next_url = ($responses->pagination->next_url) ? $responses->pagination->next_url : null;
           }

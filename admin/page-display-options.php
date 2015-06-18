@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap google-web-starter-kit">
   <div id="icon-edit" class="icon32 icon32-posts-quote"><br></div><h2><?php _e('Display Options' ,'yakadanda-instagram'); ?></h2>
   <?php if ($message): ?>
     <div id="yinstagram-msg" class="<?php echo $message['class']; ?>">
@@ -134,8 +134,8 @@
       </tbody>
     </table>
     <p class="submit">
-      <input id="submit" class="button-primary" type="submit" value="<?php echo ($data) ? __('Save Changes', 'yakadanda-instagram') : __('Save', 'yakadanda-instagram'); ?>" name="submit">&nbsp;
-      <input id="yinstagram-restore-display-options" class="button-primary" type="button" value="<?php _e('Reset', 'yakadanda-instagram'); ?>" name="yinstagram-restore-display-options">
+      <input id="submit" class="button--primary" type="submit" value="<?php echo ($data) ? __('Save Changes', 'yakadanda-instagram') : __('Save', 'yakadanda-instagram'); ?>" name="submit">&nbsp;
+      <input id="yinstagram-restore-display-options" class="button--primary" type="button" value="<?php _e('Reset', 'yakadanda-instagram'); ?>" name="yinstagram-restore-display-options">
     </p>
   </form>
 </div>

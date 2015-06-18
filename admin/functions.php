@@ -56,7 +56,8 @@ function yinstagram_get_options($admin_page = 'all') {
   if (($admin_page == 'all') || ($admin_page == 'settings') || ($admin_page == 'token')) {
     $default = array(
       'access_token' => null,
-      'user' => null
+      'user' => null,
+      'transient_suffix_name' => 1000
     );
     $token = wp_parse_args( get_option('yinstagram_access_token'), $default );
     $output = array_merge((array) $output, (array) $token);
@@ -129,7 +130,8 @@ function yinstagram_page_settings() {
     $response = json_decode( yinstagram_access_token($_GET['code']) );
     
     if ( isset($response->access_token) ) {
-      update_option('yinstagram_access_token', $response);
+      $transient_suffix_name = array('transient_suffix_name' => rand(1001, 9999));
+      update_option('yinstagram_access_token', (object)array_merge((array)$response, $transient_suffix_name));
       $message = maybe_serialize(array('cookie' => 1, 'class' => 'updated', 'msg' => __('Connection to Instagram succeeded.', 'yakadanda-instagram')));
     }
     
@@ -233,23 +235,26 @@ function yinstagram_help_tab() {
 }
 
 function yinstagram_section_setup() {
-  $output = '<h1>' . __('How to get your Instagram Client ID and Client Secret', 'yakadanda-instagram') . '</h1>';
+  $output = '<div class="google-web-starter-kit">';
+  $output .= '<h1>' . __('How to get your Instagram Client ID and Client Secret', 'yakadanda-instagram') . '</h1>';
   $output .= '<ol>';
   $output .= sprintf(__('<li>Go to <a href="%s" target="_blank">http://instagram.com/developer</a> then login.<br><img src="%s"/></li>', 'yakadanda-instagram'), 'http://instagram.com/developer', YINSTAGRAM_PLUGIN_URL . '/img/manual-1.png');
   $output .= sprintf(__('<li>Click Manage Clients menu, or Register Your Application button.<br><img src="%s"/></li>', 'yakadanda-instagram'), YINSTAGRAM_PLUGIN_URL . '/img/manual-2.png');
   $output .= sprintf(__('<li>Register a New Client.<br><img src="%s"/></li>', 'yakadanda-instagram'), YINSTAGRAM_PLUGIN_URL . '/img/manual-3.png');
   $output .= '<li>' . __('Setup Register new Client ID form.', 'yakadanda-instagram') . '<br>';
   $output .= __('a. Fill textboxes, textarea, and checkboxes with your suitable information, and preferences.', 'yakadanda-instagram') . '<br>';
-  $output .= sprintf(__('b. Fill OAuth redirect_uri textbox with <code>%s</code>', 'yakadanda-instagram'), admin_url('admin.php?page=yinstagram-settings')) . '<br>';
+  $output .= sprintf(__('b. Fill Redirect URI(s) textbox with <code>%s</code>', 'yakadanda-instagram'), admin_url('admin.php?page=yinstagram-settings')) . '<br>';
   $output .= '<img src="' . YINSTAGRAM_PLUGIN_URL . '/img/manual-4.png"/></li>';
   $output .= sprintf(__('<li>Congratulation, now you have Client ID and Client Secret.<br><img src="%s"/></li>', 'yakadanda-instagram'), YINSTAGRAM_PLUGIN_URL . '/img/manual-5.png');
   $output .= '</ol>';
+  $output .= '</div>';
 
   return $output;
 }
 
 function yinstagram_section_shortcode() {
-  $output = '<h1>Shortcode</h1>';
+  $output = '<div class="google-web-starter-kit">';
+  $output .= '<h1>Shortcode</h1>';
   $output .= '<p><strong>' . __('Examples', 'yakadanda-instagram') . '</strong></p>';
   $output .= '<ul class="sc_examples">';
   $output .= '<li><code>[yinstagram]</code></li>';
@@ -264,6 +269,7 @@ function yinstagram_section_shortcode() {
   $output .= sprintf(__('<tr><td style="vertical-align: top;">username</td><td style="vertical-align: top;">=</td><td>Get the most recent images published by a username, e.g. <span>"motogp"</td></tr>', 'yakadanda-instagram'));
   $output .= sprintf(__('<tr><td style="vertical-align: top;">hashtags</td><td style="vertical-align: top;">=</td><td>Get a list of recently tagged media, e.g. <span>"#supercar, #hypercar"</span></td></tr>', 'yakadanda-instagram'));
   $output .= '<tbody></table>';
+  $output .= '</div>';
   
   return $output;
 }
@@ -408,6 +414,18 @@ function yinstagram_fetch_data($url) {
   $result = curl_exec($ch);
   curl_close($ch);
   return $result;
+}
+
+function yinstagram_generate_sig($endpoint, $params, $secret) {
+  $sig = $endpoint;
+
+  ksort($params);
+
+  foreach ($params as $key => $val) {
+    $sig .= "|$key=$val";
+  }
+
+  return hash_hmac('sha256', $sig, $secret, false);
 }
 
 function yinstagram_contain_search($yinstagram_options, $tags = array()) {

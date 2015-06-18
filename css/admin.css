@@ -67,3 +67,422 @@
 .toplevel_page_yinstagram-settings .sc_key span {
   font-family:"Courier New", Courier, monospace;
 }
+
+/* Web Starter Kit - https://developers.google.com/web/starter-kit/ - https://developers.google.com/web/fundamentals/ */
+@font-face {
+  font-family: "YI Google Icons";
+  src: url("../icons/icons.eot");
+  src: url("../icons/icons.eot?#iefix") format("embedded-opentype"), url("../icons/icons.woff2") format("woff2"), url("../icons/icons.woff") format("woff"), url("../icons/icons.ttf") format("truetype"), url("../icons/icons.svg?#icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.google-web-starter-kit,
+.google-web-starter-kit p,
+.google-web-starter-kit form p,
+.google-web-starter-kit form strong,
+.google-web-starter-kit form table,
+.google-web-starter-kit form table label,
+.google-web-starter-kit form table input,
+.google-web-starter-kit form table select,
+.google-web-starter-kit form table tr td,
+.google-web-starter-kit form .tablenav select,
+.google-web-starter-kit form .tablenav-pages,
+.google-web-starter-kit form .tablenav-pages .displaying-num {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6250em;
+  /* 26px */
+  font-weight: 300;
+  color: #404040;
+}
+.google-web-starter-kit form table label,
+.google-web-starter-kit form strong {
+  font-weight: bold;
+}
+.google-web-starter-kit form table input[type="text"],
+.google-web-starter-kit form table input[type="search"],
+.google-web-starter-kit form table input[type="url"],
+.google-web-starter-kit form table input[type="number"],
+.google-web-starter-kit form table textarea,
+.google-web-starter-kit form table select,
+.google-web-starter-kit form .tablenav select,
+.google-web-starter-kit form .tablenav-pages input[type="text"] {
+  border: 1px solid gray;
+  padding: 0.5rem 0.65rem;
+  line-height: normal;
+  vertical-align: middle;
+}
+.google-web-starter-kit form table input[type="text"],
+.google-web-starter-kit form table input[type="search"],
+.google-web-starter-kit form table input[type="url"],
+.google-web-starter-kit form table input[type="number"],
+.google-web-starter-kit form table select,
+.google-web-starter-kit form .tablenav select,
+.google-web-starter-kit form .tablenav-pages input[type="text"],
+.google-web-starter-kit #events-filter .tablenav .action,
+.google-web-starter-kit .button--upload {
+  height: 41px;
+}
+.google-web-starter-kit #events-filter .tablenav-pages .displaying-num {
+  line-height: 41px;
+}
+.google-web-starter-kit form table #cb-select-all-1,
+.google-web-starter-kit form table #cb-select-all-2 {
+  vertical-align: middle;
+}
+.google-web-starter-kit form .tablenav-pages .pagination-links a {
+  padding: 8px 10px 11px 10px;
+}
+.google-web-starter-kit form .tablenav-pages {
+  padding: 2px 0 0 0;
+}
+.google-web-starter-kit .icon-bullet::before,
+.google-web-starter-kit ul li::before,
+.google-web-starter-kit ul.list-links a::before,
+.google-web-starter-kit .list-anchor a::before {
+  content: "\e001";
+}
+.google-web-starter-kit ul.ui-tabs-nav li::before {
+  content: "";
+}
+/*==========  COLORS  ==========*/
+.google-web-starter-kit form .color--blue {
+  color: #3372df;
+}
+.google-web-starter-kit form .color--red {
+  color: #cb4437;
+}
+.google-web-starter-kit form .color--green {
+  color: #0f9d58;
+}
+.google-web-starter-kit form .color--yellow {
+  color: #f4b400;
+}
+.google-web-starter-kit form .color--blue-secondary {
+  color: #b7cdf4;
+}
+.google-web-starter-kit form .color--red-secondary {
+  color: #ebb6b0;
+}
+.google-web-starter-kit form .color--green-secondary {
+  color: #56efa5;
+}
+.google-web-starter-kit form .color--yellow-secondary {
+  color: #ffd45b;
+}
+.google-web-starter-kit form .color--gray-background {
+  color: #f0f0f0;
+}
+.google-web-starter-kit form .color--gray-keyline {
+  color: #e0e0e0;
+}
+.google-web-starter-kit form .color--gray {
+  color: #737373;
+}
+.google-web-starter-kit form .color--gray-dark {
+  color: #404040;
+}
+.google-web-starter-kit form .color--text {
+  color: #404040;
+}
+.google-web-starter-kit form .color--highlight {
+  color: #3372df;
+}
+.google-web-starter-kit form .color--warning {
+  color: #ffd45b;
+}
+.google-web-starter-kit form .color--danger {
+  color: #cb4437;
+}
+.google-web-starter-kit form .color--muted {
+  color: #737373;
+}
+.google-web-starter-kit form .color--remember {
+  color: #09829a;
+}
+.google-web-starter-kit form .color--learning {
+  color: #da2e75;
+}
+.google-web-starter-kit form .color--layouts {
+  color: #297ea9;
+}
+.google-web-starter-kit form .color--user {
+  color: #2c8566;
+}
+.google-web-starter-kit form .color--media {
+  color: #cf423a;
+}
+.google-web-starter-kit form .color--performance {
+  color: #7b5294;
+}
+.google-web-starter-kit form .color--layouts-secondary {
+  color: #89c4e2;
+}
+.google-web-starter-kit form .color--user-secondary {
+  color: #78d2b3;
+}
+.google-web-starter-kit form .color--media-secondary {
+  color: #edb8b5;
+}
+.google-web-starter-kit form .color--performance-secondary {
+  color: #c4add2;
+}
+/**
+*
+* Button
+*
+**/
+.google-web-starter-kit .button,
+.google-web-starter-kit .button--primary,
+.google-web-starter-kit .button--secondary,
+.google-web-starter-kit .button--secondary-variation {
+  display: inline-block;
+  padding: 12px 32px;
+  margin-bottom: 13px;
+  margin-top: 13px;
+  min-height: 26px;
+  text-align: center;
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  outline: 0;
+  -webkit-transition: none;
+  transition: none;
+}
+
+.google-web-starter-kit .button--upload,
+.google-web-starter-kit #events-filter .tablenav .action {
+  vertical-align: middle;
+  display: inline-block;
+  padding-left: 32px;
+  padding-right: 32px;
+  text-align: center;
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  outline: 0;
+  -webkit-transition: none;
+  transition: none;
+}
+
+.google-web-starter-kit #events-filter .tablenav .action {
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  padding: 3px 32px;
+}
+
+.google-web-starter-kit .button:hover,
+.google-web-starter-kit .button--primary:hover,
+.google-web-starter-kit .button--secondary:hover,
+.google-web-starter-kit .button--secondary-variation:hover,
+.google-web-starter-kit .button--upload:hover,
+.google-web-starter-kit #events-filter .tablenav .action:hover {
+  background: #4d4d4d;
+  color: #ffffff;
+  border: 1px solid #4d4d4d;
+  text-decoration: none;
+}
+
+.google-web-starter-kit .button--primary {
+  background: #4285f4;
+  color: white;
+  border: 1px solid #1266f1;
+}
+
+.google-web-starter-kit .button--secondary,
+.google-web-starter-kit .button--upload,
+.google-web-starter-kit #events-filter .tablenav .action {
+  background: white;
+  color: #3372df;
+  border: 1px solid #e6e6e6;
+}
+
+.google-web-starter-kit .button--secondary-variation {
+  background: white;
+  color: #3372df;
+  border: 1px solid #e6e6e6;
+  border-color: transparent;
+}
+/**
+*
+* Link
+*
+**/
+.google-web-starter-kit a {
+  color: #3372df;
+}
+.google-web-starter-kit a:hover,
+.google-web-starter-kit #events-filter table a:hover,
+.google-web-starter-kit #events-filter table .row-actions a {
+  text-decoration: none;
+}
+.google-web-starter-kit .cta--primary {
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  color: #3372df;
+  font-weight: 400;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+}
+.google-web-starter-kit .cta--primary:hover {
+  color: #404040;
+}
+.google-web-starter-kit .cta--primary::before {
+  display: inline-block;
+  padding-right: 10px;
+  font-family: "YI Google Icons";
+  line-height: 25px;
+  font-size: 13px;
+  content: "\e005";
+}
+.google-web-starter-kit .cta--secondary {
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  color: #3372df;
+  font-weight: 400;
+  display: inline-block;
+  line-height: 1;
+}
+.google-web-starter-kit .cta--secondary:hover {
+  color: #404040;
+}
+.google-web-starter-kit #events-filter table a {
+  text-decoration: underline;
+}
+/**
+*
+* List
+*
+**/
+.google-web-starter-kit ul,
+.google-web-starter-kit ol,
+.help-tab-content .google-web-starter-kit ul li,
+.help-tab-content .google-web-starter-kit ol li {
+  list-style: none;
+  margin: 0;
+}
+@media only screen and (max-width: 619px) {
+  .google-web-starter-kit ul,
+  .google-web-starter-kit ol {
+    padding-left: 0;
+  }
+}
+
+.google-web-starter-kit ul li {
+  position: relative;
+  padding-left: 16px;
+}
+.google-web-starter-kit ul li::before {
+  font-family: "YI Google Icons";
+  font-size: 13px;
+  display: block;
+  font-weight: 400;
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 26px;
+}
+.google-web-starter-kit ul li::before {
+  font-size: 4px;
+}
+
+.google-web-starter-kit ol {
+  counter-reset: list;
+}
+.google-web-starter-kit ol > li {
+  position: relative;
+  padding-left: 32px;
+}
+.google-web-starter-kit ol > li::before {
+  counter-increment: list;
+  content: "0" counter(list);
+  color: inherit;
+  font-weight: 400;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+}
+.google-web-starter-kit ol > li:nth-child(10n) ~ li::before, ol > li:nth-child(10n)::before {
+  content: counter(list);
+}
+
+.google-web-starter-kit ul ol,
+.google-web-starter-kit ol ul {
+  padding-top: 0;
+}
+/*==========  LIST LINKS  ==========*/
+.google-web-starter-kit ul.list-links li::before {
+  display: none;
+}
+.google-web-starter-kit ul.list-links a {
+  font-weight: 400;
+}
+.google-web-starter-kit ul.list-links a::before {
+  font-family: "YI Google Icons";
+  font-size: 13px;
+  display: block;
+  font-weight: 400;
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 26px;
+}
+.google-web-starter-kit ul.list-links a::before {
+  font-size: 4px;
+}
+.google-web-starter-kit ul.list-links.list-links--primary a {
+  font-weight: 400;
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  line-height: 1;
+  text-decoration: none;
+}
+.google-web-starter-kit ul.list-links.list-links--primary a::before {
+  font-family: "YI Google Icons";
+  font-size: 13px;
+  display: block;
+  font-weight: 400;
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 26px;
+}
+
+.google-web-starter-kit ol.list-links li::before {
+  display: none;
+}
+.google-web-starter-kit ol.list-links li a {
+  display: inline-block;
+  font-weight: 300;
+}
+.google-web-starter-kit ol.list-links li a::before {
+  counter-increment: list;
+  content: "0" counter(list);
+  color: inherit;
+  font-weight: 400;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+}
+.google-web-starter-kit ol.list-links li:nth-child(10n) ~ li a::before, ol.list-links li:nth-child(10n) a::before {
+  content: counter(list);
+}
+.google-web-starter-kit ol.list-links.list-links--secondary a::before {
+  display: none;
+}
+
+.google-web-starter-kit .list-links--secondary {
+  font-size: 16px;
+  line-height: 1.6250em;
+  /* 26px */
+  padding-top: 1.6250em;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+.google-web-starter-kit .list-links--secondary li {
+  padding-left: 0;
+}
+/* end of Web Fundamentals */
