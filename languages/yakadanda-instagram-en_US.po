@@ -1,0 +1,516 @@
+# Copyright (C) 2015 Yakadanda Instagram
+# This file is distributed under the same license as the Yakadanda Instagram package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Yakadanda Instagram 0.2.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/yakadanda-"
+"instagram\n"
+"POT-Creation-Date: 2015-04-10 09:27:30+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-04-10 16:28+0700\n"
+"Last-Translator: Teguh Pratama <teguh.p@kiranatama.com>\n"
+"Language-Team: Yakadanda\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: English US\n"
+
+#: admin/functions.php:94 admin/functions.php:96 admin/page-settings.php:3
+msgid "Settings"
+msgstr ""
+
+#: admin/functions.php:99 admin/page-display-options.php:2
+msgid "Display Options"
+msgstr ""
+
+#: admin/functions.php:120 admin/functions.php:198
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: admin/functions.php:127
+msgid "Connection to Instagram failed."
+msgstr ""
+
+#: admin/functions.php:133
+msgid "Connection to Instagram succeeded."
+msgstr ""
+
+#: admin/functions.php:204
+msgid "Display options changed."
+msgstr ""
+
+#: admin/functions.php:225
+msgid "Setup"
+msgstr ""
+
+#: admin/functions.php:230
+msgid "Shortcode"
+msgstr ""
+
+#: admin/functions.php:236
+msgid "How to get your Instagram Client ID and Client Secret"
+msgstr ""
+
+#: admin/functions.php:238
+msgid ""
+"<li>Go to <a href=\"%s\" target=\"_blank\">http://instagram.com/developer</"
+"a> then login.<br><img src=\"%s\"/></li>"
+msgstr ""
+
+#: admin/functions.php:239
+msgid ""
+"<li>Click Manage Clients menu, or Register Your Application button.<br><img "
+"src=\"%s\"/></li>"
+msgstr ""
+
+#: admin/functions.php:240
+msgid "<li>Register a New Client.<br><img src=\"%s\"/></li>"
+msgstr ""
+
+#: admin/functions.php:241
+msgid "Setup Register new Client ID form."
+msgstr ""
+
+#: admin/functions.php:242
+msgid ""
+"a. Fill textboxes, textarea, and checkboxes with your suitable information, "
+"and preferences."
+msgstr ""
+
+#: admin/functions.php:243
+msgid "b. Fill OAuth redirect_uri textbox with <code>%s</code>"
+msgstr ""
+
+#: admin/functions.php:245
+msgid ""
+"<li>Congratulation, now you have Client ID and Client Secret.<br><img src="
+"\"%s\"/></li>"
+msgstr ""
+
+#: admin/functions.php:253
+msgid "Examples"
+msgstr ""
+
+#: admin/functions.php:260
+msgid "Attributes"
+msgstr ""
+
+#: admin/functions.php:262
+msgid ""
+"No attribute will retrieves Instagram images based on plugin settings, and "
+"if have attribute will override plugin settings."
+msgstr ""
+
+#: admin/functions.php:263
+msgid ""
+"<tr><td style=\"vertical-align: top;\">display_images</td><td style="
+"\"vertical-align: top;\">=</td><td>Get the authenticated user's <span>\"feed"
+"\"</span>, list of media they've <span>\"liked\"</span>, or get the most "
+"<span>\"recent\"</span> media published by a user.</td></tr>"
+msgstr ""
+
+#: admin/functions.php:264
+msgid ""
+"<tr><td style=\"vertical-align: top;\">username</td><td style=\"vertical-"
+"align: top;\">=</td><td>Get the most recent images published by a username, "
+"e.g. <span>\"motogp\"</td></tr>"
+msgstr ""
+
+#: admin/functions.php:265
+msgid ""
+"<tr><td style=\"vertical-align: top;\">hashtags</td><td style=\"vertical-"
+"align: top;\">=</td><td>Get a list of recently tagged media, e.g. <span>"
+"\"#supercar, #hypercar\"</span></td></tr>"
+msgstr ""
+
+#: admin/functions.php:327
+msgid "Close"
+msgstr ""
+
+#: admin/functions.php:328
+msgid ""
+"Since 0.1.9, OAuth redirect_uri or REDIRECT URI changed to <code>%s</code>. "
+"You can change your OAuth redirect_uri at <a href=\"%s\" target=\"_blank"
+"\">instagram.com/developer/clients/manage/</a>. Thank you."
+msgstr ""
+
+#: admin/functions.php:344
+msgid "Disconnected."
+msgstr ""
+
+#: admin/functions.php:356
+msgid "Settings restored to default settings."
+msgstr ""
+
+#: admin/functions.php:367
+msgid "Display options restored to default settings."
+msgstr ""
+
+#: admin/page-display-options.php:14
+msgid "Scroll"
+msgstr ""
+
+#: admin/page-display-options.php:18
+msgid "Auto"
+msgstr ""
+
+#: admin/page-display-options.php:19
+msgid "Infinite"
+msgstr ""
+
+#: admin/page-display-options.php:25
+msgid "Height"
+msgstr ""
+
+#: admin/page-display-options.php:29
+msgid "In pixel."
+msgstr ""
+
+#: admin/page-display-options.php:34
+msgid "Frame Rate"
+msgstr ""
+
+#: admin/page-display-options.php:38
+msgid "Number of movements/frames per second. Default is 24."
+msgstr ""
+
+#: admin/page-display-options.php:43
+msgid "Speed"
+msgstr ""
+
+#: admin/page-display-options.php:47
+msgid ""
+"Number of pixels moved per frame, must be divisible by total height of "
+"scroller.  Default is 1."
+msgstr ""
+
+#: admin/page-display-options.php:52
+msgid "Direction"
+msgstr ""
+
+#: admin/page-display-options.php:56
+msgid "Up"
+msgstr ""
+
+#: admin/page-display-options.php:57
+msgid "Down"
+msgstr ""
+
+#: admin/page-display-options.php:62
+msgid "Tooltip"
+msgstr ""
+
+#: admin/page-display-options.php:68
+msgid "Lightbox"
+msgstr ""
+
+#: admin/page-display-options.php:71
+msgid "Disable"
+msgstr ""
+
+#: admin/page-display-options.php:75
+msgid "Only for images widget and infinite scroll."
+msgstr ""
+
+#: admin/page-display-options.php:80
+msgid "Theme"
+msgstr ""
+
+#: admin/page-display-options.php:94
+msgid "Effect"
+msgstr ""
+
+#: admin/page-display-options.php:98
+msgid "Elastic"
+msgstr ""
+
+#: admin/page-display-options.php:99
+msgid "Fade"
+msgstr ""
+
+#: admin/page-display-options.php:100
+msgid "Slideshow"
+msgstr ""
+
+#: admin/page-display-options.php:105 admin/page-display-options.php:109
+msgid "Social Links"
+msgstr ""
+
+#: admin/page-display-options.php:113 admin/page-settings.php:90
+msgid "Yes"
+msgstr ""
+
+#: admin/page-display-options.php:118 admin/page-settings.php:95
+msgid "No"
+msgstr ""
+
+#: admin/page-display-options.php:125
+msgid "Order"
+msgstr ""
+
+#: admin/page-display-options.php:129 admin/widget.php:238
+msgid "Default"
+msgstr ""
+
+#: admin/page-display-options.php:130 admin/widget.php:239
+msgid "Shuffle"
+msgstr ""
+
+#: admin/page-display-options.php:137
+msgid "Save Changes"
+msgstr ""
+
+#: admin/page-display-options.php:137
+msgid "Save"
+msgstr ""
+
+#: admin/page-display-options.php:138 admin/page-settings.php:146
+msgid "Reset"
+msgstr ""
+
+#: admin/page-settings.php:6
+msgid "Please enable cURL."
+msgstr ""
+
+#: admin/page-settings.php:16
+msgid ""
+"Go to <a href=\"$s\" target=\"_blank\">http://instagram.com/developer</a> to "
+"register Instagram client, or <a id=\"yinstagram-setup-help-tab\" href=\"#"
+"\">see these steps</a> for help. See <a id=\"yinstagram-shortcode-help-tab\" "
+"href=\"#\">shortcode documentation</a> to override plugin settings."
+msgstr ""
+
+#: admin/page-settings.php:21
+msgid "Client ID"
+msgstr ""
+
+#: admin/page-settings.php:26
+msgid "Connected, logged in as %s"
+msgstr ""
+
+#: admin/page-settings.php:28 admin/shortcode.php:26 admin/widget.php:157
+msgid "Not Connected."
+msgstr ""
+
+#: admin/page-settings.php:30
+msgid "Your Instagram Client Id."
+msgstr ""
+
+#: admin/page-settings.php:35
+msgid "Client Secret"
+msgstr ""
+
+#: admin/page-settings.php:39
+msgid "Your Instagram Client Secret."
+msgstr ""
+
+#: admin/page-settings.php:43 admin/page-settings.php:48
+msgid "Display Images"
+msgstr ""
+
+#: admin/page-settings.php:52 admin/widget.php:205
+msgid "Recent"
+msgstr ""
+
+#: admin/page-settings.php:57 admin/widget.php:206
+msgid "Feed"
+msgstr ""
+
+#: admin/page-settings.php:62 admin/widget.php:207
+msgid "Liked"
+msgstr ""
+
+#: admin/page-settings.php:67 admin/widget.php:208
+msgid "Tags"
+msgstr ""
+
+#: admin/page-settings.php:74
+msgid "Username"
+msgstr ""
+
+#: admin/page-settings.php:78
+msgid ""
+"Get the most recent images published by a username. Leave blank to used your "
+"username."
+msgstr ""
+
+#: admin/page-settings.php:82 admin/page-settings.php:86
+msgid "Hashtags"
+msgstr ""
+
+#: admin/page-settings.php:101
+msgid ""
+"Tag separated by comma, e.g. <code>#buildings, #graffiti, #art</code> etc."
+msgstr ""
+
+#: admin/page-settings.php:108
+msgid "Image Size"
+msgstr ""
+
+#: admin/page-settings.php:112 admin/widget.php:222
+msgid "Thumbnail"
+msgstr ""
+
+#: admin/page-settings.php:113 admin/widget.php:223
+msgid "Low Resolution"
+msgstr ""
+
+#: admin/page-settings.php:114 admin/widget.php:224
+msgid "Standard Resolution"
+msgstr ""
+
+#: admin/page-settings.php:120
+msgid "Number Of Images"
+msgstr ""
+
+#: admin/page-settings.php:124
+msgid "less than or equal to 80 images"
+msgstr ""
+
+#: admin/page-settings.php:125
+msgid "less than or equal to 120 images"
+msgstr ""
+
+#: admin/page-settings.php:126
+msgid "less than or equal to 160 images"
+msgstr ""
+
+#: admin/page-settings.php:127
+msgid "less than or equal to 180 images"
+msgstr ""
+
+#: admin/page-settings.php:128
+msgid "less than or equal to 220 images"
+msgstr ""
+
+#: admin/page-settings.php:129
+msgid "less than or equal to 260 images"
+msgstr ""
+
+#: admin/page-settings.php:130
+msgid "less than or equal to 280 images"
+msgstr ""
+
+#: admin/page-settings.php:131
+msgid "less than or equal to 320 images"
+msgstr ""
+
+#: admin/page-settings.php:132
+msgid "less than or equal to 360 images"
+msgstr ""
+
+#: admin/page-settings.php:133
+msgid "less than or equal to 380 images"
+msgstr ""
+
+#: admin/page-settings.php:142
+msgid "Logout"
+msgstr ""
+
+#: admin/page-settings.php:144
+msgid "Save and Connect"
+msgstr ""
+
+#: admin/page-settings.php:151
+msgid "These will also disconnect from Google API if connected. Are you sure?"
+msgstr ""
+
+#: admin/shortcode.php:124 admin/shortcode.php:207
+msgid "No Image."
+msgstr ""
+
+#: admin/shortcode.php:202
+msgid "Load More"
+msgstr ""
+
+#: admin/widget.php:6
+msgid "Yakadanda Instagram Widget"
+msgstr ""
+
+#: admin/widget.php:83
+msgid "Posts:"
+msgstr ""
+
+#: admin/widget.php:84
+msgid "Followers:"
+msgstr ""
+
+#: admin/widget.php:85
+msgid "Following:"
+msgstr ""
+
+#: admin/widget.php:94
+msgid "Request timed out."
+msgstr ""
+
+#: admin/widget.php:152
+msgid "Request timed out, or no have %s images."
+msgstr ""
+
+#: admin/widget.php:192
+msgid "Title:"
+msgstr ""
+
+#: admin/widget.php:196
+msgid "Type:"
+msgstr ""
+
+#: admin/widget.php:198
+msgid "Images"
+msgstr ""
+
+#: admin/widget.php:199
+msgid "Profile"
+msgstr ""
+
+#: admin/widget.php:203
+msgid "Display Images:"
+msgstr ""
+
+#: admin/widget.php:212
+msgid "Username:"
+msgstr ""
+
+#: admin/widget.php:216
+msgid "Hashtags (separated by comma):"
+msgstr ""
+
+#: admin/widget.php:217
+msgid "e.g. #art, #buildings, #graffiti etc."
+msgstr ""
+
+#: admin/widget.php:220
+msgid "Image Size:"
+msgstr ""
+
+#: admin/widget.php:228
+msgid "Custom Image Size (pixel):"
+msgstr ""
+
+#: admin/widget.php:232
+msgid "Limit (max 33):"
+msgstr ""
+
+#: admin/widget.php:236
+msgid "Order:"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Yakadanda Instagram"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.yakadanda.com/plugins/yakadanda-instagram/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "A Wordpress plugin that pulls in Instagram images of user or hashtags."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Peter Ricci"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.yakadanda.com/"
+msgstr ""
